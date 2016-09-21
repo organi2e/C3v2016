@@ -6,11 +6,143 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		871908091D921DE80048A43F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 871907EE1D921DCC0048A43F;
+			remoteInfo = LaObjet;
+		};
+		8719080B1D921DE80048A43F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 871907F71D921DCC0048A43F;
+			remoteInfo = LaObjetTests;
+		};
+		871908361D922EB30048A43F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907D01D921D750048A43F /* iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 871908171D9227D90048A43F;
+			remoteInfo = LaObjets;
+		};
+		871908381D922EB30048A43F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907D01D921D750048A43F /* iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 871908201D9227DA0048A43F;
+			remoteInfo = LaObjetsTests;
+		};
+		871908601D924CD00048A43F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 871908461D92424F0048A43F;
+			remoteInfo = MNIST;
+		};
+		871908621D924CD00048A43F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 871908551D924CCD0048A43F;
+			remoteInfo = CIFAR10;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		871907C61D921D570048A43F /* macOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = macOS.xcodeproj; path = macOS/macOS.xcodeproj; sourceTree = "<group>"; };
+		871907D01D921D750048A43F /* iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iOS.xcodeproj; path = iOS/iOS.xcodeproj; sourceTree = "<group>"; };
+		871907DA1D921D840048A43F /* tvOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = tvOS.xcodeproj; path = tvOS/tvOS.xcodeproj; sourceTree = "<group>"; };
+		871907E41D921D9A0048A43F /* watchOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = watchOS.xcodeproj; path = watchOS/watchOS.xcodeproj; sourceTree = "<group>"; };
+		8719080D1D921E0B0048A43F /* LaObjetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LaObjetTests.swift; path = LaObjet/LaObjetTests.swift; sourceTree = "<group>"; };
+		871908331D922EB20048A43F /* LaSparse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LaSparse.swift; path = LaObjet/LaSparse.swift; sourceTree = "<group>"; };
+		8719083C1D9230900048A43F /* LaObjet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LaObjet.swift; path = LaObjet/LaObjet.swift; sourceTree = "<group>"; };
+		871908401D92423F0048A43F /* MNIST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MNIST.swift; path = MNIST/MNIST.swift; sourceTree = "<group>"; };
+		871908641D924CF60048A43F /* CIFAR10.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CIFAR10.swift; path = CIFAR10/CIFAR10.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
 /* Begin PBXGroup section */
 		871907B81D921CCA0048A43F = {
 			isa = PBXGroup;
 			children = (
+				8719085D1D924CD00048A43F /* CIFAR10 */,
+				8719083F1D92421E0048A43F /* MNIST */,
+				871907E81D921DA60048A43F /* C³ */,
+				871907E71D921DA00048A43F /* LaObjet */,
+				871907E41D921D9A0048A43F /* watchOS.xcodeproj */,
+				871907DA1D921D840048A43F /* tvOS.xcodeproj */,
+				871907D01D921D750048A43F /* iOS.xcodeproj */,
+				871907C61D921D570048A43F /* macOS.xcodeproj */,
 			);
+			sourceTree = "<group>";
+		};
+		871907C71D921D570048A43F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8719080A1D921DE80048A43F /* LaObjet.framework */,
+				8719080C1D921DE80048A43F /* LaObjetTests.xctest */,
+				871908611D924CD00048A43F /* MNIST.framework */,
+				871908631D924CD00048A43F /* CIFAR10.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		871907D11D921D750048A43F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				871908371D922EB30048A43F /* LaObjets.framework */,
+				871908391D922EB30048A43F /* LaObjetsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		871907DB1D921D840048A43F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		871907E51D921D9A0048A43F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		871907E71D921DA00048A43F /* LaObjet */ = {
+			isa = PBXGroup;
+			children = (
+				8719080D1D921E0B0048A43F /* LaObjetTests.swift */,
+				8719083C1D9230900048A43F /* LaObjet.swift */,
+				871908331D922EB20048A43F /* LaSparse.swift */,
+			);
+			name = LaObjet;
+			sourceTree = "<group>";
+		};
+		871907E81D921DA60048A43F /* C³ */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "C³";
+			sourceTree = "<group>";
+		};
+		8719083F1D92421E0048A43F /* MNIST */ = {
+			isa = PBXGroup;
+			children = (
+				871908401D92423F0048A43F /* MNIST.swift */,
+			);
+			name = MNIST;
+			sourceTree = "<group>";
+		};
+		8719085D1D924CD00048A43F /* CIFAR10 */ = {
+			isa = PBXGroup;
+			children = (
+				871908641D924CF60048A43F /* CIFAR10.swift */,
+			);
+			name = CIFAR10;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -30,11 +162,74 @@
 			);
 			mainGroup = 871907B81D921CCA0048A43F;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 871907D11D921D750048A43F /* Products */;
+					ProjectRef = 871907D01D921D750048A43F /* iOS.xcodeproj */;
+				},
+				{
+					ProductGroup = 871907C71D921D570048A43F /* Products */;
+					ProjectRef = 871907C61D921D570048A43F /* macOS.xcodeproj */;
+				},
+				{
+					ProductGroup = 871907DB1D921D840048A43F /* Products */;
+					ProjectRef = 871907DA1D921D840048A43F /* tvOS.xcodeproj */;
+				},
+				{
+					ProductGroup = 871907E51D921D9A0048A43F /* Products */;
+					ProjectRef = 871907E41D921D9A0048A43F /* watchOS.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		8719080A1D921DE80048A43F /* LaObjet.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = LaObjet.framework;
+			remoteRef = 871908091D921DE80048A43F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8719080C1D921DE80048A43F /* LaObjetTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = LaObjetTests.xctest;
+			remoteRef = 8719080B1D921DE80048A43F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		871908371D922EB30048A43F /* LaObjets.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = LaObjets.framework;
+			remoteRef = 871908361D922EB30048A43F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		871908391D922EB30048A43F /* LaObjetsTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = LaObjetsTests.xctest;
+			remoteRef = 871908381D922EB30048A43F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		871908611D924CD00048A43F /* MNIST.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MNIST.framework;
+			remoteRef = 871908601D924CD00048A43F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		871908631D924CD00048A43F /* CIFAR10.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CIFAR10.framework;
+			remoteRef = 871908621D924CD00048A43F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin XCBuildConfiguration section */
 		871907BD1D921CCA0048A43F /* Debug */ = {
