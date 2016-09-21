@@ -49,6 +49,34 @@
 			remoteGlobalIDString = 871908551D924CCD0048A43F;
 			remoteInfo = CIFAR10;
 		};
+		8719088D1D9253DE0048A43F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8719086E1D9252F30048A43F;
+			remoteInfo = C3;
+		};
+		8719088F1D9253DE0048A43F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 871908761D9252F30048A43F;
+			remoteInfo = C3Tests;
+		};
+		871908B81D9282040048A43F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8719089F1D9281F70048A43F;
+			remoteInfo = Funktion;
+		};
+		871908BA1D9282040048A43F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 871908A71D9281F70048A43F;
+			remoteInfo = FunktionTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -61,16 +89,24 @@
 		8719083C1D9230900048A43F /* LaObjet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LaObjet.swift; path = LaObjet/LaObjet.swift; sourceTree = "<group>"; };
 		871908401D92423F0048A43F /* MNIST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MNIST.swift; path = MNIST/MNIST.swift; sourceTree = "<group>"; };
 		871908641D924CF60048A43F /* CIFAR10.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CIFAR10.swift; path = CIFAR10/CIFAR10.swift; sourceTree = "<group>"; };
+		871908681D9252DC0048A43F /* C³.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "C³.xcdatamodel"; sourceTree = "<group>"; };
+		8719088A1D9253DD0048A43F /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Context.swift; path = "C³/Context.swift"; sourceTree = "<group>"; };
+		871908911D9253ED0048A43F /* Arcane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Arcane.swift; path = "C³/Arcane.swift"; sourceTree = "<group>"; };
+		871908BC1D9282180048A43F /* Maschine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Maschine.swift; path = Funktion/Maschine.swift; sourceTree = "<group>"; };
+		871908BF1D928F8A0048A43F /* Buffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Buffer.swift; path = Funktion/Buffer.swift; sourceTree = "<group>"; };
+		871908C01D928F960048A43F /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Command.swift; path = Funktion/Command.swift; sourceTree = "<group>"; };
+		871908C51D9298370048A43F /* BufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BufferTests.swift; path = Funktion/BufferTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		871907B81D921CCA0048A43F = {
 			isa = PBXGroup;
 			children = (
-				8719085D1D924CD00048A43F /* CIFAR10 */,
-				8719083F1D92421E0048A43F /* MNIST */,
 				871907E81D921DA60048A43F /* C³ */,
 				871907E71D921DA00048A43F /* LaObjet */,
+				871908961D9257AC0048A43F /* Funktion */,
+				8719083F1D92421E0048A43F /* MNIST */,
+				8719085D1D924CD00048A43F /* CIFAR10 */,
 				871907E41D921D9A0048A43F /* watchOS.xcodeproj */,
 				871907DA1D921D840048A43F /* tvOS.xcodeproj */,
 				871907D01D921D750048A43F /* iOS.xcodeproj */,
@@ -81,6 +117,10 @@
 		871907C71D921D570048A43F /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				8719088E1D9253DE0048A43F /* C3.framework */,
+				871908901D9253DE0048A43F /* C3Tests.xctest */,
+				871908B91D9282040048A43F /* Funktion.framework */,
+				871908BB1D9282040048A43F /* FunktionTests.xctest */,
 				8719080A1D921DE80048A43F /* LaObjet.framework */,
 				8719080C1D921DE80048A43F /* LaObjetTests.xctest */,
 				871908611D924CD00048A43F /* MNIST.framework */,
@@ -125,6 +165,9 @@
 		871907E81D921DA60048A43F /* C³ */ = {
 			isa = PBXGroup;
 			children = (
+				871908671D9252DC0048A43F /* C³.xcdatamodeld */,
+				8719088A1D9253DD0048A43F /* Context.swift */,
+				871908911D9253ED0048A43F /* Arcane.swift */,
 			);
 			name = "C³";
 			sourceTree = "<group>";
@@ -143,6 +186,17 @@
 				871908641D924CF60048A43F /* CIFAR10.swift */,
 			);
 			name = CIFAR10;
+			sourceTree = "<group>";
+		};
+		871908961D9257AC0048A43F /* Funktion */ = {
+			isa = PBXGroup;
+			children = (
+				871908BC1D9282180048A43F /* Maschine.swift */,
+				871908BF1D928F8A0048A43F /* Buffer.swift */,
+				871908C01D928F960048A43F /* Command.swift */,
+				871908C51D9298370048A43F /* BufferTests.swift */,
+			);
+			name = Funktion;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -229,6 +283,34 @@
 			remoteRef = 871908621D924CD00048A43F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		8719088E1D9253DE0048A43F /* C3.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = C3.framework;
+			remoteRef = 8719088D1D9253DE0048A43F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		871908901D9253DE0048A43F /* C3Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = C3Tests.xctest;
+			remoteRef = 8719088F1D9253DE0048A43F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		871908B91D9282040048A43F /* Funktion.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Funktion.framework;
+			remoteRef = 871908B81D9282040048A43F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		871908BB1D9282040048A43F /* FunktionTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FunktionTests.xctest;
+			remoteRef = 871908BA1D9282040048A43F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin XCBuildConfiguration section */
@@ -257,6 +339,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		871908671D9252DC0048A43F /* C³.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				871908681D9252DC0048A43F /* C³.xcdatamodel */,
+			);
+			currentVersion = 871908681D9252DC0048A43F /* C³.xcdatamodel */;
+			name = "C³.xcdatamodeld";
+			path = "C³/C³.xcdatamodeld";
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 871907B91D921CCA0048A43F /* Project object */;
 }

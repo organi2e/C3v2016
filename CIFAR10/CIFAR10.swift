@@ -30,7 +30,8 @@ public class CIFAR10 {
 		public var rows: Int {
 			return CIFAR10.rows
 		}
-		fileprivate init(label: UInt8, r: [UInt8], g: [UInt8], b: [UInt8]) {
+		//I hate fileprivate
+		internal init(label: UInt8, r: [UInt8], g: [UInt8], b: [UInt8]) {
 			self.label = label
 			self.r = r
 			self.g = g

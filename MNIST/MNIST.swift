@@ -18,7 +18,8 @@ public class MNIST {
 		public var meta: String {
 			return String(label)
 		}
-		fileprivate init(pixel: [UInt8], label: UInt8, rows: Int, cols: Int) {
+		//I hate fileprivate
+		internal init(pixel: [UInt8], label: UInt8, rows: Int, cols: Int) {
 			self.label = label
 			self.pixel = pixel
 			self.rows = rows
@@ -37,10 +38,10 @@ public class MNIST {
 		if let data: Data = dataFromBundle(path: image), MemoryLayout<UInt32>.size * 4 < data.count {
 			
 			let(headdata, bodydata) = data.split(cursor: MemoryLayout<UInt32>.size * 4)
-			let head: [Int] = headdata.toArray().map{Int(UInt32(bigEndian: $0))}
-			let length: Int = head[1]
-			let rows: Int = head[2]
-			let cols: Int = head[3]
+			let head: [UInt32] = headdata.toArray().map{ UInt32(bigEndian: $0) }
+			let length: Int = Int(head[1])
+			let rows: Int = Int(head[2])
+			let cols: Int = Int(head[3])
 			let pixelsbody: [UInt8] = bodydata.toArray()
 			if length * rows * cols == pixelsbody.count, let data: Data = dataFromBundle(path: label), MemoryLayout<UInt32>.size * 2 < data.count {
 				let(headdata, bodydata) = data.split(cursor: MemoryLayout<UInt32>.size * 2)

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11232" systemVersion="15G1004" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Arcane" representedClassName="C3.Arcane" isAbstract="YES" syncable="YES">
+        <attribute name="cols" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="logmu" attributeType="Binary" syncable="YES"/>
+        <attribute name="logsigma" attributeType="Binary" syncable="YES"/>
+        <attribute name="rows" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
+    <entity name="Bias" representedClassName="C3.Bias" parentEntity="Arcane" syncable="YES"/>
+    <entity name="Cell" syncable="YES"/>
+    <entity name="Circular" parentEntity="Arcane" syncable="YES"/>
+    <entity name="Decay" syncable="YES">
+        <attribute name="loglambda" attributeType="Binary" syncable="YES"/>
+    </entity>
+    <entity name="Edge" parentEntity="Arcane" syncable="YES"/>
+    <elements>
+        <element name="Arcane" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="Bias" positionX="-54" positionY="9" width="128" height="45"/>
+        <element name="Cell" positionX="-36" positionY="18" width="128" height="45"/>
+        <element name="Decay" positionX="-18" positionY="27" width="128" height="60"/>
+        <element name="Edge" positionX="0" positionY="45" width="128" height="45"/>
+        <element name="Circular" positionX="18" positionY="63" width="128" height="45"/>
+    </elements>
+</model>
