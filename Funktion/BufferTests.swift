@@ -24,6 +24,14 @@ class BufferTests: XCTestCase {
 		
 		print(y)
 		
+		let c = maschine.newCommand()
+		c.addCompletedHandler { (_)in
+			print("ok")
+		}
+		c.commit()
+		print(2)
+		c.waitUntilCompleted()
+		print(3)
 		
 	}
 

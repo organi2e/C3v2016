@@ -11,7 +11,7 @@ import Metal
 typealias ComputeCommandEncoder = MTLComputeCommandEncoder
 typealias BlitCommandEncoder = MTLBlitCommandEncoder
 
-typealias Command = MTLCommandBuffer
+public typealias Command = MTLCommandBuffer
 
 /*
 public class Command {

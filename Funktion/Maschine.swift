@@ -48,7 +48,7 @@ public class Maschine {
 	func loadLibraryFrom(bundle: Bundle) throws {
 		//let library: Library = try device.makeDefaultLibrary(bundle: bundle)
 	}
-	func newCommand() -> Command {
+	public func newCommand() -> Command {
 		return queue.makeCommandBuffer()
 	}
 	func newComputePipeline(funktion: String) throws -> ComputePipelineState {
