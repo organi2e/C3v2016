@@ -8,60 +8,66 @@
 import Metal
 
 public typealias Device = MTLDevice
-typealias Library = MTLLibrary
-typealias CommandQueue = MTLCommandQueue
-typealias CommandBuffer = MTLCommandBuffer
-typealias ComputePipelineState = MTLComputePipelineState
-typealias RenderPipelineState = MTLRenderPipelineState
+
+public typealias ComputePipelineState = MTLComputePipelineState
+public typealias RenderPipelineState = MTLRenderPipelineState
+
+public enum FunktionError: Error {
+	//case KeinFehlerGefunden
+	case NichtGefunden(funktion: String)
+	case BereitsRegistriert(funktion: String)
+}
 
 public class Maschine {
 	
-	typealias Funktion = MTLFunction
+	private typealias CommandQueue = MTLCommandQueue
+	private let queue: CommandQueue
 	
-	let device: Device
-	let queue: CommandQueue
-	var funktions: [String: Funktion]
+	internal let device: Device
+	internal typealias Library = MTLLibrary
+	internal typealias Funktion = MTLFunction
+	
+	internal var cache: (
+		funktions: [String: Funktion],
+		computePipelines: [String: ComputePipelineState],
+		renderPipelines: [String: RenderPipelineState]
+	)
+	
 	public init(device: Device? = nil) throws {
-		guard let device: Device = device ?? MTLCreateSystemDefaultDevice() else {
-			fatalError()
-		}
+		guard let device: Device = device ?? MTLCreateSystemDefaultDevice() else { fatalError() }
 		self.device = device
 		self.queue = device.makeCommandQueue()
-		self.funktions = [:]
-		//if let library: Library = device.newDefaultLibrary() {
-		//	bindLibrary(library: library)
-		//}
+		self.cache.funktions = [:]
+		self.cache.computePipelines = [:]
+		self.cache.renderPipelines = [:]
 	}
-	func bindLibrary(library: Library) {
-		library.functionNames.forEach {
+	
+	private func bindLibrary(library: Library) throws {
+		try library.functionNames.forEach {
 			if let funktion: Funktion = library.makeFunction(name: $0) {
-				funktions.updateValue(funktion, forKey: $0)
+				if cache.funktions.index(forKey: $0) != cache.funktions.endIndex {
+					cache.funktions.updateValue(funktion, forKey: $0)
+				} else {
+					throw FunktionError.BereitsRegistriert(funktion: $0)
+				}
+			} else {
+				throw FunktionError.NichtGefunden(funktion: $0)
 			}
 		}
 	}
-	func loadLibraryFrom(path: String) throws {
-		bindLibrary(library: try device.makeLibrary(filepath: path))
+	
+	public func loadLibraryFrom(path: String) throws {
+		try bindLibrary(library: try device.makeLibrary(filepath: path))
 	}
-	func loadLibraryFrom(source: String) throws {
-		bindLibrary(library: try device.makeLibrary(source: source, options: nil))
+	
+	public func loadLibraryFrom(source: String, fast: Bool = false) throws {
+		let options: MTLCompileOptions = MTLCompileOptions()
+		options.fastMathEnabled = fast
+		try bindLibrary(library: try device.makeLibrary(source: source, options: options))
 	}
-	func loadLibraryFrom(bundle: Bundle) throws {
-		//let library: Library = try device.makeDefaultLibrary(bundle: bundle)
+	
+	public func loadLibraryFrom(bundle: Bundle) throws {
+		try bindLibrary(library: try device.makeDefaultLibrary(bundle: bundle))
 	}
-	public func newCommand() -> Command {
-		return queue.makeCommandBuffer()
-	}
-	func newComputePipeline(funktion: String) throws -> ComputePipelineState {
-		guard let funktion: Funktion = funktions[funktion] else {
-			fatalError()
-		}
-		return try device.makeComputePipelineState(function: funktion)
-	}
-	func newRenderPipeline() throws -> RenderPipelineState {
-		typealias RenderPipelineDescriptor = MTLRenderPipelineDescriptor
-		let descriptor: RenderPipelineDescriptor = RenderPipelineDescriptor()
-		//
-		return try device.makeRenderPipelineState(descriptor: descriptor)
-	}
-}
 
+}

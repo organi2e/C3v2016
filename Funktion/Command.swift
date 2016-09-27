@@ -8,19 +8,21 @@
 
 import Metal
 
-typealias ComputeCommandEncoder = MTLComputeCommandEncoder
-typealias BlitCommandEncoder = MTLBlitCommandEncoder
+public typealias ComputeCommandEncoder = MTLComputeCommandEncoder
+public typealias BlitCommandEncoder = MTLBlitCommandEncoder
 
-public typealias Command = MTLCommandBuffer
-
-/*
 public class Command {
+	
+	typealias CommandBuffer = MTLCommandBuffer
+	
 	let buffer: CommandBuffer
 	let maschine: Maschine
+	
 	internal init(buffer: CommandBuffer, maschine: Maschine) {
 		self.buffer = buffer
 		self.maschine = maschine
 	}
+	
 	func newCompute(funktion: String, handler: (ComputeCommandEncoder) -> Void ) {
 		if let funktion: Funktion = maschine.funktions[funktion] {
 			func complete(state: ComputePipelineState) {
@@ -46,10 +48,15 @@ public class Command {
 	func enque() {
 		buffer.enqueue()
 	}
-	func addCompleteHandler(block: (CommandBuffer)->Void) {
+	func addCompleteHandler(block: @escaping (CommandBuffer)->Void) {
 		buffer.addCompletedHandler {
 			block($0)
 		}
 	}
 }
-*/
+
+extension Maschine {
+	public func newCommand() -> Command {
+		return Command(buffer: queue.makeCommandBuffer(), maschine: self)
+	}
+}

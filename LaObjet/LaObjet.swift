@@ -50,18 +50,18 @@ public extension LaObjet {
 		assert(la_matrix_to_float_buffer(UnsafeMutablePointer<Float>(mutating: result), cols, rows == 0 && cols == 0 ? la_matrix_from_splat(self, 1, 1) : self)==SUCCESS)
 		return result
 	}
-	func value(at: UInt) -> Float {
+    func value<Entier: Integer>(at: Entier) -> Float {
 		let rows: la_count_t = la_matrix_rows(self)
 		let cols: la_count_t = la_matrix_cols(self)
 		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat( rows == 0 && cols == 0 ? self : la_splat_from_vector_element(self, la_index_t(at)), 1, 1))==SUCCESS)//Avoid redundant computation
+		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat( rows == 0 && cols == 0 ? self : la_splat_from_vector_element(self, at.signedValue), 1, 1))==SUCCESS)//Avoid redundant computation
 		return value
 	}
-	func value(at: (row: UInt, col: UInt)) -> Float {
+    func value<Entier: Integer>(at: (row: Entier, col: Entier)) -> Float {
 		let rows: la_count_t = la_matrix_rows(self)
 		let cols: la_count_t = la_matrix_cols(self)
 		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat( rows == 0 && cols == 0 ? self : la_splat_from_matrix_element(self, la_index_t(at.0), la_index_t(at.1)), 1, 1))==SUCCESS)//Avoid redundant computation
+		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat( rows == 0 && cols == 0 ? self : la_splat_from_matrix_element(self, at.0.signedValue, at.1.signedValue), 1, 1))==SUCCESS)//Avoid redundant computation
 		return value
 	}
 	subscript(index: Int) -> LaObjet {
@@ -79,14 +79,14 @@ public extension LaObjet {
 	func getBytes(buffer: UnsafeRawPointer) -> Bool {
 		return la_matrix_to_float_buffer(UnsafeMutablePointer<Float>(OpaquePointer(buffer)), la_matrix_cols(self), self) == SUCCESS
 	}
-	func rowVecteur(col: UInt) -> LaObjet {
-		return la_vector_from_matrix_row(self, col)
+    func rowVecteur<Entier: Integer>(col: Entier) -> LaObjet {
+		return la_vector_from_matrix_row(self, col.unsignedValue)
 	}
-	func colVecteur(row: UInt) -> LaObjet {
-		return la_vector_from_matrix_col(self, row)
+    func colVecteur<Entier: Integer>(row: Entier) -> LaObjet {
+		return la_vector_from_matrix_col(self, row.unsignedValue)
 	}
-	func diagVecteur(offset: Int) -> LaObjet {
-		return la_vector_from_matrix_diagonal(self, la_index_t(offset))
+    func diagVecteur<Entier: Integer>(offset: Entier) -> LaObjet {
+		return la_vector_from_matrix_diagonal(self, offset.signedValue)
 	}
 }
 
@@ -165,16 +165,18 @@ public func -(lhs: Float, rhs: LaObjet) -> LaObjet {
 
 // MARK: - Multiplication
 public func *(lhs: LaObjet, rhs: LaObjet) -> LaObjet {
-	if lhs.count == 0 && rhs.count == 0 {
+    let lhscount: UInt = lhs.count
+    let rhscount: UInt = rhs.count
+	if lhscount == 0 && rhscount == 0 {
 		var x: Float = 0
 		var y: Float = 0
 		assert(la_matrix_to_float_buffer(&x, 1, la_matrix_from_splat(lhs, 1, 1))==SUCCESS)
 		assert(la_matrix_to_float_buffer(&y, 1, la_matrix_from_splat(rhs, 1, 1))==SUCCESS)
 		return la_splat_from_float(x*y, ATTR)
-	} else if lhs.count == 1 && rhs.count == 1 {
+	} else if lhscount == 1 && rhscount == 1 {
 		return la_elementwise_product(lhs, rhs)
 	} else {
-		return la_elementwise_product(lhs.count == 1 ? la_splat_from_matrix_element(lhs, 0, 0) : lhs, rhs.count == 1 ? la_splat_from_matrix_element(rhs, 0, 0) : rhs)
+		return la_elementwise_product(lhscount == 1 ? la_splat_from_matrix_element(lhs, 0, 0) : lhs, rhscount == 1 ? la_splat_from_matrix_element(rhs, 0, 0) : rhs)
 	}
 }
 public func *(lhs: LaObjet, rhs: Float) -> LaObjet {
@@ -215,10 +217,11 @@ public func /(lhs: LaObjet, rhs: LaObjet) -> LaObjet {
 		assert(la_matrix_to_float_buffer(&x, 1, rhs)==SUCCESS)
 		return la_scale_with_float(lhs, 1/x)
 	} else {
-		let result: UnsafeMutablePointer<Float> = UnsafeMutablePointer<Float>(OpaquePointer(malloc_zone_malloc(malloc_default_zone(), MemoryLayout<Float>.size*Int(rhs.count))))
+		let result: UnsafeMutablePointer<Float> = UnsafeMutablePointer<Float>(OpaquePointer(malloc_zone_malloc(malloc_default_purgeable_zone(), MemoryLayout<Float>.size*Int(rhs.count))))
+        
 		assert(la_matrix_to_float_buffer(result, la_matrix_cols(rhs), rhs)==SUCCESS)
 		vvrecf(result, result, [Int32(rhs.count)])
-		return la_elementwise_product(lhs.count == 1 ? la_splat_from_matrix_element(lhs, 0, 0) : lhs, la_matrix_from_float_buffer_nocopy(result, la_matrix_rows(rhs), la_matrix_cols(rhs), la_matrix_cols(rhs), HINT, { malloc_zone_free(malloc_default_zone(), $0) }, ATTR))
+        return la_elementwise_product(lhs.count == 1 ? la_splat_from_matrix_element(lhs, 0, 0) : lhs, la_matrix_from_float_buffer_nocopy(result, la_matrix_rows(rhs), la_matrix_cols(rhs), la_matrix_cols(rhs), HINT, { malloc_zone_free(malloc_default_purgeable_zone(), $0) }, ATTR))
 	}
 }
 public func /(lhs: LaObjet, rhs: Float) -> LaObjet {
@@ -255,35 +258,70 @@ public func LINFNormalize(x: LaObjet) -> LaObjet {
 }
 
 // MARK: - Linear Algebra productions
-public func inner_product(lhs: LaObjet, _ rhs: LaObjet) -> LaObjet {
+public func inner_product(_ lhs: LaObjet, _ rhs: LaObjet) -> LaObjet {
 	return la_inner_product(lhs, rhs)
 }
-public func outer_product(lhs: LaObjet, _ rhs: LaObjet) -> LaObjet {
+public func outer_product(_ lhs: LaObjet, _ rhs: LaObjet) -> LaObjet {
 	return la_outer_product(lhs, rhs)
 }
-public func matrix_product(lhs: LaObjet, _ rhs: LaObjet) -> LaObjet {
+public func matrix_product(_ lhs: LaObjet, _ rhs: LaObjet) -> LaObjet {
 	return la_matrix_product(lhs, rhs)
 }
-public func solve(A lhs: LaObjet, b rhs: LaObjet) -> LaObjet {
-	return la_solve(lhs, rhs)
+public func solve(A: LaObjet, b: LaObjet) -> LaObjet {
+	return la_solve(A, b)
 }
 
 // MARK: - Build
-public func LaMatrice(identité: UInt) -> LaObjet {
-	return la_identity_matrix(identité, TYPE, ATTR)
+public func LaMatrice<Entier: Integer>(identité: Entier) -> LaObjet {
+	return la_identity_matrix(identité.unsignedValue, TYPE, ATTR)
 }
-public func LaMatrice(diagonale: LaObjet, shift: Int = 0) -> LaObjet {
-	return la_diagonal_matrix_from_vector(diagonale, shift)
+public func LaMatrice<Entier: Integer>(diagonale: LaObjet, shift: Entier = 0) -> LaObjet {
+	return la_diagonal_matrix_from_vector(diagonale, shift.signedValue)
 }
 public func LaMatrice(valuer: Float) -> LaObjet {
 	return la_splat_from_float(valuer, ATTR)
 }
-public func LaMatrice(valuer: Float, rows: UInt, cols: UInt) -> LaObjet {
-	return la_matrix_from_splat(la_splat_from_float(valuer, ATTR), rows, cols)
+public func LaMatrice<Entier: Integer>(valuer: Float, rows: Entier, cols: Entier) -> LaObjet {
+	return la_matrix_from_splat(la_splat_from_float(valuer, ATTR), rows.unsignedValue, cols.unsignedValue)
 }
-public func LaMatrice(valuer: UnsafeRawPointer, rows: UInt, cols: UInt, stride: UInt? = nil) -> LaObjet {
-	return la_matrix_from_float_buffer(UnsafePointer<Float>(OpaquePointer(valuer)), rows, cols, stride ?? cols, HINT, ATTR)
+public func LaMatrice<Entier: Integer>(valuer: UnsafeRawPointer, rows: Entier, cols: Entier, stride: Entier? = nil) -> LaObjet {
+	return la_matrix_from_float_buffer(UnsafePointer<Float>(OpaquePointer(valuer)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, ATTR)
 }
-public func LaMatrice(valuer: UnsafeRawPointer, rows: UInt, cols: UInt, stride: UInt? = nil, deallocator: (@convention(c) (UnsafeMutableRawPointer?) -> Void)?) -> LaObjet {
-	return la_matrix_from_float_buffer_nocopy(UnsafeMutablePointer<Float>(OpaquePointer(valuer)), rows, cols, stride ?? cols, HINT, deallocator, ATTR)
+public func LaMatrice<Entier: Integer>(valuer: UnsafeRawPointer, rows: Entier, cols: Entier, stride: Entier? = nil, deallocator: (@convention(c) (UnsafeMutableRawPointer?) -> Void)?) -> LaObjet {
+	return la_matrix_from_float_buffer_nocopy(UnsafeMutablePointer<Float>(OpaquePointer(valuer)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, deallocator, ATTR)
+}
+
+private extension Integer {
+    var signedValue: Int {
+        switch self {
+            case let value as Int: return value
+            case let value as UInt: return Int(value)
+            case let value as Int8: return Int(value)
+            case let value as UInt8: return Int(value)
+            case let value as Int16: return Int(value)
+            case let value as UInt16: return Int(value)
+            case let value as Int32: return Int(value)
+            case let value as UInt32: return Int(value)
+            case let value as Int64: return Int(value)
+            case let value as UInt64: return Int(value)
+            default: assertionFailure("\(type(of: self)) cannot be compatible")
+        }
+        return 0
+    }
+    var unsignedValue: UInt {
+        switch self {
+            case let value as Int: return UInt(value)
+            case let value as UInt: return value
+            case let value as Int8: return UInt(value)
+            case let value as UInt8: return UInt(value)
+            case let value as Int16: return UInt(value)
+            case let value as UInt16: return UInt(value)
+            case let value as Int32: return UInt(value)
+            case let value as UInt32: return UInt(value)
+            case let value as Int64: return UInt(value)
+            case let value as UInt64: return UInt(value)
+            default: assertionFailure("\(type(of: self)) cannot be compatible")
+        }
+        return 0
+    }
 }

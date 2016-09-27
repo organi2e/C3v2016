@@ -22,8 +22,8 @@ class LaObjetTests: XCTestCase {
 		let a: [Float] = uniform()
 		let b: [Float] = uniform()
 		let c: [Float] = zip(a,b).map { $0.0 + $0.1 }
-		let A: LaObjet = LaMatrice(buffer: a, rows: a.count, cols: 1, deallocator: nil)
-		let B: LaObjet = LaMatrice(buffer: b, rows: b.count, cols: 1, deallocator: nil)
+		let A: LaObjet = LaMatrice(valuer: a, rows: a.count, cols: 1, deallocator: nil)
+		let B: LaObjet = LaMatrice(valuer: b, rows: b.count, cols: 1, deallocator: nil)
 		XCTAssert((A+B).eval.elementsEqual(c))
 	}
 	
@@ -31,8 +31,8 @@ class LaObjetTests: XCTestCase {
 		let a: [Float] = uniform()
 		let b: [Float] = uniform()
 		let c: [Float] = zip(a,b).map { $0.0 - $0.1 }
-		let A: LaObjet = LaMatrice(buffer: a, rows: a.count, cols: 1, deallocator: nil)
-		let B: LaObjet = LaMatrice(buffer: b, rows: b.count, cols: 1, deallocator: nil)
+		let A: LaObjet = LaMatrice(valuer: a, rows: a.count, cols: 1, deallocator: nil)
+		let B: LaObjet = LaMatrice(valuer: b, rows: b.count, cols: 1, deallocator: nil)
 		XCTAssert((A-B).eval.elementsEqual(c))
 	}
 	
@@ -40,8 +40,8 @@ class LaObjetTests: XCTestCase {
 		let a: [Float] = uniform()
 		let b: [Float] = uniform()
 		let c: [Float] = zip(a,b).map { $0.0 * $0.1 }
-		let A: LaObjet = LaMatrice(buffer: a, rows: a.count, cols: 1, deallocator: nil)
-		let B: LaObjet = LaMatrice(buffer: b, rows: b.count, cols: 1, deallocator: nil)
+		let A: LaObjet = LaMatrice(valuer: a, rows: a.count, cols: 1, deallocator: nil)
+		let B: LaObjet = LaMatrice(valuer: b, rows: b.count, cols: 1, deallocator: nil)
 		XCTAssert((A*B).eval.elementsEqual(c))
 	}
 	
@@ -49,9 +49,9 @@ class LaObjetTests: XCTestCase {
 		let a: [Float] = uniform()
 		let b: [Float] = uniform()
 		let c: [Float] = zip(a,b).map { $0.0 / $0.1 }
-		let A: LaObjet = LaMatrice(buffer: a, rows: a.count, cols: 1, deallocator: nil)
-		let B: LaObjet = LaMatrice(buffer: b, rows: b.count, cols: 1, deallocator: nil)
-		if 1e-5 < (A/B-LaMatrice(buffer: c, rows: c.count, cols: 1)).L2Norm {
+		let A: LaObjet = LaMatrice(valuer: a, rows: a.count, cols: 1, deallocator: nil)
+		let B: LaObjet = LaMatrice(valuer: b, rows: b.count, cols: 1, deallocator: nil)
+		if 1e-5 < ((A/B)-LaMatrice(valuer: c, rows: c.count, cols: 1)).L2Norme {
 			XCTFail()
 			print((A/B).eval)
 			print(c)
@@ -62,8 +62,8 @@ class LaObjetTests: XCTestCase {
 		let a: Float = uniform()
 		let b: [Float] = uniform()
 		let c: [Float] = b.map { a + $0 }
-		let A: LaObjet = LaMatrice(scalar: a)
-		let B: LaObjet = LaMatrice(buffer: b, rows: b.count, cols: 1, deallocator: nil)
+		let A: LaObjet = LaMatrice(valuer: a)
+		let B: LaObjet = LaMatrice(valuer: b, rows: b.count, cols: 1, deallocator: nil)
 		XCTAssert((A+B).eval.elementsEqual(c))
 	}
 	
@@ -71,8 +71,8 @@ class LaObjetTests: XCTestCase {
 		let a: Float = uniform()
 		let b: [Float] = uniform()
 		let c: [Float] = b.map { a - $0 }
-		let A: LaObjet = LaMatrice(scalar: a)
-		let B: LaObjet = LaMatrice(buffer: b, rows: b.count, cols: 1, deallocator: nil)
+		let A: LaObjet = LaMatrice(valuer: a)
+		let B: LaObjet = LaMatrice(valuer: b, rows: b.count, cols: 1, deallocator: nil)
 		XCTAssert((A-B).eval.elementsEqual(c))
 	}
 	
@@ -80,8 +80,8 @@ class LaObjetTests: XCTestCase {
 		let a: Float = uniform()
 		let b: [Float] = uniform()
 		let c: [Float] = b.map { $0 - a }
-		let A: LaObjet = LaMatrice(scalar: a)
-		let B: LaObjet = LaMatrice(buffer: b, rows: b.count, cols: 1, deallocator: nil)
+		let A: LaObjet = LaMatrice(valuer: a)
+		let B: LaObjet = LaMatrice(valuer: b, rows: b.count, cols: 1, deallocator: nil)
 		XCTAssert((B-A).eval.elementsEqual(c))
 	}
 	
@@ -89,8 +89,8 @@ class LaObjetTests: XCTestCase {
 		let a: Float = uniform()
 		let b: [Float] = uniform()
 		let c: [Float] = b.map { a * $0 }
-		let A: LaObjet = LaMatrice(scalar: a)
-		let B: LaObjet = LaMatrice(buffer: b, rows: M, cols: N, deallocator: nil)
+		let A: LaObjet = LaMatrice(valuer: a)
+		let B: LaObjet = LaMatrice(valuer: b, rows: M, cols: N, deallocator: nil)
 		XCTAssert((A*B).eval.elementsEqual(c))
 	}
 	
@@ -98,9 +98,9 @@ class LaObjetTests: XCTestCase {
 		let a: Float = uniform()
 		let b: [Float] = uniform()
 		let c: [Float] = b.map { a / $0 }
-		let A: LaObjet = LaMatrice(scalar: a)
-		let B: LaObjet = LaMatrice(buffer: b, rows: b.count, cols: 1, deallocator: nil)
-		if 1e-5 < ((A/B) - LaMatrice(buffer: c, rows: b.count, cols: 1, deallocator: nil)).L2Norm {
+		let A: LaObjet = LaMatrice(valuer: a)
+		let B: LaObjet = LaMatrice(valuer: b, rows: b.count, cols: 1, deallocator: nil)
+		if 1e-5 < ((A/B) - LaMatrice(valuer: c, rows: b.count, cols: 1, deallocator: nil)).L2Norme {
 			XCTFail()
 			print((A/B).eval)
 			print(c)
@@ -110,10 +110,10 @@ class LaObjetTests: XCTestCase {
 	func testDivVS() {
 		let a: Float = uniform()
 		let b: [Float] = uniform()
-		let c: [Float] = b.map { Float(Double($0) / Double(a)) }
-		let A: LaObjet = LaMatrice(scalar: a)
-		let B: LaObjet = LaMatrice(buffer: b, rows: b.count, cols: 1, deallocator: nil)
-		if 1e-3 < ((B/A) - LaMatrice(buffer: c, rows: b.count, cols: 1, deallocator: nil)).L2Norm {
+		let c: [Float] = b.map { $0 / a }
+		let A: LaObjet = LaMatrice(valuer: a)
+		let B: LaObjet = LaMatrice(valuer: b, rows: b.count, cols: 1, deallocator: nil)
+		if 1e-3 < ((B/A) - LaMatrice(valuer: c, rows: b.count, cols: 1, deallocator: nil)).L2Norme {
 			XCTFail()
 			print((B/A).eval)
 			print(c)

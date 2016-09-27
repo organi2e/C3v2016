@@ -8,24 +8,37 @@
 import Metal
 
 public typealias Buffer = MTLBuffer
+public typealias ResourceOptions = MTLResourceOptions
 
 public extension Buffer {
-	public typealias Buffer = MTLBuffer
-	var data: Data {
-		return Data(bytesNoCopy: contents(), count: length, deallocator: .none)
+	public var name: String {
+		get {
+			return label ?? ""
+		}
+		set {
+			label = newValue
+		}
 	}
-	func toBuffer<T>() -> UnsafeMutableBufferPointer<T> {
+	public var data: Data {
+		get {
+			return Data(bytesNoCopy: contents(), count: length, deallocator: .none)
+		}
+		set {
+			newValue.copyBytes(to: UnsafeMutablePointer<UInt8>(OpaquePointer(contents())), count: length)
+		}
+	}
+	public func toBuffer<T>() -> UnsafeMutableBufferPointer<T> {
 		return UnsafeMutableBufferPointer<T>(start: UnsafeMutablePointer<T>(OpaquePointer(contents())), count: length/MemoryLayout<T>.size)
 	}
-	func toArray<T>() -> Array<T> {
+	public func toArray<T>() -> Array<T> {
 		return Array<T>(UnsafeMutableBufferPointer<T>(start: UnsafeMutablePointer<T>(OpaquePointer(contents())), count: length/MemoryLayout<T>.size))
+	}
+	public func purge() {
+		setPurgeableState(.empty)
 	}
 }
 
 public extension Maschine {
-	
-	public typealias ResourceOptions = MTLResourceOptions
-	
 	public func newBuffer(length: Int, options: ResourceOptions = .storageModeShared) -> Buffer {
 		return device.makeBuffer(length: length, options: options)
 	}
@@ -43,6 +56,7 @@ public extension Maschine {
 			return device.makeBuffer(bytes: UnsafeRawPointer(baseAddress), length: MemoryLayout<T>.size*buffer.count, options: options)
 		}
 		else {
+			assertionFailure("Invalid address for the buffer")
 			return device.makeBuffer(length: MemoryLayout<T>.size*buffer.count, options: options)
 		}
 	}
