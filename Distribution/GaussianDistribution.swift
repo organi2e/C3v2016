@@ -29,19 +29,19 @@ internal class GaussianDistribution: StrictlyStableDistribution {
 	func σscale(σ: LaObjet) -> LaObjet {
 		return σ
 	}
-	func δ(λ: LaObjet, a: LaObjet, x: LaObjet) -> LaObjet {
+	func gradσδ(λ: LaObjet, a: LaObjet, x: LaObjet) -> LaObjet {
 		return a * outer_product(λ * λ * λ, x * x)
 	}
-	func δ(λ: LaObjet, b: LaObjet, y: LaObjet) -> LaObjet {
+	func gradσδ(λ: LaObjet, b: LaObjet, y: LaObjet) -> LaObjet {
 		return b * outer_product(λ * λ * λ, y * y)
 	}
-	func δ(λ: LaObjet, c: LaObjet) -> LaObjet {
+	func gradσδ(λ: LaObjet, c: LaObjet) -> LaObjet {
 		return LaMatrice(diagonale: λ * λ * λ * c, shift: 0)
 	}
 	func J(gradμ: Buffer<Float>, gradσ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
 		
 	}
-	func B(λ: LaObjet, b: LaObjet, y: LaObjet, dy: LaObjet) -> LaObjet {
+	func gradσB(λ: LaObjet, b: LaObjet, y: LaObjet, dy: LaObjet) -> LaObjet {
 		return b * b * outer_product(λ * λ * λ, y * dy)
 	}
 }
