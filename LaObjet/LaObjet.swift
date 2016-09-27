@@ -247,13 +247,13 @@ public func /(lhs: Float, rhs: LaObjet) -> LaObjet {
 }
 
 // MARK: - Normalization
-public func L1Normalize(x: LaObjet) -> LaObjet {
+public func L1Normalize(_ x: LaObjet) -> LaObjet {
 	return la_normalized_vector(x, la_norm_t(LA_L1_NORM))
 }
-public func L2Normalize(x: LaObjet) -> LaObjet {
+public func L2Normalize(_ x: LaObjet) -> LaObjet {
 	return la_normalized_vector(x, la_norm_t(LA_L2_NORM))
 }
-public func LINFNormalize(x: LaObjet) -> LaObjet {
+public func LINFNormalize(_ x: LaObjet) -> LaObjet {
 	return la_normalized_vector(x, la_norm_t(LA_LINF_NORM))
 }
 
@@ -283,6 +283,12 @@ public func LaMatrice(valuer: Float) -> LaObjet {
 }
 public func LaMatrice<Entier: Integer>(valuer: Float, rows: Entier, cols: Entier) -> LaObjet {
 	return la_matrix_from_splat(la_splat_from_float(valuer, ATTR), rows.unsignedValue, cols.unsignedValue)
+}
+public func LaMatrice<Entier: Integer>(valuer: Data, rows: Entier, cols: Entier, stride: Entier? = nil) -> LaObjet {
+	return la_matrix_from_float_buffer(UnsafePointer<Float>(OpaquePointer((valuer as NSData).bytes)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, ATTR)
+}
+public func LaMatrice<Entier: Integer>(valuer: Data, rows: Entier, cols: Entier, stride: Entier? = nil, deallocator: (@convention(c) (UnsafeMutableRawPointer?) -> Void)?) -> LaObjet {
+	return la_matrix_from_float_buffer_nocopy(UnsafeMutablePointer<Float>(OpaquePointer((valuer as NSData).bytes)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, deallocator, ATTR)
 }
 public func LaMatrice<Entier: Integer>(valuer: UnsafeRawPointer, rows: Entier, cols: Entier, stride: Entier? = nil) -> LaObjet {
 	return la_matrix_from_float_buffer(UnsafePointer<Float>(OpaquePointer(valuer)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, ATTR)

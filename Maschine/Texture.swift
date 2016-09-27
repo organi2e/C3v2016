@@ -10,6 +10,10 @@ import Metal
 
 public typealias Texture = MTLTexture
 
+extension Texture {
+
+}
+
 extension Maschine {
 	public func newTexture(configure: (MTLTextureDescriptor)->MTLTextureDescriptor) -> Texture {
 		return device.makeTexture(descriptor: configure(MTLTextureDescriptor()))

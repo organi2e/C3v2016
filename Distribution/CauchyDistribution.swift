@@ -5,56 +5,43 @@
 //  Created by Kota Nakano on 9/23/16.
 //
 //
+
+import Accelerate
 import LaObjet
-import Funktion
-public class CauchyDistribution: StrictlyStableDistribution {
-	//let rng: ComputePipelineState
-	private let r: Buffer
-	private let mu: Buffer
-	private let sigma: Buffer
-	public init(machine: Maschine, count: Int) {
-		do {
-			try machine.loadLibraryFrom(bundle: Bundle(for: type(of: self)))
-		} catch FunktionError.NichtGefunden(let funktion) {
-			assertionFailure("\(funktion) is not found")
-		} catch FunktionError.BereitsRegistriert {
-			//nop
-		} catch {
-			
-		}
-		let Δx: Int = 0
-		r = machine.newBuffer(length: MemoryLayout<Float>.size*count)
-		mu = machine.newBuffer(length: MemoryLayout<Float>.size*count)
-		sigma = machine.newBuffer(length: MemoryLayout<Float>.size*count)
-	}
-	public var μ: LaObjet {
-		return LaMatrice(valuer: 0)
-	}
-	public var σ: LaObjet {
-		return LaMatrice(valuer: 0)
-	}
-	public func pdf(value: Buffer) {
+import Maschine
+
+internal class CauchyDistribution: StrictlyStableDistribution {
+	func pdf(value: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
 		
 	}
-	public func cdf(value: Buffer) {
+	func cdf(value: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
 		
 	}
-	public func shuffle() {
+	func rng(value: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
 		
 	}
-	public var value: LaObjet {
-		return LaMatrice(valuer: 0)
+	func λsynth(λ: Buffer<Float>, σ: Buffer<Float>) {
+		var count: Int32 = Int32(min(λ.count, σ.count))
+		assert(count==Int32(λ.count))
+		assert(count==Int32(σ.count))
+		vvrecf(λ.address, σ.address, &count)
 	}
-	public func μscale(μ: LaObjet) -> LaObjet {
-		return μ
-	}
-	public func σscale(σ: LaObjet) -> LaObjet {
+	func σscale(σ: LaObjet) -> LaObjet {
 		return σ
 	}
-	public func gradμscale(μ: LaObjet) -> LaObjet {
-		return LaMatrice(valuer: 1)
+	func δ(λ: LaObjet, a: LaObjet, x: LaObjet) -> LaObjet {
+		return outer_product(λ * λ, x)
 	}
-	public func gradσscale(σ: LaObjet) -> LaObjet {
-		return LaMatrice(valuer: 1)
+	func δ(λ: LaObjet, b: LaObjet, y: LaObjet) -> LaObjet {
+		return outer_product(λ * λ, y)
+	}
+	func δ(λ: LaObjet, c: LaObjet) -> LaObjet {
+		return LaMatrice(diagonale: λ * λ, shift: 0)
+	}
+	func J(gradμ: Buffer<Float>, gradσ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
+		
+	}
+	func B(λ: LaObjet, b: LaObjet, y: LaObjet, dy: LaObjet) -> LaObjet {
+		return b * outer_product(λ * λ, dy)
 	}
 }

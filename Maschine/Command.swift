@@ -14,7 +14,7 @@ extension Command {
 	public func compute(configure: (ComputeCommand)->Void) {
 		let computeCommand: ComputeCommand = makeComputeCommandEncoder()
 		configure(computeCommand)
-		defer { computeCommand.close() }
+		computeCommand.close()
 	}
 }
 extension Maschine {

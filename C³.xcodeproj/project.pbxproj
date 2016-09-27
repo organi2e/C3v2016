@@ -156,6 +156,12 @@
 		871E162A1D9A342A00739047 /* ComputeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ComputeCommand.swift; path = Maschine/ComputeCommand.swift; sourceTree = "<group>"; };
 		871E162D1D9A385500739047 /* Texture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Texture.swift; path = Maschine/Texture.swift; sourceTree = "<group>"; };
 		871E162E1D9A386000739047 /* Sampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Sampler.swift; path = Maschine/Sampler.swift; sourceTree = "<group>"; };
+		871E163B1D9A4EE400739047 /* ComputePipelineState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ComputePipelineState.swift; path = Maschine/ComputePipelineState.swift; sourceTree = "<group>"; };
+		871E163E1D9A670F00739047 /* mtlMomentum.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlMomentum.metal; path = Optimizer/mtlMomentum.metal; sourceTree = "<group>"; };
+		871E163F1D9A670F00739047 /* mtlStochasticGradientDescent.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlStochasticGradientDescent.metal; path = Optimizer/mtlStochasticGradientDescent.metal; sourceTree = "<group>"; };
+		871E16401D9A670F00739047 /* StochasticGradientDescent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StochasticGradientDescent.swift; path = Optimizer/StochasticGradientDescent.swift; sourceTree = "<group>"; };
+		871E16451D9A75E400739047 /* OptimizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OptimizerTests.swift; path = Optimizer/OptimizerTests.swift; sourceTree = "<group>"; };
+		871E16481D9A7A7E00739047 /* mtlOptimizerTests.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlOptimizerTests.metal; path = Optimizer/mtlOptimizerTests.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -286,8 +292,13 @@
 		871E15C11D9A011A00739047 /* Optimizer */ = {
 			isa = PBXGroup;
 			children = (
+				871E163E1D9A670F00739047 /* mtlMomentum.metal */,
+				871E163F1D9A670F00739047 /* mtlStochasticGradientDescent.metal */,
+				871E16401D9A670F00739047 /* StochasticGradientDescent.swift */,
 				871E15C21D9A01E400739047 /* Optimizer.swift */,
+				871E16451D9A75E400739047 /* OptimizerTests.swift */,
 				871E15E31D9A065900739047 /* Momentum.swift */,
+				871E16481D9A7A7E00739047 /* mtlOptimizerTests.metal */,
 			);
 			name = Optimizer;
 			sourceTree = "<group>";
@@ -302,6 +313,7 @@
 				871E16271D9A191F00739047 /* Command.swift */,
 				871E162A1D9A342A00739047 /* ComputeCommand.swift */,
 				871E16121D9A183200739047 /* MaschineTests.swift */,
+				871E163B1D9A4EE400739047 /* ComputePipelineState.swift */,
 				871E16131D9A184400739047 /* mtlMachineTests.metal */,
 			);
 			name = Maschine;

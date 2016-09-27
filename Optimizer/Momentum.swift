@@ -6,34 +6,42 @@
 //
 //
 
-import LaObjet
+import Maschine
 
 public class Momentum {
+	
 	private static let η: Float = 0.5
 	private static let γ: Float = 0.9
-	private let γ: Float
+	
 	private let η: Float
-	private let w: [Float]
-	private var W: LaObjet {
-		return LaMatrice(valuer: w, rows: w.count, cols: 1, deallocator: nil)
-	}
-	init(dim: Int, γ: Float = γ, η: Float = η) {
+	private let γ: Float
+	
+	private let pipeline: ComputePipelineState
+	private let velocity: Buffer<Float>
+	private let group: Int
+	
+	public init(maschine: Maschine, count: Int, γ: Float = γ, η: Float = η) throws {
+		try?maschine.employ(bundle: Bundle(for: type(of: self)))
+		self.pipeline = try maschine.newComputePipelineState(name: "Momentum")
+		self.velocity = maschine.newBuffer(count: count)
+		self.group = (count-1)/4+1
 		self.γ = γ
 		self.η = η
-		self.w = [Float](repeating: 0, count: dim)
 	}
-	static func factory(γ: Float = γ, η: Float = η) -> (Int) -> Optimizer {
-		return {
-			Momentum(dim: $0, γ: γ, η: η)
+	public func update(command: Command, θ: Buffer<Float>, Δθ: Buffer<Float>) {
+		command.compute {
+			$0.set(pipeline: pipeline)
+			$0.set(buffer: θ, offset: 0, at: 0)
+			$0.set(buffer: velocity, offset: 0, at: 1)
+			$0.set(buffer: Δθ, offset: 0, at: 2)
+			$0.set(value: γ, at: 3)
+			$0.set(value: η, at: 4)
+			$0.dispatch(groups: group, threads: 1)
 		}
 	}
-	public func optimize(Δx: LaObjet, x: LaObjet) -> LaObjet {
-		assert((γ * W + η * Δx).getBytes(buffer: w))
-		return W
+	public func reset() {
+		
 	}
 }
 extension Momentum: Optimizer {
-	public func reset() {
-	//	vDSP_vclr(UnsafeMutablePointer<Float>(w), 1, vDSP_Length(w.count))
-	}
 }

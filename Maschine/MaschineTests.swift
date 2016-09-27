@@ -16,7 +16,7 @@ class MaschineTests: XCTestCase {
 			
 			let maschine: Maschine = try Maschine()
 			
-			try maschine.entry(bundle: Bundle(for: type(of: self)))
+			try maschine.employ(bundle: Bundle(for: type(of: self)))
 			
 			let a: Buffer<Float> = maschine.newBuffer(count: 8)
 			let b: Buffer<Float> = maschine.newBuffer(count: 8)
@@ -27,10 +27,10 @@ class MaschineTests: XCTestCase {
 				b[k] = Float(k*k)
 			}
 			
-			let add = try maschine.newComputePipelineState(name: "add")
+			let p = try maschine.newComputePipelineState(name: "add")
 			let command: Command = maschine.newCommand()
 			command.compute {
-				$0.set(pipeline: add)
+				$0.set(pipeline: p)
 				$0.set(buffer: a, offset: 0, at: 1)
 				$0.set(buffer: b, offset: 0, at: 2)
 				$0.set(buffer: c, offset: 0, at: 0)

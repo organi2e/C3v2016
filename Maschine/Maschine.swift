@@ -10,9 +10,10 @@ import Metal
 
 public class Maschine {
 	
-	enum Fehler: Error {
+	internal enum Fehler: Error {
 		case KeineImplementierungGefunden
-		case FunktionNichtGefunden(name: String)
+		case BereitsEingesetzt(object: Any)
+		case NichtGefunden(funktion: String)
 	}
 	
 	internal typealias Device = MTLDevice
@@ -26,7 +27,8 @@ public class Maschine {
 	internal let device: Device
 	internal let commandQueue: CommandQueue
 	
-	private var cache: (
+	internal var cache: (
+		bundle: Set<Bundle>,
 		funktion: [String: Funktion],
 		computePipelineState: [String: ComputePipelineState]
 	)
@@ -40,28 +42,26 @@ public class Maschine {
 		
 		self.cache.funktion = [:]
 		self.cache.computePipelineState = [:]
-		
+		self.cache.bundle = []
 	}
-	public func newComputePipelineState(name: String) throws -> ComputePipelineState {
-		guard let funktion: Funktion = cache.funktion[name] else {
-			throw Fehler.FunktionNichtGefunden(name: name)
-		}
-		return try device.makeComputePipelineState(function: funktion)
-	}
-	private func entry(library: Library) throws {
+	private func employ(library: Library) throws {
 		try library.functionNames.forEach {
 			if let funktion: Funktion = library.makeFunction(name: $0) {
 				if cache.funktion.index(forKey: $0) == nil {
 					cache.funktion[$0] = funktion
 				} else {
-					//nop throw Fehler.FunktionNichtGefunden(name: $0)
+					throw Fehler.BereitsEingesetzt(object: $0)
 				}
 			} else {
-				throw Fehler.FunktionNichtGefunden(name: $0)
+				throw Fehler.NichtGefunden(funktion: $0)
 			}
 		}
 	}
-	public func entry(bundle: Bundle) throws {
-		try entry(library: try device.makeDefaultLibrary(bundle: bundle))
+	public func employ(bundle: Bundle) throws {
+		if cache.bundle.contains(bundle) {
+			throw Fehler.BereitsEingesetzt(object: bundle)
+		}
+		try employ(library: try device.makeDefaultLibrary(bundle: bundle))
+		cache.bundle.insert(bundle)
 	}
 }

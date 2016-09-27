@@ -38,7 +38,6 @@
 		871E15BD1D98AEEB00739047 /* mtlCauchy.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E15BC1D98AEEB00739047 /* mtlCauchy.metal */; };
 		871E15C01D98B08200739047 /* mtlGauss.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E15BF1D98B08200739047 /* mtlGauss.metal */; };
 		871E15D11D9A01FD00739047 /* Optimizer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 871E15C81D9A01FD00739047 /* Optimizer.framework */; };
-		871E15D61D9A01FD00739047 /* OptimizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15D51D9A01FD00739047 /* OptimizerTests.swift */; };
 		871E15D81D9A01FD00739047 /* Optimizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 871E15CA1D9A01FD00739047 /* Optimizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		871E15E01D9A020D00739047 /* Optimizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15DF1D9A020D00739047 /* Optimizer.swift */; };
 		871E15EB1D9A0DD400739047 /* Momentum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15EA1D9A0DD400739047 /* Momentum.swift */; };
@@ -52,6 +51,12 @@
 		871E162C1D9A343900739047 /* ComputeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E162B1D9A343900739047 /* ComputeCommand.swift */; };
 		871E16301D9A387000739047 /* Texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E162F1D9A387000739047 /* Texture.swift */; };
 		871E16321D9A387300739047 /* Sampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E16311D9A387300739047 /* Sampler.swift */; };
+		871E163D1D9A4EF000739047 /* ComputePipelineState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E163C1D9A4EF000739047 /* ComputePipelineState.swift */; };
+		871E16421D9A671F00739047 /* StochasticGradientDescent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E16411D9A671F00739047 /* StochasticGradientDescent.swift */; };
+		871E16441D9A672500739047 /* mtlStochasticGradientDescent.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E16431D9A672500739047 /* mtlStochasticGradientDescent.metal */; };
+		871E16471D9A762D00739047 /* OptimizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E16461D9A762D00739047 /* OptimizerTests.swift */; };
+		871E164A1D9A7B5600739047 /* mtlOptimizerTests.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E16491D9A7B5600739047 /* mtlOptimizerTests.metal */; };
+		871E164C1D9A84BE00739047 /* mtlMomentum.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E164B1D9A84BE00739047 /* mtlMomentum.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,13 +109,6 @@
 			remoteGlobalIDString = 871907ED1D921DCC0048A43F;
 			remoteInfo = LaObjet;
 		};
-		871E15B71D953ECB00739047 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 871907C01D921D570048A43F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8719089E1D9281F70048A43F;
-			remoteInfo = Funktion;
-		};
 		871E15B91D953ECB00739047 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 871907C01D921D570048A43F /* Project object */;
@@ -132,14 +130,21 @@
 			remoteGlobalIDString = 871907ED1D921DCC0048A43F;
 			remoteInfo = LaObjet;
 		};
-		871E15EC1D9A133300739047 /* PBXContainerItemProxy */ = {
+		871E15FD1D9A17F300739047 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 871907C01D921D570048A43F /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8719089E1D9281F70048A43F;
-			remoteInfo = Funktion;
+			remoteGlobalIDString = 871E15F21D9A17F300739047;
+			remoteInfo = Maschine;
 		};
-		871E15FD1D9A17F300739047 /* PBXContainerItemProxy */ = {
+		871E16331D9A4BCD00739047 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907C01D921D570048A43F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 871E15F21D9A17F300739047;
+			remoteInfo = Maschine;
+		};
+		871E164D1D9A89B800739047 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 871907C01D921D570048A43F /* Project object */;
 			proxyType = 1;
@@ -199,7 +204,6 @@
 		871E15CA1D9A01FD00739047 /* Optimizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Optimizer.h; sourceTree = "<group>"; };
 		871E15CB1D9A01FD00739047 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		871E15D01D9A01FD00739047 /* OptimizerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OptimizerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		871E15D51D9A01FD00739047 /* OptimizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptimizerTests.swift; sourceTree = "<group>"; };
 		871E15D71D9A01FD00739047 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		871E15DF1D9A020D00739047 /* Optimizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Optimizer.swift; path = ../../Optimizer/Optimizer.swift; sourceTree = "<group>"; };
 		871E15EA1D9A0DD400739047 /* Momentum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Momentum.swift; path = ../../Optimizer/Momentum.swift; sourceTree = "<group>"; };
@@ -216,6 +220,12 @@
 		871E162B1D9A343900739047 /* ComputeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ComputeCommand.swift; path = ../../Maschine/ComputeCommand.swift; sourceTree = "<group>"; };
 		871E162F1D9A387000739047 /* Texture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Texture.swift; path = ../../Maschine/Texture.swift; sourceTree = "<group>"; };
 		871E16311D9A387300739047 /* Sampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Sampler.swift; path = ../../Maschine/Sampler.swift; sourceTree = "<group>"; };
+		871E163C1D9A4EF000739047 /* ComputePipelineState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ComputePipelineState.swift; path = ../../Maschine/ComputePipelineState.swift; sourceTree = "<group>"; };
+		871E16411D9A671F00739047 /* StochasticGradientDescent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StochasticGradientDescent.swift; path = ../../Optimizer/StochasticGradientDescent.swift; sourceTree = "<group>"; };
+		871E16431D9A672500739047 /* mtlStochasticGradientDescent.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlStochasticGradientDescent.metal; path = ../../Optimizer/mtlStochasticGradientDescent.metal; sourceTree = "<group>"; };
+		871E16461D9A762D00739047 /* OptimizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OptimizerTests.swift; path = ../../Optimizer/OptimizerTests.swift; sourceTree = "<group>"; };
+		871E16491D9A7B5600739047 /* mtlOptimizerTests.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlOptimizerTests.metal; path = ../../Optimizer/mtlOptimizerTests.metal; sourceTree = "<group>"; };
+		871E164B1D9A84BE00739047 /* mtlMomentum.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlMomentum.metal; path = ../../Optimizer/mtlMomentum.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -478,6 +488,9 @@
 		871E15C91D9A01FD00739047 /* Optimizer */ = {
 			isa = PBXGroup;
 			children = (
+				871E16431D9A672500739047 /* mtlStochasticGradientDescent.metal */,
+				871E164B1D9A84BE00739047 /* mtlMomentum.metal */,
+				871E16411D9A671F00739047 /* StochasticGradientDescent.swift */,
 				871E15EA1D9A0DD400739047 /* Momentum.swift */,
 				871E15DF1D9A020D00739047 /* Optimizer.swift */,
 				871E15CA1D9A01FD00739047 /* Optimizer.h */,
@@ -489,7 +502,8 @@
 		871E15D41D9A01FD00739047 /* OptimizerTests */ = {
 			isa = PBXGroup;
 			children = (
-				871E15D51D9A01FD00739047 /* OptimizerTests.swift */,
+				871E16461D9A762D00739047 /* OptimizerTests.swift */,
+				871E16491D9A7B5600739047 /* mtlOptimizerTests.metal */,
 				871E15D71D9A01FD00739047 /* Info.plist */,
 			);
 			path = OptimizerTests;
@@ -502,6 +516,7 @@
 				871E16251D9A190300739047 /* Buffer.swift */,
 				871E16281D9A192A00739047 /* Command.swift */,
 				871E162B1D9A343900739047 /* ComputeCommand.swift */,
+				871E163C1D9A4EF000739047 /* ComputePipelineState.swift */,
 				871E16311D9A387300739047 /* Sampler.swift */,
 				871E162F1D9A387000739047 /* Texture.swift */,
 				871E15F51D9A17F300739047 /* Maschine.h */,
@@ -749,7 +764,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				871E15B81D953ECB00739047 /* PBXTargetDependency */,
+				871E164E1D9A89B800739047 /* PBXTargetDependency */,
 				871E15BA1D953ECB00739047 /* PBXTargetDependency */,
 			);
 			name = Distribution;
@@ -787,7 +802,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				871E15ED1D9A133300739047 /* PBXTargetDependency */,
+				871E16341D9A4BCD00739047 /* PBXTargetDependency */,
 				871E15E21D9A030A00739047 /* PBXTargetDependency */,
 			);
 			name = Optimizer;
@@ -1150,7 +1165,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				871E15E01D9A020D00739047 /* Optimizer.swift in Sources */,
+				871E16421D9A671F00739047 /* StochasticGradientDescent.swift in Sources */,
 				871E15EB1D9A0DD400739047 /* Momentum.swift in Sources */,
+				871E16441D9A672500739047 /* mtlStochasticGradientDescent.metal in Sources */,
+				871E164C1D9A84BE00739047 /* mtlMomentum.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1158,7 +1176,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				871E15D61D9A01FD00739047 /* OptimizerTests.swift in Sources */,
+				871E16471D9A762D00739047 /* OptimizerTests.swift in Sources */,
+				871E164A1D9A7B5600739047 /* mtlOptimizerTests.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1172,6 +1191,7 @@
 				871E16321D9A387300739047 /* Sampler.swift in Sources */,
 				871E16291D9A192A00739047 /* Command.swift in Sources */,
 				871E162C1D9A343900739047 /* ComputeCommand.swift in Sources */,
+				871E163D1D9A4EF000739047 /* ComputePipelineState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1222,11 +1242,6 @@
 			target = 871907ED1D921DCC0048A43F /* LaObjet */;
 			targetProxy = 871E15B51D953E2700739047 /* PBXContainerItemProxy */;
 		};
-		871E15B81D953ECB00739047 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8719089E1D9281F70048A43F /* Funktion */;
-			targetProxy = 871E15B71D953ECB00739047 /* PBXContainerItemProxy */;
-		};
 		871E15BA1D953ECB00739047 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 871907ED1D921DCC0048A43F /* LaObjet */;
@@ -1242,15 +1257,20 @@
 			target = 871907ED1D921DCC0048A43F /* LaObjet */;
 			targetProxy = 871E15E11D9A030A00739047 /* PBXContainerItemProxy */;
 		};
-		871E15ED1D9A133300739047 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8719089E1D9281F70048A43F /* Funktion */;
-			targetProxy = 871E15EC1D9A133300739047 /* PBXContainerItemProxy */;
-		};
 		871E15FE1D9A17F300739047 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 871E15F21D9A17F300739047 /* Maschine */;
 			targetProxy = 871E15FD1D9A17F300739047 /* PBXContainerItemProxy */;
+		};
+		871E16341D9A4BCD00739047 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 871E15F21D9A17F300739047 /* Maschine */;
+			targetProxy = 871E16331D9A4BCD00739047 /* PBXContainerItemProxy */;
+		};
+		871E164E1D9A89B800739047 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 871E15F21D9A17F300739047 /* Maschine */;
+			targetProxy = 871E164D1D9A89B800739047 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
