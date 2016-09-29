@@ -138,7 +138,7 @@
 		871908BF1D928F8A0048A43F /* Buffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Buffer.swift; path = Funktion/Buffer.swift; sourceTree = "<group>"; };
 		871908C01D928F960048A43F /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Command.swift; path = Funktion/Command.swift; sourceTree = "<group>"; };
 		871908C51D9298370048A43F /* BufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BufferTests.swift; path = Funktion/BufferTests.swift; sourceTree = "<group>"; };
-		871E157D1D952F7600739047 /* Distribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Distribution.swift; path = Distribution/Distribution.swift; sourceTree = "<group>"; };
+		871E157D1D952F7600739047 /* RandomVariableDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomVariableDistribution.swift; path = Distribution/RandomVariableDistribution.swift; sourceTree = "<group>"; };
 		871E159A1D9530D600739047 /* StrictlyStableDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StrictlyStableDistribution.swift; path = Distribution/StrictlyStableDistribution.swift; sourceTree = "<group>"; };
 		871E15A11D95311A00739047 /* GaussianDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GaussianDistribution.swift; path = Distribution/GaussianDistribution.swift; sourceTree = "<group>"; };
 		871E15A21D95312800739047 /* CauchyDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CauchyDistribution.swift; path = Distribution/CauchyDistribution.swift; sourceTree = "<group>"; };
@@ -194,12 +194,12 @@
 				871E15E91D9A065B00739047 /* OptimizerTests.xctest */,
 				871908B91D9282040048A43F /* Funktion.framework */,
 				871908BB1D9282040048A43F /* FunktionTests.xctest */,
+				871E160E1D9A17F900739047 /* Maschine.framework */,
+				871E16101D9A17F900739047 /* MaschineTests.xctest */,
 				8719080A1D921DE80048A43F /* LaObjet.framework */,
 				8719080C1D921DE80048A43F /* LaObjetTests.xctest */,
 				871908631D924CD00048A43F /* CIFAR10.framework */,
 				871908611D924CD00048A43F /* MNIST.framework */,
-				871E160E1D9A17F900739047 /* Maschine.framework */,
-				871E16101D9A17F900739047 /* MaschineTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -279,7 +279,7 @@
 		871E15721D952F2A00739047 /* Distribution */ = {
 			isa = PBXGroup;
 			children = (
-				871E157D1D952F7600739047 /* Distribution.swift */,
+				871E157D1D952F7600739047 /* RandomVariableDistribution.swift */,
 				871E159A1D9530D600739047 /* StrictlyStableDistribution.swift */,
 				871E15A21D95312800739047 /* CauchyDistribution.swift */,
 				871E15A11D95311A00739047 /* GaussianDistribution.swift */,

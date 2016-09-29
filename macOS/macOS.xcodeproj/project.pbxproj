@@ -29,7 +29,7 @@
 		871908C71D9298420048A43F /* BufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871908C61D9298420048A43F /* BufferTests.swift */; };
 		871E158C1D95308500739047 /* Distribution.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 871E15831D95308400739047 /* Distribution.framework */; };
 		871E15931D95308500739047 /* Distribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 871E15851D95308400739047 /* Distribution.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		871E15A41D9531B200739047 /* Distribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15A31D9531B200739047 /* Distribution.swift */; };
+		871E15A41D9531B200739047 /* RandomVariableDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15A31D9531B200739047 /* RandomVariableDistribution.swift */; };
 		871E15A61D9531B400739047 /* StrictlyStableDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15A51D9531B400739047 /* StrictlyStableDistribution.swift */; };
 		871E15A81D9531B600739047 /* CauchyDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15A71D9531B600739047 /* CauchyDistribution.swift */; };
 		871E15AA1D9531B800739047 /* GaussianDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15A91D9531B800739047 /* GaussianDistribution.swift */; };
@@ -57,6 +57,7 @@
 		871E16471D9A762D00739047 /* OptimizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E16461D9A762D00739047 /* OptimizerTests.swift */; };
 		871E164A1D9A7B5600739047 /* mtlOptimizerTests.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E16491D9A7B5600739047 /* mtlOptimizerTests.metal */; };
 		871E164C1D9A84BE00739047 /* mtlMomentum.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E164B1D9A84BE00739047 /* mtlMomentum.metal */; };
+		879905D61D9AB2C90027654A /* DegenerateDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879905D51D9AB2C90027654A /* DegenerateDistribution.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,7 +193,7 @@
 		871E15861D95308400739047 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		871E158B1D95308500739047 /* DistributionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DistributionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		871E15921D95308500739047 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		871E15A31D9531B200739047 /* Distribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Distribution.swift; path = ../../Distribution/Distribution.swift; sourceTree = "<group>"; };
+		871E15A31D9531B200739047 /* RandomVariableDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomVariableDistribution.swift; path = ../../Distribution/RandomVariableDistribution.swift; sourceTree = "<group>"; };
 		871E15A51D9531B400739047 /* StrictlyStableDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StrictlyStableDistribution.swift; path = ../../Distribution/StrictlyStableDistribution.swift; sourceTree = "<group>"; };
 		871E15A71D9531B600739047 /* CauchyDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CauchyDistribution.swift; path = ../../Distribution/CauchyDistribution.swift; sourceTree = "<group>"; };
 		871E15A91D9531B800739047 /* GaussianDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GaussianDistribution.swift; path = ../../Distribution/GaussianDistribution.swift; sourceTree = "<group>"; };
@@ -226,6 +227,7 @@
 		871E16461D9A762D00739047 /* OptimizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OptimizerTests.swift; path = ../../Optimizer/OptimizerTests.swift; sourceTree = "<group>"; };
 		871E16491D9A7B5600739047 /* mtlOptimizerTests.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlOptimizerTests.metal; path = ../../Optimizer/mtlOptimizerTests.metal; sourceTree = "<group>"; };
 		871E164B1D9A84BE00739047 /* mtlMomentum.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlMomentum.metal; path = ../../Optimizer/mtlMomentum.metal; sourceTree = "<group>"; };
+		879905D51D9AB2C90027654A /* DegenerateDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DegenerateDistribution.swift; path = ../../Distribution/DegenerateDistribution.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -467,10 +469,11 @@
 			children = (
 				871E15BF1D98B08200739047 /* mtlGauss.metal */,
 				871E15BC1D98AEEB00739047 /* mtlCauchy.metal */,
+				879905D51D9AB2C90027654A /* DegenerateDistribution.swift */,
 				871E15A91D9531B800739047 /* GaussianDistribution.swift */,
 				871E15A71D9531B600739047 /* CauchyDistribution.swift */,
 				871E15A51D9531B400739047 /* StrictlyStableDistribution.swift */,
-				871E15A31D9531B200739047 /* Distribution.swift */,
+				871E15A31D9531B200739047 /* RandomVariableDistribution.swift */,
 				871E15851D95308400739047 /* Distribution.h */,
 				871E15861D95308400739047 /* Info.plist */,
 			);
@@ -1144,7 +1147,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				871E15A41D9531B200739047 /* Distribution.swift in Sources */,
+				871E15A41D9531B200739047 /* RandomVariableDistribution.swift in Sources */,
+				879905D61D9AB2C90027654A /* DegenerateDistribution.swift in Sources */,
 				871E15A61D9531B400739047 /* StrictlyStableDistribution.swift in Sources */,
 				871E15A81D9531B600739047 /* CauchyDistribution.swift in Sources */,
 				871E15AA1D9531B800739047 /* GaussianDistribution.swift in Sources */,
@@ -2978,6 +2982,7 @@
 				871E15961D95308500739047 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		871E15971D95308500739047 /* Build configuration list for PBXNativeTarget "DistributionTests" */ = {
 			isa = XCConfigurationList;
@@ -2986,6 +2991,7 @@
 				871E15991D95308500739047 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		871E15D91D9A01FD00739047 /* Build configuration list for PBXNativeTarget "Optimizer" */ = {
 			isa = XCConfigurationList;
@@ -2994,6 +3000,7 @@
 				871E15DB1D9A01FD00739047 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		871E15DC1D9A01FD00739047 /* Build configuration list for PBXNativeTarget "OptimizerTests" */ = {
 			isa = XCConfigurationList;
@@ -3002,6 +3009,7 @@
 				871E15DE1D9A01FD00739047 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		871E16041D9A17F300739047 /* Build configuration list for PBXNativeTarget "Maschine" */ = {
 			isa = XCConfigurationList;
@@ -3010,6 +3018,7 @@
 				871E16061D9A17F300739047 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		871E16071D9A17F300739047 /* Build configuration list for PBXNativeTarget "MaschineTests" */ = {
 			isa = XCConfigurationList;
@@ -3018,6 +3027,7 @@
 				871E16091D9A17F300739047 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

@@ -15,6 +15,9 @@ public class Buffer<T> {
 	internal init(body: MTLBuffer) {
 		self.body = body
 	}
+	public var pointer: UnsafeMutableRawPointer {
+		return body.contents()
+	}
 	public var address: UnsafeMutablePointer<T> {
 		return UnsafeMutablePointer<T>(OpaquePointer(body.contents()))
 	}
@@ -23,6 +26,9 @@ public class Buffer<T> {
 	}
 	public var array: Array<T> {
 		return Array<T>(UnsafeMutableBufferPointer<T>(start: UnsafeMutablePointer<T>(OpaquePointer(body.contents())), count: body.length/MemoryLayout<T>.size))
+	}
+	public var length: Int {
+		return body.length
 	}
 	public var count: Int {
 		return body.length/MemoryLayout<T>.size
@@ -41,20 +47,22 @@ public class Buffer<T> {
 		}
 	}
 }
+
 extension Maschine {
-	public func newBuffer<T>(count: Int, options: MTLResourceOptions = .storageModeShared) -> Buffer<T> {
+	public typealias ResourceOptions = MTLResourceOptions
+	public func newBuffer<T>(count: Int, options: ResourceOptions = .storageModeShared) -> Buffer<T> {
 		return Buffer<T>(body: device.makeBuffer(length: MemoryLayout<T>.size*count, options: options))
 	}
-	public func newBuffer<T>(array: Array<T>, options: MTLResourceOptions = .storageModeShared) -> Buffer<T> {
+	public func newBuffer<T>(array: Array<T>, options: ResourceOptions = .storageModeShared) -> Buffer<T> {
 		return Buffer<T>(body: device.makeBuffer(bytes: UnsafePointer<T>(array), length: MemoryLayout<T>.size*array.count, options: options))
 	}
-	public func newBuffer<T>(array: Array<T>, options: MTLResourceOptions = .storageModeShared, deallocator: ((UnsafeMutableRawPointer, Int)->Void)?) -> Buffer<T> {
+	public func newBuffer<T>(array: Array<T>, options: ResourceOptions = .storageModeShared, deallocator: ((UnsafeMutableRawPointer, Int)->Void)?) -> Buffer<T> {
 		return Buffer<T>(body: device.makeBuffer(bytesNoCopy: UnsafeMutablePointer<T>(mutating: array), length: MemoryLayout<T>.size*array.count, options: options, deallocator: deallocator))
 	}
-	public func newBuffer<T>(data: Data, options: MTLResourceOptions = .storageModeShared) -> Buffer<T> {
+	public func newBuffer<T>(data: Data, options: ResourceOptions = .storageModeShared) -> Buffer<T> {
 		return Buffer<T>(body: device.makeBuffer(bytes: (data as NSData).bytes, length: data.count, options: options))
 	}
-	public func newBuffer<T>(data: Data, options: MTLResourceOptions = .storageModeShared, deallocator: ((UnsafeMutableRawPointer, Int)->Void)?) -> Buffer<T> {
+	public func newBuffer<T>(data: Data, options: ResourceOptions = .storageModeShared, deallocator: ((UnsafeMutableRawPointer, Int)->Void)?) -> Buffer<T> {
 		return Buffer<T>(body: device.makeBuffer(bytesNoCopy: UnsafeMutableRawPointer(mutating: (data as NSData).bytes), length: data.count, options: options, deallocator: deallocator))
 	}
 }

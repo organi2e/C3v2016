@@ -9,10 +9,9 @@
 import Maschine
 import LaObjet
 
-protocol StrictlyStableDistribution: Distribution {
-	func pdf(value: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
-	func cdf(value: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
-	func rng(value: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
+public protocol SymmetricStableDistribution: RandomVariableDistribution {
+	func eval(command: Command, pdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
+	func eval(command: Command, cdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
 	func λsynth(λ: Buffer<Float>, σ: Buffer<Float>)
 	func σscale(σ: LaObjet) -> LaObjet
 	func gradσδ(λ: LaObjet, a: LaObjet, x: LaObjet) -> LaObjet
