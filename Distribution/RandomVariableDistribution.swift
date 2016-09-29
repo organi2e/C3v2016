@@ -9,5 +9,5 @@ import LaObjet
 import Maschine
 
 public protocol RandomVariableDistribution {
-	func rng(command: Command, χ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
+	func rng(commandBuffer: CommandBuffer, χ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
 }

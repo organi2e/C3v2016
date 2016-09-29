@@ -30,7 +30,7 @@
 		871E158C1D95308500739047 /* Distribution.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 871E15831D95308400739047 /* Distribution.framework */; };
 		871E15931D95308500739047 /* Distribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 871E15851D95308400739047 /* Distribution.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		871E15A41D9531B200739047 /* RandomVariableDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15A31D9531B200739047 /* RandomVariableDistribution.swift */; };
-		871E15A61D9531B400739047 /* StrictlyStableDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15A51D9531B400739047 /* StrictlyStableDistribution.swift */; };
+		871E15A61D9531B400739047 /* SymmetricStableDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15A51D9531B400739047 /* SymmetricStableDistribution.swift */; };
 		871E15A81D9531B600739047 /* CauchyDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15A71D9531B600739047 /* CauchyDistribution.swift */; };
 		871E15AA1D9531B800739047 /* GaussianDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15A91D9531B800739047 /* GaussianDistribution.swift */; };
 		871E15AD1D9539FD00739047 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E15AC1D9539FD00739047 /* Cell.swift */; };
@@ -57,6 +57,7 @@
 		871E16471D9A762D00739047 /* OptimizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E16461D9A762D00739047 /* OptimizerTests.swift */; };
 		871E164A1D9A7B5600739047 /* mtlOptimizerTests.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E16491D9A7B5600739047 /* mtlOptimizerTests.metal */; };
 		871E164C1D9A84BE00739047 /* mtlMomentum.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E164B1D9A84BE00739047 /* mtlMomentum.metal */; };
+		8766AEA41D9CCCA100FC7FE6 /* BlitCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8766AEA31D9CCCA100FC7FE6 /* BlitCommand.swift */; };
 		879905D61D9AB2C90027654A /* DegenerateDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879905D51D9AB2C90027654A /* DegenerateDistribution.swift */; };
 /* End PBXBuildFile section */
 
@@ -194,7 +195,7 @@
 		871E158B1D95308500739047 /* DistributionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DistributionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		871E15921D95308500739047 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		871E15A31D9531B200739047 /* RandomVariableDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomVariableDistribution.swift; path = ../../Distribution/RandomVariableDistribution.swift; sourceTree = "<group>"; };
-		871E15A51D9531B400739047 /* StrictlyStableDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StrictlyStableDistribution.swift; path = ../../Distribution/StrictlyStableDistribution.swift; sourceTree = "<group>"; };
+		871E15A51D9531B400739047 /* SymmetricStableDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SymmetricStableDistribution.swift; path = ../../Distribution/SymmetricStableDistribution.swift; sourceTree = "<group>"; };
 		871E15A71D9531B600739047 /* CauchyDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CauchyDistribution.swift; path = ../../Distribution/CauchyDistribution.swift; sourceTree = "<group>"; };
 		871E15A91D9531B800739047 /* GaussianDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GaussianDistribution.swift; path = ../../Distribution/GaussianDistribution.swift; sourceTree = "<group>"; };
 		871E15AC1D9539FD00739047 /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Cell.swift; path = "../../C³/Cell.swift"; sourceTree = "<group>"; };
@@ -227,6 +228,7 @@
 		871E16461D9A762D00739047 /* OptimizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OptimizerTests.swift; path = ../../Optimizer/OptimizerTests.swift; sourceTree = "<group>"; };
 		871E16491D9A7B5600739047 /* mtlOptimizerTests.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlOptimizerTests.metal; path = ../../Optimizer/mtlOptimizerTests.metal; sourceTree = "<group>"; };
 		871E164B1D9A84BE00739047 /* mtlMomentum.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlMomentum.metal; path = ../../Optimizer/mtlMomentum.metal; sourceTree = "<group>"; };
+		8766AEA31D9CCCA100FC7FE6 /* BlitCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BlitCommand.swift; path = ../../Maschine/BlitCommand.swift; sourceTree = "<group>"; };
 		879905D51D9AB2C90027654A /* DegenerateDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DegenerateDistribution.swift; path = ../../Distribution/DegenerateDistribution.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -472,7 +474,7 @@
 				879905D51D9AB2C90027654A /* DegenerateDistribution.swift */,
 				871E15A91D9531B800739047 /* GaussianDistribution.swift */,
 				871E15A71D9531B600739047 /* CauchyDistribution.swift */,
-				871E15A51D9531B400739047 /* StrictlyStableDistribution.swift */,
+				871E15A51D9531B400739047 /* SymmetricStableDistribution.swift */,
 				871E15A31D9531B200739047 /* RandomVariableDistribution.swift */,
 				871E15851D95308400739047 /* Distribution.h */,
 				871E15861D95308400739047 /* Info.plist */,
@@ -515,6 +517,7 @@
 		871E15F41D9A17F300739047 /* Maschine */ = {
 			isa = PBXGroup;
 			children = (
+				8766AEA31D9CCCA100FC7FE6 /* BlitCommand.swift */,
 				871E161C1D9A189F00739047 /* Maschine.swift */,
 				871E16251D9A190300739047 /* Buffer.swift */,
 				871E16281D9A192A00739047 /* Command.swift */,
@@ -1149,7 +1152,7 @@
 			files = (
 				871E15A41D9531B200739047 /* RandomVariableDistribution.swift in Sources */,
 				879905D61D9AB2C90027654A /* DegenerateDistribution.swift in Sources */,
-				871E15A61D9531B400739047 /* StrictlyStableDistribution.swift in Sources */,
+				871E15A61D9531B400739047 /* SymmetricStableDistribution.swift in Sources */,
 				871E15A81D9531B600739047 /* CauchyDistribution.swift in Sources */,
 				871E15AA1D9531B800739047 /* GaussianDistribution.swift in Sources */,
 				871E15BD1D98AEEB00739047 /* mtlCauchy.metal in Sources */,
@@ -1193,6 +1196,7 @@
 				871E16261D9A190300739047 /* Buffer.swift in Sources */,
 				871E16301D9A387000739047 /* Texture.swift in Sources */,
 				871E16321D9A387300739047 /* Sampler.swift in Sources */,
+				8766AEA41D9CCCA100FC7FE6 /* BlitCommand.swift in Sources */,
 				871E16291D9A192A00739047 /* Command.swift in Sources */,
 				871E162C1D9A343900739047 /* ComputeCommand.swift in Sources */,
 				871E163D1D9A4EF000739047 /* ComputePipelineState.swift in Sources */,

@@ -11,9 +11,6 @@ import Metal
 public typealias ComputeCommand = MTLComputeCommandEncoder
 
 public extension ComputeCommand {
-	public func close() {
-		endEncoding()
-	}
 	public func set(pipeline: Maschine.ComputePipelineState) {
 		setComputePipelineState(pipeline)
 	}
@@ -43,12 +40,6 @@ public extension ComputeCommand {
 	}
 	public func dispatch<I: Integer>(groups: (width: I, height: I, depth: I), threads: (width: I, height: I, depth: I)) {
 		dispatchThreadgroups(MTLSize(width: groups.width.signedValue, height: groups.height.signedValue, depth: groups.depth.signedValue), threadsPerThreadgroup: MTLSize(width: threads.width.signedValue, height: threads.height.signedValue, depth: threads.depth.signedValue))
-	}
-	public func push(group: String) {
-		pushDebugGroup(group)
-	}
-	public func pop() {
-		popDebugGroup()
 	}
 }
 

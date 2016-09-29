@@ -8,17 +8,38 @@
 
 import Metal
 
-public typealias Command = MTLCommandBuffer
+public typealias CommandBuffer = MTLCommandBuffer
 
-extension Command {
-	public func compute(configure: (ComputeCommand)->Void) {
+extension CommandBuffer {
+	public func compute(encode: (ComputeCommand)->Void) {
 		let computeCommand: ComputeCommand = makeComputeCommandEncoder()
-		configure(computeCommand)
-		computeCommand.close()
+		encode(computeCommand)
+		computeCommand.endEncoding()
+	}
+	public func blit(encode: (BlitCommand)->Void) {
+		let blitCommand: BlitCommand = makeBlitCommandEncoder()
+		encode(blitCommand)
+		blitCommand.endEncoding()
 	}
 }
 extension Maschine {
-	public func newCommand() -> Command {
+	public func newCommandBuffer() -> CommandBuffer {
 		return commandQueue.makeCommandBuffer()
+	}
+}
+
+public typealias Command = MTLCommandEncoder
+extension Command {
+	public func close() {
+		endEncoding()
+	}
+	public func insert(sign: String) {
+		insertDebugSignpost(sign)
+	}
+	public func push(group: String) {
+		pushDebugGroup(group)
+	}
+	public func pop() {
+		popDebugGroup()
 	}
 }

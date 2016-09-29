@@ -11,16 +11,16 @@ import LaObjet
 import Maschine
 
 public class GaussianDistribution: SymmetricStableDistribution {
-	public init() {
+	public init(maschine: Maschine) throws {
 	
 	}
-	public func eval(command: Command, pdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
+	public func eval(commandBuffer: CommandBuffer, pdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
 	
 	}
-	public func eval(command: Command, cdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)	{
+	public func eval(commandBuffer: CommandBuffer, cdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)	{
 	
 	}
-	public func rng(command: Command, χ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
+	public func rng(commandBuffer: CommandBuffer, χ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
 		
 	}
 	public func λsynth(λ: Buffer<Float>, σ: Buffer<Float>) {
@@ -41,7 +41,7 @@ public class GaussianDistribution: SymmetricStableDistribution {
 	public func gradσδ(λ: LaObjet, c: LaObjet) -> LaObjet {
 		return LaMatrice(diagonale: λ * λ * λ * c, shift: 0)
 	}
-	public func J(gradμ: Buffer<Float>, gradσ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
+	public func J(gradμ: Buffer<Float>, gradσ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>) {
 		
 	}
 	public func gradσB(λ: LaObjet, b: LaObjet, y: LaObjet, dy: LaObjet) -> LaObjet {
