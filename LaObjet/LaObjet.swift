@@ -15,6 +15,32 @@ private let SUCCESS: la_status_t = la_status_t(LA_SUCCESS)
 
 public typealias LaObjet = la_object_t
 
+public class Objet<T: FloatingPoint> {
+	
+	internal typealias objet = la_object_t
+	internal let objet: objet
+	internal init(objet: objet) {
+		self.objet = objet
+	}
+	var rows: UInt {
+		return la_matrix_rows(self.objet)
+	}
+	var cols: UInt {
+		return la_matrix_cols(self.objet)
+	}
+	var count: UInt {
+		return la_matrix_rows(self.objet) * la_matrix_cols(self.objet)
+	}
+}
+func La(n: Int) -> Objet<Float> {
+	let my: la_object_t = la_splat_from_float(0, ATTR)
+	return Objet<Float>(objet: my)
+}
+func La(n: Int) -> Objet<Double> {
+	let my: la_object_t = la_splat_from_double(0, ATTR)
+	return Objet<Double>(objet: my)
+}
+
 public extension LaObjet {
 	var rows: UInt {
 		return la_matrix_rows(self)

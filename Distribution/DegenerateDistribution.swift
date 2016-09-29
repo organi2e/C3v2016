@@ -15,7 +15,7 @@ public class DegenerateDistribution: SymmetricStableDistribution {
 	
 	}
 	public func eval(commandBuffer: CommandBuffer, pdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
-	
+		
 	}
 	public func eval(commandBuffer: CommandBuffer, cdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
 	
