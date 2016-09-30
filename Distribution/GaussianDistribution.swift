@@ -6,10 +6,9 @@
 //
 //
 
-import Accelerate
 import LaObjet
 import Maschine
-
+/*
 public class GaussianDistribution: SymmetricStableDistribution {
 	public init(maschine: Maschine) throws {
 	
@@ -48,3 +47,4 @@ public class GaussianDistribution: SymmetricStableDistribution {
 		return b * b * outer_product(λ * λ * λ, y * dy)
 	}
 }
+*/

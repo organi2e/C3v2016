@@ -162,6 +162,7 @@
 		871E16401D9A670F00739047 /* StochasticGradientDescent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StochasticGradientDescent.swift; path = Optimizer/StochasticGradientDescent.swift; sourceTree = "<group>"; };
 		871E16451D9A75E400739047 /* OptimizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OptimizerTests.swift; path = Optimizer/OptimizerTests.swift; sourceTree = "<group>"; };
 		871E16481D9A7A7E00739047 /* mtlOptimizerTests.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlOptimizerTests.metal; path = Optimizer/mtlOptimizerTests.metal; sourceTree = "<group>"; };
+		8762339C1D9E6A2500E7D001 /* LaÉlément.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "LaÉlément.swift"; path = "LaObjet/LaÉlément.swift"; sourceTree = "<group>"; };
 		8766AEA21D9CCC6B00FC7FE6 /* BlitCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BlitCommand.swift; path = Maschine/BlitCommand.swift; sourceTree = "<group>"; };
 		8766AEA51D9CD43500FC7FE6 /* DegenerateDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DegenerateDistribution.swift; path = Distribution/DegenerateDistribution.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -235,6 +236,7 @@
 				8719080D1D921E0B0048A43F /* LaObjetTests.swift */,
 				8719083C1D9230900048A43F /* LaObjet.swift */,
 				871908331D922EB20048A43F /* LaSparse.swift */,
+				8762339C1D9E6A2500E7D001 /* LaÉlément.swift */,
 			);
 			name = LaObjet;
 			sourceTree = "<group>";

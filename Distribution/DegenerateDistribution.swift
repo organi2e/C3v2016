@@ -6,44 +6,38 @@
 //
 //
 
-import Accelerate
 import LaObjet
 import Maschine
 
 public class DegenerateDistribution: SymmetricStableDistribution {
-	public init(maschine: Maschine, count: Int) {
-	
+	public func rng(commandBuffer: CommandBuffer, χ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
+		assert(LaObjet<Float>(valuer: μ.address, rows: μ.count, cols: 1).copy(buffer: χ.address))
 	}
 	public func eval(commandBuffer: CommandBuffer, pdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
-		
+		LaObjet<Float>(valuer: 1, rows: μ.count, cols: 1).copy(to: μ.address)
 	}
 	public func eval(commandBuffer: CommandBuffer, cdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
 	
 	}
-	public func rng(commandBuffer: CommandBuffer, χ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
-		commandBuffer.blit {
-			$0.copy(destination: χ, source: μ)
-		}
+	public func eval(commandBuffer: CommandBuffer, gradμ: Buffer<Float>, gradσ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>) {
+	
 	}
-    public func λsynth(λ: Buffer<Float>, σ: Buffer<Float>) {
-		assert(Data(bytesNoCopy: σ.pointer, count: σ.length, deallocator: .none).copyBytes(to: λ.buffer)==λ.count)
+	public func λsynth(λ: Buffer<Float>, σ: Buffer<Float>) {
+	
 	}
-    public func σscale(σ: LaObjet) -> LaObjet {
-        return LaMatrice(valuer: 0)
-    }
-    public func gradσδ(λ: LaObjet, a: LaObjet, x: LaObjet) -> LaObjet {
-        return LaMatrice(valuer: 0)
-    }
-    public func gradσδ(λ: LaObjet, b: LaObjet, y: LaObjet) -> LaObjet {
-        return LaMatrice(valuer: 0)
-    }
-    public func gradσδ(λ: LaObjet, c: LaObjet) -> LaObjet {
-        return LaMatrice(valuer: 0)
-    }
-    public func J(gradμ: Buffer<Float>, gradσ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>) {
-		
-    }
-    public func gradσB(λ: LaObjet, b: LaObjet, y: LaObjet, dy: LaObjet) -> LaObjet {
-        return LaMatrice(valuer: 0)
-    }
+	public func σscale<Type: FloatingPoint>(σ: LaObjet<Type>) -> LaObjet<Type> {
+		return LaObjet<Type>(valuer: 0, rows: σ.rows, cols: σ.cols)
+	}
+	public func gradσδ<Type: FloatingPoint>(λ: LaObjet<Type>, a: LaObjet<Type>, x: LaObjet<Type>) -> LaObjet<Type> {
+		return LaObjet<Type>(valuer: 0)
+	}
+	public func gradσδ<Type: FloatingPoint>(λ: LaObjet<Type>, b: LaObjet<Type>, y: LaObjet<Type>) -> LaObjet<Type> {
+		return LaObjet<Type>(valuer: 0)
+	}
+	public func gradσδ<Type: FloatingPoint>(λ: LaObjet<Type>, c: LaObjet<Type>) -> LaObjet<Type> {
+		return LaObjet<Type>(valuer: 0)
+	}
+	public func gradσB<Type: FloatingPoint>(λ: LaObjet<Type>, b: LaObjet<Type>, y: LaObjet<Type>, dy: LaObjet<Type>) -> LaObjet<Type> {
+		return LaObjet<Type>(valuer: 0)
+	}
 }

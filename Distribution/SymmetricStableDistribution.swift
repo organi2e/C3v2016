@@ -12,11 +12,11 @@ import LaObjet
 public protocol SymmetricStableDistribution: RandomVariableDistribution {
 	func eval(commandBuffer: CommandBuffer, pdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
 	func eval(commandBuffer: CommandBuffer, cdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
+	func eval(commandBuffer: CommandBuffer, gradμ: Buffer<Float>, gradσ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)
 	func λsynth(λ: Buffer<Float>, σ: Buffer<Float>)
-	func σscale(σ: LaObjet) -> LaObjet
-	func gradσδ(λ: LaObjet, a: LaObjet, x: LaObjet) -> LaObjet
-	func gradσδ(λ: LaObjet, b: LaObjet, y: LaObjet) -> LaObjet
-	func gradσδ(λ: LaObjet, c: LaObjet) -> LaObjet
-	func J(gradμ: Buffer<Float>, gradσ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)
-	func gradσB(λ: LaObjet, b: LaObjet, y: LaObjet, dy: LaObjet) -> LaObjet
+	func σscale<Type: FloatingPoint>(σ: LaObjet<Type>) -> LaObjet<Type>
+	func gradσδ<Type: FloatingPoint>(λ: LaObjet<Type>, a: LaObjet<Type>, x: LaObjet<Type>) -> LaObjet<Type>
+	func gradσδ<Type: FloatingPoint>(λ: LaObjet<Type>, b: LaObjet<Type>, y: LaObjet<Type>) -> LaObjet<Type>
+	func gradσδ<Type: FloatingPoint>(λ: LaObjet<Type>, c: LaObjet<Type>) -> LaObjet<Type>
+	func gradσB<Type: FloatingPoint>(λ: LaObjet<Type>, b: LaObjet<Type>, y: LaObjet<Type>, dy: LaObjet<Type>) -> LaObjet<Type>
 }

@@ -57,6 +57,9 @@
 		871E16471D9A762D00739047 /* OptimizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E16461D9A762D00739047 /* OptimizerTests.swift */; };
 		871E164A1D9A7B5600739047 /* mtlOptimizerTests.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E16491D9A7B5600739047 /* mtlOptimizerTests.metal */; };
 		871E164C1D9A84BE00739047 /* mtlMomentum.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E164B1D9A84BE00739047 /* mtlMomentum.metal */; };
+		8762339A1D9E64E000E7D001 /* LaEntier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876233991D9E64E000E7D001 /* LaEntier.swift */; };
+		8762339B1D9E650900E7D001 /* LaEntier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876233991D9E64E000E7D001 /* LaEntier.swift */; };
+		876233AE1D9E6A3000E7D001 /* LaÉlément.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876233AD1D9E6A3000E7D001 /* LaÉlément.swift */; };
 		8766AEA41D9CCCA100FC7FE6 /* BlitCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8766AEA31D9CCCA100FC7FE6 /* BlitCommand.swift */; };
 		879905D61D9AB2C90027654A /* DegenerateDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879905D51D9AB2C90027654A /* DegenerateDistribution.swift */; };
 /* End PBXBuildFile section */
@@ -228,6 +231,8 @@
 		871E16461D9A762D00739047 /* OptimizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OptimizerTests.swift; path = ../../Optimizer/OptimizerTests.swift; sourceTree = "<group>"; };
 		871E16491D9A7B5600739047 /* mtlOptimizerTests.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlOptimizerTests.metal; path = ../../Optimizer/mtlOptimizerTests.metal; sourceTree = "<group>"; };
 		871E164B1D9A84BE00739047 /* mtlMomentum.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlMomentum.metal; path = ../../Optimizer/mtlMomentum.metal; sourceTree = "<group>"; };
+		876233991D9E64E000E7D001 /* LaEntier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LaEntier.swift; path = ../../LaObjet/LaEntier.swift; sourceTree = "<group>"; };
+		876233AD1D9E6A3000E7D001 /* LaÉlément.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "LaÉlément.swift"; path = "../../LaObjet/LaÉlément.swift"; sourceTree = "<group>"; };
 		8766AEA31D9CCCA100FC7FE6 /* BlitCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BlitCommand.swift; path = ../../Maschine/BlitCommand.swift; sourceTree = "<group>"; };
 		879905D51D9AB2C90027654A /* DegenerateDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DegenerateDistribution.swift; path = ../../Distribution/DegenerateDistribution.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -387,6 +392,8 @@
 			isa = PBXGroup;
 			children = (
 				8719080E1D921E170048A43F /* LaObjet.swift */,
+				876233991D9E64E000E7D001 /* LaEntier.swift */,
+				876233AD1D9E6A3000E7D001 /* LaÉlément.swift */,
 				871907F11D921DCC0048A43F /* LaObjet.h */,
 				871907F21D921DCC0048A43F /* Info.plist */,
 			);
@@ -1082,6 +1089,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8719080F1D921E170048A43F /* LaObjet.swift in Sources */,
+				8762339B1D9E650900E7D001 /* LaEntier.swift in Sources */,
+				876233AE1D9E6A3000E7D001 /* LaÉlément.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1090,6 +1099,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				871908111D921E4E0048A43F /* LaObjetTests.swift in Sources */,
+				8762339A1D9E64E000E7D001 /* LaEntier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

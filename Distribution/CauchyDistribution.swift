@@ -6,10 +6,9 @@
 //
 //
 
-import Accelerate
 import LaObjet
 import Maschine
-
+/*
 public class CauchyDistribution: SymmetricStableDistribution {
 	public init() {
 		
@@ -48,3 +47,4 @@ public class CauchyDistribution: SymmetricStableDistribution {
 		return b * outer_product(λ * λ, dy)
 	}
 }
+*/

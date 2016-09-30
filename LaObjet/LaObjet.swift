@@ -8,361 +8,315 @@
 
 import Accelerate
 
+//An implementation of Linear algebra container
+// with lazy evaluation
+// with broadcasting
+
 private let ATTR: la_attribute_t = la_attribute_t(LA_ATTRIBUTE_ENABLE_LOGGING)
 private let HINT: la_hint_t = la_hint_t(LA_NO_HINT)
 private let SUCCESS: la_status_t = la_status_t(LA_SUCCESS)
 
-public protocol LaObjet {
-    associatedtype FloatingPoint
-    var L1Norme: FloatingPoint { get }
-    var L2Norme: FloatingPoint { get }
-}
-public class LaUne {
-    var L1Norme: Float { return 0 }
-    var L2Norme: Float { return 0 }
-}
-public class LaDuo {
-    var L1Norme: Double { return 0 }
-    var L2Norme: Double { return 0 }
-}
-func x() {
-    let x: LaObjet<Double> = LaDuo()
-    let y: LaObjet<Float> = LaUne()
-}
-/*
-public class LaObjet<Element: FloatingPoint> {
-	internal typealias Objet = la_object_t
-	internal let objet: Objet
-    internal let type: Element.Type
-    internal init(objet: Objet) {
-        self.type = type(of: Element(0))
+public struct LaObjet<Type: LaType> {
+	internal let objet: la_object_t
+	internal init(objet: la_object_t) {
 		self.objet = objet
 	}
-	var rows: UInt {
-		return la_matrix_rows(objet)
+	public init(valuer: Type.Élément) {
+		objet = Type.splat(valuer, ATTR)
 	}
-	var cols: UInt {
-		return la_matrix_cols(objet)
+	public init<Entier: Integer>(identité: Entier) {
+		objet = la_identity_matrix(identité.unsignedValue, Type.type, ATTR)
 	}
-	var count: UInt {
-		return la_matrix_rows(objet) * la_matrix_cols(objet)
+	public init<Entier: Integer>(diagonale: LaObjet, shift: Entier = 0) {
+		objet = la_diagonal_matrix_from_vector(diagonale.objet, shift.signedValue)
 	}
-	var status: Int {
-		return Int(la_status(objet))
+	public init<Entier: Integer>(valuer: Type.Élément, rows: Entier, cols: Entier) {
+		objet = la_matrix_from_splat(Type.splat(valuer, ATTR), rows.unsignedValue, cols.unsignedValue)
 	}
-	var T: LaObjet {
-		return LaObjet(objet: la_transpose(objet))
+	public init<Entier: Integer>(valuer: UnsafePointer<Type.Élément>, rows: Entier, cols: Entier, stride: Entier? = nil) {
+		objet = Type.copy(valuer, rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, ATTR)
 	}
-	var length: UInt {
-		return la_vector_length(objet)
+	public init<Entier: Integer>(valuer: UnsafePointer<Type.Élément>, rows: Entier, cols: Entier, stride: Entier? = nil, deallocator: (@convention(c) (UnsafeMutableRawPointer?) -> Void)?) {
+		objet = Type.nocopy(UnsafeMutablePointer<Type.Élément>(OpaquePointer(valuer)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, deallocator, ATTR)
 	}
-	var L1Norme: Element {
-        switch type {
-        case is Float.Type:
-            break
-        case is Double.Type:
-            break
-        default:
-            break
-        }
-        return 0//return Element(la_norm_as_float(objet, la_norm_t(LA_L1_NORM)))
-	}
-	var L2Norme: Float {
-		return la_norm_as_float(objet, la_norm_t(LA_L2_NORM))
-	}
-	var LINFNorme: Float {
-		return la_norm_as_float(objet, la_norm_t(LA_LINF_NORM))
-	}
-	var eval: [Float] {
+	public var array: Array<Type.Élément> {
 		let rows: la_count_t = la_matrix_rows(objet)
 		let cols: la_count_t = la_matrix_cols(objet)
-		let result: [Float] = [Float](repeating: 0, count: max(1, Int(rows*cols)))
-		assert(la_matrix_to_float_buffer(UnsafeMutablePointer<Float>(mutating: result), cols, rows == 0 && cols == 0 ? la_matrix_from_splat(objet, 1, 1) : objet)==SUCCESS)
+		let result: Array<Type.Élément> = Array<Type.Élément>(repeating: 0, count: max(1, Int(rows*cols)))
+		assert(Type.bytes(UnsafeMutablePointer<Type.Élément>(OpaquePointer(result)), cols, rows == 0 && cols == 0 ? la_matrix_from_splat(objet, 1, 1) : objet)==SUCCESS)
 		return result
 	}
-    func value<Entier: Integer>(at: Entier) -> Float {
+	public func value<Entier: Integer>(at: Entier) -> Type.Élément {
 		let rows: la_count_t = la_matrix_rows(objet)
 		let cols: la_count_t = la_matrix_cols(objet)
-		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat( rows == 0 && cols == 0 ? objet : la_splat_from_vector_element(objet, at.signedValue), 1, 1))==SUCCESS)//Avoid redundant computation
+		var value: Type.Élément = 0
+		assert(Type.bytes(&value, 1, la_matrix_from_splat( rows == 0 && cols == 0 ? objet : la_splat_from_vector_element(objet, at.signedValue), 1, 1))==SUCCESS)//Avoid redundant computation
 		return value
 	}
-    func value<Entier: Integer>(at: (row: Entier, col: Entier)) -> Float {
+	public func value<Entier: Integer>(at: (row: Entier, col: Entier)) -> Type.Élément {
 		let rows: la_count_t = la_matrix_rows(objet)
 		let cols: la_count_t = la_matrix_cols(objet)
-		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat( rows == 0 && cols == 0 ? objet : la_splat_from_matrix_element(objet, at.0.signedValue, at.1.signedValue), 1, 1))==SUCCESS)//Avoid redundant computation
+		var value: Type.Élément = 0
+		assert(Type.bytes(&value, 1, la_matrix_from_splat( rows == 0 && cols == 0 ? objet : la_splat_from_matrix_element(objet, at.0.signedValue, at.1.signedValue), 1, 1))==SUCCESS)//Avoid redundant computation
 		return value
 	}
-	subscript(index: Int) -> LaObjet {
+	public func copy(to: UnsafePointer<Type.Élément>) -> Bool {
+		return Type.bytes(UnsafeMutablePointer<Type.Élément>(OpaquePointer(to)), cols, objet) == SUCCESS
+	}
+	public var L1Norme: Type.Élément {
+		return Type.norm(objet, la_norm_t(LA_L1_NORM))
+	}
+	public var L1Normalisée: LaObjet {
+		return LaObjet(objet: la_normalized_vector(objet, la_norm_t(LA_L1_NORM)))
+	}
+	public var L2Norme: Type.Élément {
+		return Type.norm(objet, la_norm_t(LA_L2_NORM))
+	}
+	public var L2Normalisée: LaObjet {
+		return LaObjet(objet: la_normalized_vector(objet, la_norm_t(LA_L2_NORM)))
+	}
+	public var LINFNorme: Type.Élément {
+		return Type.norm(objet, la_norm_t(LA_LINF_NORM))
+	}
+	public var LINFNormalisée: LaObjet {
+		return LaObjet(objet: la_normalized_vector(objet, la_norm_t(LA_LINF_NORM)))
+	}
+	public var rows: UInt {
+		return la_matrix_rows(objet)
+	}
+	public var cols: UInt {
+		return la_matrix_cols(objet)
+	}
+	public var count: UInt {
+		return la_matrix_rows(objet) * la_matrix_cols(objet)
+	}
+	public var status: Int {
+		return Int(la_status(objet))
+	}
+	public var T: LaObjet {
+		return LaObjet(objet: la_transpose(objet))
+	}
+	public var length: UInt {
+		return la_vector_length(objet)
+	}
+	public subscript(index: Int) -> LaObjet {
 		return LaObjet(objet: la_splat_from_vector_element(objet, index))
 	}
-	subscript(row: Int, col: Int) -> LaObjet {
+	public subscript(row: Int, col: Int) -> LaObjet {
 		return LaObjet(objet: la_splat_from_matrix_element(objet, row, col))
 	}
-	subscript(range: Range<Int>) -> LaObjet {
+	public subscript(range: Range<Int>) -> LaObjet {
 		return LaObjet(objet: la_vector_slice(objet, range.lowerBound, 1, la_count_t(range.count)))
 	}
-	subscript(rows: Range<Int>, cols: Range<Int>) -> LaObjet {
+	public subscript(rows: Range<Int>, cols: Range<Int>) -> LaObjet {
 		return LaObjet(objet: la_matrix_slice(objet, rows.lowerBound, cols.lowerBound, la_index_t(la_matrix_cols(objet)), 1, la_count_t(rows.count), la_count_t(cols.count)))
 	}
-	
-	func getBytes(buffer: UnsafeRawPointer) -> Bool {
-		return la_matrix_to_float_buffer(UnsafeMutablePointer<Float>(OpaquePointer(buffer)), la_matrix_cols(objet), objet) == SUCCESS
-	}
-    func rowVecteur<Entier: Integer>(col: Entier) -> LaObjet {
+	func rowVecteur<Entier: Integer>(col: Entier) -> LaObjet {
 		return LaObjet(objet: la_vector_from_matrix_row(objet, col.unsignedValue))
 	}
-    func colVecteur<Entier: Integer>(row: Entier) -> LaObjet {
+	func colVecteur<Entier: Integer>(row: Entier) -> LaObjet {
 		return LaObjet(objet: la_vector_from_matrix_col(objet, row.unsignedValue))
 	}
-    func diagVecteur<Entier: Integer>(offset: Entier) -> LaObjet {
+	func diagVecteur<Entier: Integer>(offset: Entier) -> LaObjet {
 		return LaObjet(objet: la_vector_from_matrix_diagonal(objet, offset.signedValue))
 	}
 }
-extension LaObjet {
 
+extension LaObjet where Type: LaSoloType {
+	public func toDoublé() -> LaObjet<Double> {
+		let dst: UnsafeMutablePointer<Double> = UnsafeMutablePointer<Double>(OpaquePointer(malloc(MemoryLayout<Double>.size*Int(count))))
+		let src: UnsafeMutablePointer<Float> = UnsafeMutablePointer<Float>.allocate(capacity: Int(count))
+		defer { src.deallocate(capacity: Int(count)) }
+		vDSP_vspdp(src, 1, dst, 1, vDSP_Length(count))
+		return LaObjet<Double>(valuer: dst, rows: rows, cols: cols, deallocator: { free($0) })
+	}
 }
-*/
-/*
+extension LaObjet where Type: LaDoubléType {
+	public func toSolo() -> LaObjet<Float> {
+		return LaObjet<Float>(valuer: 0)
+	}
+}
 // MARK: - Minus
-public prefix func -(lhs: LaObjet) -> LaObjet {
+public prefix func-<Type: FloatingPoint>(lhs: LaObjet<Type>) -> LaObjet<Type> {
 	if lhs.count == 0 {
-		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat(lhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(-value, ATTR)
+		var value: Type.Élément = 0
+		assert(Type.bytes(&value, 1, la_matrix_from_splat(lhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(-value, ATTR))
 	} else {
-		return la_scale_with_float(lhs, -1)
+		return LaObjet<Type>(objet: Type.scale(lhs.objet, -1))
 	}
 }
 
 // MARK: - Addition
-public func +(lhs: LaObjet, rhs: LaObjet) -> LaObjet {
-	if lhs.count == 0 && rhs.count == 0 {
-		var x: Float = 0
-		var y: Float = 0
-		assert(la_matrix_to_float_buffer(&x, 1, la_matrix_from_splat(lhs, 1, 1))==SUCCESS)
-		assert(la_matrix_to_float_buffer(&y, 1, la_matrix_from_splat(rhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(x+y, ATTR)
+public func +<Type: FloatingPoint>(lhs: LaObjet<Type>, rhs: LaObjet<Type>) -> LaObjet<Type> {
+	let lhscount: UInt = lhs.count
+	let rhscount: UInt = rhs.count
+	if lhscount == 0 && rhscount == 0 {
+		var x: Type.Élément = 0
+		var y: Type.Élément = 0
+		assert(Type.bytes(&x, 1, la_matrix_from_splat(lhs.objet, 1, 1))==SUCCESS)
+		assert(Type.bytes(&y, 1, la_matrix_from_splat(rhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(x+y, ATTR))
+	} else if lhscount == 1 && rhscount == 1 {
+		return LaObjet(objet: la_sum(lhs.objet, rhs.objet))
 	} else {
-		return la_sum(lhs, rhs)
+		return LaObjet(objet: la_sum(lhscount == 1 ? la_splat_from_matrix_element(lhs.objet, 0, 0) : lhs.objet, rhscount == 1 ? la_splat_from_matrix_element(rhs.objet, 0, 0) : rhs.objet))
 	}
 }
-public func +(lhs: LaObjet, rhs: Float) -> LaObjet {
+public func +<Type: FloatingPoint>(lhs: LaObjet<Type>, rhs: Type.Élément) -> LaObjet<Type> {
 	if lhs.count == 0 {
-		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat(lhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(value+rhs, ATTR)
+		var value: Type.Élément = 0
+		assert(Type.bytes(&value, 1, la_matrix_from_splat(lhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(value+rhs, ATTR))
 	} else {
-		return la_sum(lhs, la_splat_from_float(rhs, ATTR))
+		return LaObjet<Type>(objet: la_sum(lhs.objet, Type.splat(rhs, ATTR)))
 	}
 }
-public func +(lhs: Float, rhs: LaObjet) -> LaObjet {
+public func +<Type: FloatingPoint>(lhs: Type.Élément, rhs: LaObjet<Type>) -> LaObjet<Type> {
 	if rhs.count == 0 {
-		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat(rhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(lhs+value, ATTR)
+		var value: Type.Élément = 0
+		assert(Type.bytes(&value, 1, la_matrix_from_splat(rhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(lhs+value, ATTR))
 	} else {
-		return la_sum(la_splat_from_float(lhs, ATTR), rhs)
+		return LaObjet<Type>(objet: la_sum(Type.splat(lhs, ATTR), rhs.objet))
 	}
 }
 
 // MARK: - Subtraction
-public func -(lhs: LaObjet, rhs: LaObjet) -> LaObjet {
-	if lhs.count == 0 && rhs.count == 0 {
-		var x: Float = 0
-		var y: Float = 0
-		assert(la_matrix_to_float_buffer(&x, 1, la_matrix_from_splat(lhs, 1, 1))==SUCCESS)
-		assert(la_matrix_to_float_buffer(&y, 1, la_matrix_from_splat(rhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(x-y, ATTR)
+public func -<Type: FloatingPoint>(lhs: LaObjet<Type>, rhs: LaObjet<Type>) -> LaObjet<Type> {
+	let lhscount: UInt = lhs.count
+	let rhscount: UInt = rhs.count
+	if lhscount == 0 && rhscount == 0 {
+		var x: Type.Élément = 0
+		var y: Type.Élément = 0
+		assert(Type.bytes(&x, 1, la_matrix_from_splat(lhs.objet, 1, 1))==SUCCESS)
+		assert(Type.bytes(&y, 1, la_matrix_from_splat(rhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(x-y, ATTR))
+	} else if lhscount == 1 && rhscount == 1 {
+		return LaObjet(objet: la_difference(lhs.objet, rhs.objet))
 	} else {
-		return la_difference(lhs, rhs)
+		return LaObjet(objet: la_difference(lhscount == 1 ? la_splat_from_matrix_element(lhs.objet, 0, 0) : lhs.objet, rhscount == 1 ? la_splat_from_matrix_element(rhs.objet, 0, 0) : rhs.objet))
 	}
 }
-public func -(lhs: LaObjet, rhs: Float) -> LaObjet {
+public func -<Type: FloatingPoint>(lhs: LaObjet<Type>, rhs: Type.Élément) -> LaObjet<Type> {
 	if lhs.count == 0 {
-		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat(lhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(value-rhs, ATTR)
+		var value: Type.Élément = 0
+		assert(Type.bytes(&value, 1, la_matrix_from_splat(lhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(value-rhs, ATTR))
 	} else {
-		return la_difference(lhs, la_splat_from_float(rhs, ATTR))
+		return LaObjet<Type>(objet: la_difference(lhs.objet, Type.splat(rhs, ATTR)))
 	}
 }
-public func -(lhs: Float, rhs: LaObjet) -> LaObjet {
+public func -<Type: FloatingPoint>(lhs: Type.Élément, rhs: LaObjet<Type>) -> LaObjet<Type> {
 	if rhs.count == 0 {
-		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat(rhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(lhs-value, ATTR)
+		var value: Type.Élément = 0
+		assert(Type.bytes(&value, 1, la_matrix_from_splat(rhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(lhs-value, ATTR))
 	} else {
-		return la_sum(la_splat_from_float(lhs, ATTR), rhs)
+		return LaObjet<Type>(objet: la_sum(Type.splat(lhs, ATTR), rhs.objet))
 	}
 }
 
 // MARK: - Multiplication
-public func *(lhs: LaObjet, rhs: LaObjet) -> LaObjet {
-    let lhscount: UInt = lhs.count
-    let rhscount: UInt = rhs.count
+public func *<Type: FloatingPoint>(lhs: LaObjet<Type>, rhs: LaObjet<Type>) -> LaObjet<Type> {
+	let lhscount: UInt = lhs.count
+	let rhscount: UInt = rhs.count
 	if lhscount == 0 && rhscount == 0 {
-		var x: Float = 0
-		var y: Float = 0
-		assert(la_matrix_to_float_buffer(&x, 1, la_matrix_from_splat(lhs, 1, 1))==SUCCESS)
-		assert(la_matrix_to_float_buffer(&y, 1, la_matrix_from_splat(rhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(x*y, ATTR)
+		var x: Type.Élément = 0
+		var y: Type.Élément = 0
+		assert(Type.bytes(&x, 1, la_matrix_from_splat(lhs.objet, 1, 1))==SUCCESS)
+		assert(Type.bytes(&y, 1, la_matrix_from_splat(rhs.objet, 1, 1))==SUCCESS)
+		return LaObjet(objet: Type.splat(x*y, ATTR))
 	} else if lhscount == 1 && rhscount == 1 {
-		return la_elementwise_product(lhs, rhs)
+		return LaObjet(objet: la_elementwise_product(lhs.objet, rhs.objet))
 	} else {
-		return la_elementwise_product(lhscount == 1 ? la_splat_from_matrix_element(lhs, 0, 0) : lhs, rhscount == 1 ? la_splat_from_matrix_element(rhs, 0, 0) : rhs)
+		return LaObjet(objet: la_elementwise_product(lhscount == 1 ? la_splat_from_matrix_element(lhs.objet, 0, 0) : lhs.objet, rhscount == 1 ? la_splat_from_matrix_element(rhs.objet, 0, 0) : rhs.objet))
 	}
 }
-public func *(lhs: LaObjet, rhs: Float) -> LaObjet {
+public func *<Type: FloatingPoint>(lhs: LaObjet<Type>, rhs: Type.Élément) -> LaObjet<Type> {
 	if lhs.count == 0 {
-		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat(lhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(value*rhs, ATTR)
+		var value: Type.Élément = 0
+		assert(Type.bytes(&value, 1, la_matrix_from_splat(lhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(value*rhs, ATTR))
 	}
 	else {
-		return la_scale_with_float(lhs, rhs)
+		return LaObjet<Type>(objet: Type.scale(lhs.objet, rhs))
 	}
 }
-public func *(lhs: Float, rhs: LaObjet) -> LaObjet {
+public func *<Type: FloatingPoint>(lhs: Type.Élément, rhs: LaObjet<Type>) -> LaObjet<Type> {
 	if rhs.count == 0 {
-		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat(rhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(value*lhs, ATTR)
+		var value: Type.Élément = 0
+		assert(Type.bytes(&value, 1, la_matrix_from_splat(rhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(value*lhs, ATTR))
 	} else {
-		return la_scale_with_float(rhs, lhs)
+		return LaObjet<Type>(objet: Type.scale(rhs.objet, lhs))
 	}
 }
 
 // MARK: - Division
 //		 - fire vvdiv and employ vvrec for lazy evaluation
-public func /(lhs: LaObjet, rhs: LaObjet) -> LaObjet {
-	if lhs.count == 0 && rhs.count == 0 { // return splat
-		var y: Float = 0
-		var x: Float = 1
-		assert(la_matrix_to_float_buffer(&y, 1, la_matrix_from_splat(lhs, 1, 1))==SUCCESS)
-		assert(la_matrix_to_float_buffer(&x, 1, la_matrix_from_splat(rhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(y/x, ATTR)
-	} else if lhs.count != 0 && rhs.count == 0 {
-		var x: Float = 1
-		assert(la_matrix_to_float_buffer(&x, 1, la_matrix_from_splat(rhs, 1, 1))==SUCCESS)
-		return la_scale_with_float(lhs, 1/x)
-	} else if lhs.count != 0 && rhs.count == 1 {
-		var x: Float = 1
-		assert(la_matrix_to_float_buffer(&x, 1, rhs)==SUCCESS)
-		return la_scale_with_float(lhs, 1/x)
+public func /<Type: FloatingPoint>(lhs: LaObjet<Type>, rhs: LaObjet<Type>) -> LaObjet<Type> {
+	let lhscount: UInt = lhs.count
+	let rhsrows: UInt = la_matrix_rows(rhs.objet)
+	let rhscols: UInt = la_matrix_cols(rhs.objet)
+	let rhscount: UInt = rhsrows * rhscols
+	if lhscount == 0 && rhscount == 0 { // return splat
+		var y: Type.Élément = 0
+		var x: Type.Élément = 1
+		assert(Type.bytes(&x, 1, la_matrix_from_splat(rhs.objet, 1, 1))==SUCCESS)
+		assert(Type.bytes(&y, 1, la_matrix_from_splat(lhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(y/x, ATTR))
+	} else if lhscount != 0 && rhscount == 0 {
+		var x: Type.Élément = 1
+		assert(Type.bytes(&x, 1, la_matrix_from_splat(rhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.scale(lhs.objet, 1/x))
+	} else if lhscount != 0 && rhscount == 1 {
+		var x: Type.Élément = 1
+		assert(Type.bytes(&x, 1, rhs.objet)==SUCCESS)
+		return LaObjet<Type>(objet: Type.scale(lhs.objet, 1/x))
 	} else {
-		let result: UnsafeMutablePointer<Float> = UnsafeMutablePointer<Float>(OpaquePointer(malloc_zone_malloc(malloc_default_purgeable_zone(), MemoryLayout<Float>.size*Int(rhs.count))))
-        
-		assert(la_matrix_to_float_buffer(result, la_matrix_cols(rhs), rhs)==SUCCESS)
-		vvrecf(result, result, [Int32(rhs.count)])
-        return la_elementwise_product(lhs.count == 1 ? la_splat_from_matrix_element(lhs, 0, 0) : lhs, la_matrix_from_float_buffer_nocopy(result, la_matrix_rows(rhs), la_matrix_cols(rhs), la_matrix_cols(rhs), HINT, { malloc_zone_free(malloc_default_purgeable_zone(), $0) }, ATTR))
+		let result: UnsafeMutablePointer<Type.Élément> = UnsafeMutablePointer<Type.Élément>(OpaquePointer(malloc_zone_malloc(malloc_default_purgeable_zone(), MemoryLayout<Type.Élément>.size*Int(rhscount))))
+		assert(Type.bytes(result, rhscols, rhs.objet)==SUCCESS)
+		Type.vRec(result, result, [Int32(rhscount)])
+		return LaObjet<Type>(objet: la_elementwise_product(lhscount == 1 ? la_splat_from_matrix_element(lhs.objet, 0, 0) : lhs.objet, Type.nocopy(result, rhsrows, rhscols, rhscols, HINT, { malloc_zone_free(malloc_default_purgeable_zone(), $0) }, ATTR)))
 	}
 }
-public func /(lhs: LaObjet, rhs: Float) -> LaObjet {
-	if lhs.count == 0 {
-		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat(lhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(value/rhs, ATTR)
+public func /<Type: FloatingPoint>(lhs: LaObjet<Type>, rhs: Type.Élément) -> LaObjet<Type> {
+	let lhscount: UInt = lhs.count
+	if lhscount == 0 {
+		var value: Type.Élément = 0
+		assert(Type.bytes(&value, 1, la_matrix_from_splat(lhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(value/rhs, ATTR))
 	} else {
-		return la_scale_with_float(lhs, 1/rhs)
+		return LaObjet<Type>(objet: Type.scale(lhs.objet, 1/rhs))
 	}
 }
-public func /(lhs: Float, rhs: LaObjet) -> LaObjet {
-	if rhs.count == 0 {
-		var value: Float = 0
-		assert(la_matrix_to_float_buffer(&value, 1, la_matrix_from_splat(rhs, 1, 1))==SUCCESS)
-		return la_splat_from_float(lhs/value, ATTR)
+public func /<Type: FloatingPoint>(lhs: Type.Élément, rhs: LaObjet<Type>) -> LaObjet<Type> {
+	let rhsrows: UInt = la_matrix_rows(rhs.objet)
+	let rhscols: UInt = la_matrix_rows(rhs.objet)
+	let rhscount: UInt = rhsrows * rhscols
+	if rhscount == 0 {
+		var value: Type.Élément = 0
+		assert(Type.bytes(&value, 1, la_matrix_from_splat(rhs.objet, 1, 1))==SUCCESS)
+		return LaObjet<Type>(objet: Type.splat(lhs/value, ATTR))
 	} else {
-		let result: UnsafeMutablePointer<Float> = UnsafeMutablePointer<Float>(OpaquePointer(malloc_zone_malloc(malloc_default_zone(), MemoryLayout<Float>.size*Int(rhs.count))))
-		assert(la_matrix_to_float_buffer(result, la_matrix_cols(rhs), rhs)==SUCCESS)
-		vvrecf(result, result, [Int32(rhs.count)])
-		return la_scale_with_float(la_matrix_from_float_buffer_nocopy(result, la_matrix_rows(rhs), la_matrix_cols(rhs), la_matrix_cols(rhs), HINT, { malloc_zone_free(malloc_default_zone(), $0) }, ATTR), lhs)
+		let result: UnsafeMutablePointer<Type.Élément> = UnsafeMutablePointer<Type.Élément>(OpaquePointer(malloc_zone_malloc(malloc_default_purgeable_zone(), MemoryLayout<Type.Élément>.size*Int(rhscount))))
+		assert(Type.bytes(result, rhscols, rhs.objet)==SUCCESS)
+		Type.vRec(result, result, [Int32(rhscount)])
+		return LaObjet<Type>(objet: Type.scale(Type.nocopy(result, rhsrows, rhscols, rhscols, HINT, { malloc_zone_free(malloc_default_purgeable_zone(), $0) }, ATTR), lhs))
 	}
-}
-
-// MARK: - Normalization
-public func L1Normalize(_ x: LaObjet) -> LaObjet {
-	return la_normalized_vector(x, la_norm_t(LA_L1_NORM))
-}
-public func L2Normalize(_ x: LaObjet) -> LaObjet {
-	return la_normalized_vector(x, la_norm_t(LA_L2_NORM))
-}
-public func LINFNormalize(_ x: LaObjet) -> LaObjet {
-	return la_normalized_vector(x, la_norm_t(LA_LINF_NORM))
 }
 
 // MARK: - Linear Algebra productions
-public func inner_product(_ lhs: LaObjet, _ rhs: LaObjet) -> LaObjet {
-	return la_inner_product(lhs, rhs)
+public func inner_product<T: FloatingPoint>(_ lhs: LaObjet<T>, _ rhs: LaObjet<T>) -> LaObjet<T> {
+	return LaObjet<T>(objet: la_inner_product(lhs.objet, rhs.objet))
 }
-public func outer_product(_ lhs: LaObjet, _ rhs: LaObjet) -> LaObjet {
-	return la_outer_product(lhs, rhs)
+public func outer_product<T: FloatingPoint>(_ lhs: LaObjet<T>, _ rhs: LaObjet<T>) -> LaObjet<T> {
+	return LaObjet<T>(objet: la_outer_product(lhs.objet, rhs.objet))
 }
-public func matrix_product(_ lhs: LaObjet, _ rhs: LaObjet) -> LaObjet {
-	return la_matrix_product(lhs, rhs)
+public func matrix_product<T: FloatingPoint>(_ lhs: LaObjet<T>, _ rhs: LaObjet<T>) -> LaObjet<T> {
+	return LaObjet<T>(objet: la_matrix_product(lhs.objet, rhs.objet))
 }
-public func solve(A: LaObjet, b: LaObjet) -> LaObjet {
-	return la_solve(A, b)
-}
-
-// MARK: - Build
-public func LaMatrice<Entier: Integer>(identité: Entier) -> LaObjet {
-	return la_identity_matrix(identité.unsignedValue, TYPE, ATTR)
-}
-public func LaMatrice<Entier: Integer>(diagonale: LaObjet, shift: Entier = 0) -> LaObjet {
-	return la_diagonal_matrix_from_vector(diagonale, shift.signedValue)
-}
-public func LaMatrice(valuer: Float) -> LaObjet {
-	return la_splat_from_float(valuer, ATTR)
-}
-public func LaMatrice<Entier: Integer>(valuer: Float, rows: Entier, cols: Entier) -> LaObjet {
-	return la_matrix_from_splat(la_splat_from_float(valuer, ATTR), rows.unsignedValue, cols.unsignedValue)
-}
-public func LaMatrice<Entier: Integer>(valuer: Data, rows: Entier, cols: Entier, stride: Entier? = nil) -> LaObjet {
-	return la_matrix_from_float_buffer(UnsafePointer<Float>(OpaquePointer((valuer as NSData).bytes)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, ATTR)
-}
-public func LaMatrice<Entier: Integer>(valuer: Data, rows: Entier, cols: Entier, stride: Entier? = nil, deallocator: (@convention(c) (UnsafeMutableRawPointer?) -> Void)?) -> LaObjet {
-	return la_matrix_from_float_buffer_nocopy(UnsafeMutablePointer<Float>(OpaquePointer((valuer as NSData).bytes)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, deallocator, ATTR)
-}
-public func LaMatrice<Entier: Integer>(valuer: UnsafeRawPointer, rows: Entier, cols: Entier, stride: Entier? = nil) -> LaObjet {
-	return la_matrix_from_float_buffer(UnsafePointer<Float>(OpaquePointer(valuer)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, ATTR)
-}
-public func LaMatrice<Entier: Integer>(valuer: UnsafeRawPointer, rows: Entier, cols: Entier, stride: Entier? = nil, deallocator: (@convention(c) (UnsafeMutableRawPointer?) -> Void)?) -> LaObjet {
-	return la_matrix_from_float_buffer_nocopy(UnsafeMutablePointer<Float>(OpaquePointer(valuer)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, deallocator, ATTR)
-}
-*/
-private extension Integer {
-    var signedValue: Int {
-        switch self {
-            case let value as Int: return value
-            case let value as UInt: return Int(value)
-            case let value as Int8: return Int(value)
-            case let value as UInt8: return Int(value)
-            case let value as Int16: return Int(value)
-            case let value as UInt16: return Int(value)
-            case let value as Int32: return Int(value)
-            case let value as UInt32: return Int(value)
-            case let value as Int64: return Int(value)
-            case let value as UInt64: return Int(value)
-            default: assertionFailure("\(type(of: self)) cannot be compatible")
-        }
-        return 0
-    }
-    var unsignedValue: UInt {
-        switch self {
-            case let value as Int: return UInt(value)
-            case let value as UInt: return value
-            case let value as Int8: return UInt(value)
-            case let value as UInt8: return UInt(value)
-            case let value as Int16: return UInt(value)
-            case let value as UInt16: return UInt(value)
-            case let value as Int32: return UInt(value)
-            case let value as UInt32: return UInt(value)
-            case let value as Int64: return UInt(value)
-            case let value as UInt64: return UInt(value)
-            default: assertionFailure("\(type(of: self)) cannot be compatible")
-        }
-        return 0
-    }
+public func solve<T: FloatingPoint>(A: LaObjet<T>, b: LaObjet<T>) -> LaObjet<T> {
+	return LaObjet<T>(objet: la_solve(A.objet, b.objet))
 }
