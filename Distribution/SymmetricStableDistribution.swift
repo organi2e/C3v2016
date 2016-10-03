@@ -9,7 +9,7 @@
 import Maschine
 import LaObjet
 
-public protocol SymmetricStableDistribution: RandomVariableDistribution {
+public protocol SymmetricStableDistribution: RandomNumberGenerator {
 	func eval(commandBuffer: CommandBuffer, pdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
 	func eval(commandBuffer: CommandBuffer, cdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
 	func eval(commandBuffer: CommandBuffer, gradμ: Buffer<Float>, gradσ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)

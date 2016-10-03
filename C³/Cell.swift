@@ -6,33 +6,77 @@
 //
 //
 import LaObjet
-import Funktion
 import Distribution
+import Maschine
 import CoreData
-public class Cell: NSManagedObject {
+
+public class Cell: ManagedObject {
+	var level: RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)> = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: [])
+	var delta: RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)> = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)>(array: [])
+	var distribution: SymmetricStableDistribution = DegenerateDistribution()
 }
 extension Cell {
-	public func collect(ignore: Set<Cell> = []) -> LaObjet {
+	override func setup(context: Context) throws {
+		let count: Int = 2
+		level = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: (0..<count).map {(_)in
+			return (
+				context.newBuffer(count: Int(width)),
+				context.newBuffer(count: Int(width)),
+				context.newBuffer(count: Int(width))
+			)
+		})
+		delta = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)>(array: (0..<count).map {(_)in
+			return (
+				context.newBuffer(count: Int(width)),
+				context.newBuffer(count: Int(width)),
+				context.newBuffer(count: Int(width))
+			)
+		})
+	}
+}
+extension Cell {
+	public func collect(ignore: Set<Cell> = Set<Cell>()) -> LaObjet<Float> {
 		input.map {
 			$0.collect(ignore: ignore.union([self]))
 		}
-		return LaMatrice(identité: 1)
+		return LaObjet(identité: 1)
 	}
-	public func correct(ignore: Set<Cell> = []) -> (Δ: LaObjet, gradμ: LaObjet, gradσ: LaObjet) {
+	public func correct(ignore: Set<Cell> = Set<Cell>()) -> (Δ: LaObjet<Float>, gradμ: LaObjet<Float>, gradσ: LaObjet<Float>) {
 		return (
-			Δ: LaMatrice(valuer: 0),
-			gradμ: LaMatrice(valuer: 0),
-			gradσ: LaMatrice(valuer: 0)
+			Δ: LaObjet(valuer: 0),
+			gradμ: LaObjet(valuer: 0),
+			gradσ: LaObjet(valuer: 0)
 		)
 	}
 }
 extension Cell {
 	@NSManaged var width: UInt
-	@NSManaged var input: Set<Cell>
-	@NSManaged var output: Set<Cell>
+	@NSManaged var label: String
+	@NSManaged var attribute: Dictionary<String, Any>
+	@NSManaged var input: Set<Edge>
+	@NSManaged var output: Set<Edge>
+	@NSManaged var bias: Bias
 }
-extension Cell {
-	internal var state: LaObjet {
-		return LaMatrice(valuer: 0)
+extension Context {
+	public func newCell(width: UInt, label: String = "", recur: Bool = false, input: Array<Cell> = Array<Cell>()) throws -> Cell {
+		guard let cell: Cell = new() else {
+			throw EntityError.InsertionError(of: Cell.self)
+		}
+		cell.width = width
+		cell.label = label
+		cell.attribute = Dictionary<String, Any>()
+		cell.input = Set<Edge>()
+		cell.output = Set<Edge>()
+		try cell.setup(context: self)
+		do {
+			let _: Bias = try newBias(cell: cell)
+		} catch {
+			delete(cell)
+			throw EntityError.InsertionError(of: Bias.self)
+		}
+		try input.forEach {
+			let _: Edge = try newEdge(output: cell, input: $0)
+		}
+		return cell
 	}
 }

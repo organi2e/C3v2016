@@ -131,14 +131,13 @@
 		8719083C1D9230900048A43F /* LaObjet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LaObjet.swift; path = LaObjet/LaObjet.swift; sourceTree = "<group>"; };
 		871908401D92423F0048A43F /* MNIST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MNIST.swift; path = MNIST/MNIST.swift; sourceTree = "<group>"; };
 		871908641D924CF60048A43F /* CIFAR10.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CIFAR10.swift; path = CIFAR10/CIFAR10.swift; sourceTree = "<group>"; };
-		871908681D9252DC0048A43F /* C³.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "C³.xcdatamodel"; sourceTree = "<group>"; };
 		8719088A1D9253DD0048A43F /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Context.swift; path = "C³/Context.swift"; sourceTree = "<group>"; };
 		871908911D9253ED0048A43F /* Arcane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Arcane.swift; path = "C³/Arcane.swift"; sourceTree = "<group>"; };
 		871908BC1D9282180048A43F /* Maschine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Maschine.swift; path = Funktion/Maschine.swift; sourceTree = "<group>"; };
 		871908BF1D928F8A0048A43F /* Buffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Buffer.swift; path = Funktion/Buffer.swift; sourceTree = "<group>"; };
 		871908C01D928F960048A43F /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Command.swift; path = Funktion/Command.swift; sourceTree = "<group>"; };
 		871908C51D9298370048A43F /* BufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BufferTests.swift; path = Funktion/BufferTests.swift; sourceTree = "<group>"; };
-		871E157D1D952F7600739047 /* RandomVariableDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomVariableDistribution.swift; path = Distribution/RandomVariableDistribution.swift; sourceTree = "<group>"; };
+		871E157D1D952F7600739047 /* RandomNumberGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomNumberGenerator.swift; path = Distribution/RandomNumberGenerator.swift; sourceTree = "<group>"; };
 		871E159A1D9530D600739047 /* SymmetricStableDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SymmetricStableDistribution.swift; path = Distribution/SymmetricStableDistribution.swift; sourceTree = "<group>"; };
 		871E15A11D95311A00739047 /* GaussianDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GaussianDistribution.swift; path = Distribution/GaussianDistribution.swift; sourceTree = "<group>"; };
 		871E15A21D95312800739047 /* CauchyDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CauchyDistribution.swift; path = Distribution/CauchyDistribution.swift; sourceTree = "<group>"; };
@@ -162,9 +161,15 @@
 		871E16401D9A670F00739047 /* StochasticGradientDescent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StochasticGradientDescent.swift; path = Optimizer/StochasticGradientDescent.swift; sourceTree = "<group>"; };
 		871E16451D9A75E400739047 /* OptimizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OptimizerTests.swift; path = Optimizer/OptimizerTests.swift; sourceTree = "<group>"; };
 		871E16481D9A7A7E00739047 /* mtlOptimizerTests.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlOptimizerTests.metal; path = Optimizer/mtlOptimizerTests.metal; sourceTree = "<group>"; };
+		875297F11DA2637500F28C50 /* mtlArcane.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlArcane.metal; path = "C³/mtlArcane.metal"; sourceTree = "<group>"; };
+		875298041DA2669100F28C50 /* Decay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Decay.swift; path = "C³/Decay.swift"; sourceTree = "<group>"; };
+		875298081DA2680F00F28C50 /* C³.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "C³.xcdatamodel"; sourceTree = "<group>"; };
 		8762339C1D9E6A2500E7D001 /* LaÉlément.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "LaÉlément.swift"; path = "LaObjet/LaÉlément.swift"; sourceTree = "<group>"; };
 		8766AEA21D9CCC6B00FC7FE6 /* BlitCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BlitCommand.swift; path = Maschine/BlitCommand.swift; sourceTree = "<group>"; };
 		8766AEA51D9CD43500FC7FE6 /* DegenerateDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DegenerateDistribution.swift; path = Distribution/DegenerateDistribution.swift; sourceTree = "<group>"; };
+		87CDF7301DA21FCA0056FC89 /* RingBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RingBuffer.swift; path = "C³/RingBuffer.swift"; sourceTree = "<group>"; };
+		87CDF7441DA234D00056FC89 /* ContextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContextTests.swift; path = "C³/ContextTests.swift"; sourceTree = "<group>"; };
+		87CDF7471DA246EA0056FC89 /* Bias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Bias.swift; path = "C³/Bias.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -244,11 +249,16 @@
 		871907E81D921DA60048A43F /* C³ */ = {
 			isa = PBXGroup;
 			children = (
-				871908671D9252DC0048A43F /* C³.xcdatamodeld */,
 				8719088A1D9253DD0048A43F /* Context.swift */,
 				871908911D9253ED0048A43F /* Arcane.swift */,
+				87CDF7471DA246EA0056FC89 /* Bias.swift */,
 				871E15AB1D9539CC00739047 /* Cell.swift */,
+				875298041DA2669100F28C50 /* Decay.swift */,
 				871E15AE1D953A5C00739047 /* Edge.swift */,
+				87CDF7301DA21FCA0056FC89 /* RingBuffer.swift */,
+				875297F11DA2637500F28C50 /* mtlArcane.metal */,
+				87CDF7441DA234D00056FC89 /* ContextTests.swift */,
+				875298071DA2680F00F28C50 /* C³.xcdatamodeld */,
 			);
 			name = "C³";
 			sourceTree = "<group>";
@@ -283,7 +293,7 @@
 		871E15721D952F2A00739047 /* Distribution */ = {
 			isa = PBXGroup;
 			children = (
-				871E157D1D952F7600739047 /* RandomVariableDistribution.swift */,
+				871E157D1D952F7600739047 /* RandomNumberGenerator.swift */,
 				871E159A1D9530D600739047 /* SymmetricStableDistribution.swift */,
 				8766AEA51D9CD43500FC7FE6 /* DegenerateDistribution.swift */,
 				871E15A21D95312800739047 /* CauchyDistribution.swift */,
@@ -509,12 +519,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		871908671D9252DC0048A43F /* C³.xcdatamodeld */ = {
+		875298071DA2680F00F28C50 /* C³.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				871908681D9252DC0048A43F /* C³.xcdatamodel */,
+				875298081DA2680F00F28C50 /* C³.xcdatamodel */,
 			);
-			currentVersion = 871908681D9252DC0048A43F /* C³.xcdatamodel */;
+			currentVersion = 875298081DA2680F00F28C50 /* C³.xcdatamodel */;
 			name = "C³.xcdatamodeld";
 			path = "C³/C³.xcdatamodeld";
 			sourceTree = "<group>";

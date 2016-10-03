@@ -20,8 +20,8 @@ public class StochasticGradientDescent: Optimizer {
 		self.groups = (count-1)/4+1
 		self.η = η
 	}
-	public func update(command: Command, θ: Buffer<Float>, Δθ: Buffer<Float>) {
-		command.compute {
+	public func update(commandBuffer: CommandBuffer, θ: Buffer<Float>, Δθ: Buffer<Float>) {
+		commandBuffer.compute {
 			$0.set(pipeline: pipeline)
 			$0.set(buffer: θ, offset: 0, at: 0)
 			$0.set(buffer: Δθ, offset: 0, at: 1)
