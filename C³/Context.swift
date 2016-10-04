@@ -127,7 +127,7 @@ public class ManagedObject: NSManagedObject {
 		return context
 	}
 	internal static var entityName: String {
-		guard let entityName: String = String(describing: type(of: self)).components(separatedBy: ".").last else {
+		guard let entityName: String = String(describing: self).components(separatedBy: ".").last else {
 			assertionFailure(Context.SystemError.BrokenBundle.rawValue)
 			fatalError()
 		}

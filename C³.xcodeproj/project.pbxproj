@@ -63,20 +63,6 @@
 			remoteGlobalIDString = 871908761D9252F30048A43F;
 			remoteInfo = C3Tests;
 		};
-		871908B81D9282040048A43F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8719089F1D9281F70048A43F;
-			remoteInfo = Funktion;
-		};
-		871908BA1D9282040048A43F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 871908A71D9281F70048A43F;
-			remoteInfo = FunktionTests;
-		};
 		871E159D1D9530D600739047 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
@@ -119,6 +105,20 @@
 			remoteGlobalIDString = 871E15FB1D9A17F300739047;
 			remoteInfo = MaschineTests;
 		};
+		8752984A1DA3723900F28C50 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 875298301DA3721A00F28C50;
+			remoteInfo = Brass;
+		};
+		8752984C1DA3723900F28C50 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 871907C61D921D570048A43F /* macOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 875298381DA3721B00F28C50;
+			remoteInfo = BrassTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -133,10 +133,6 @@
 		871908641D924CF60048A43F /* CIFAR10.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CIFAR10.swift; path = CIFAR10/CIFAR10.swift; sourceTree = "<group>"; };
 		8719088A1D9253DD0048A43F /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Context.swift; path = "C³/Context.swift"; sourceTree = "<group>"; };
 		871908911D9253ED0048A43F /* Arcane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Arcane.swift; path = "C³/Arcane.swift"; sourceTree = "<group>"; };
-		871908BC1D9282180048A43F /* Maschine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Maschine.swift; path = Funktion/Maschine.swift; sourceTree = "<group>"; };
-		871908BF1D928F8A0048A43F /* Buffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Buffer.swift; path = Funktion/Buffer.swift; sourceTree = "<group>"; };
-		871908C01D928F960048A43F /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Command.swift; path = Funktion/Command.swift; sourceTree = "<group>"; };
-		871908C51D9298370048A43F /* BufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BufferTests.swift; path = Funktion/BufferTests.swift; sourceTree = "<group>"; };
 		871E157D1D952F7600739047 /* RandomNumberGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomNumberGenerator.swift; path = Distribution/RandomNumberGenerator.swift; sourceTree = "<group>"; };
 		871E159A1D9530D600739047 /* SymmetricStableDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SymmetricStableDistribution.swift; path = Distribution/SymmetricStableDistribution.swift; sourceTree = "<group>"; };
 		871E15A11D95311A00739047 /* GaussianDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GaussianDistribution.swift; path = Distribution/GaussianDistribution.swift; sourceTree = "<group>"; };
@@ -168,6 +164,9 @@
 		8752981B1DA354BE00F28C50 /* RMSProp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RMSProp.swift; path = Optimizer/RMSProp.swift; sourceTree = "<group>"; };
 		875298241DA35B2100F28C50 /* AdaDelta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdaDelta.swift; path = Optimizer/AdaDelta.swift; sourceTree = "<group>"; };
 		875298251DA35B2D00F28C50 /* mtlAdaDelta.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlAdaDelta.metal; path = Optimizer/mtlAdaDelta.metal; sourceTree = "<group>"; };
+		875298471DA3723800F28C50 /* Brass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Brass.swift; path = Brass/Brass.swift; sourceTree = "<group>"; };
+		8752984E1DA3724200F28C50 /* mtlBrass.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlBrass.metal; path = Brass/mtlBrass.metal; sourceTree = "<group>"; };
+		875298531DA37D2500F28C50 /* BrassTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BrassTests.swift; path = Brass/BrassTests.swift; sourceTree = "<group>"; };
 		8762339C1D9E6A2500E7D001 /* LaÉlément.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "LaÉlément.swift"; path = "LaObjet/LaÉlément.swift"; sourceTree = "<group>"; };
 		8766AEA21D9CCC6B00FC7FE6 /* BlitCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BlitCommand.swift; path = Maschine/BlitCommand.swift; sourceTree = "<group>"; };
 		8766AEA51D9CD43500FC7FE6 /* DegenerateDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DegenerateDistribution.swift; path = Distribution/DegenerateDistribution.swift; sourceTree = "<group>"; };
@@ -182,8 +181,8 @@
 			children = (
 				871907E81D921DA60048A43F /* C³ */,
 				871907E71D921DA00048A43F /* LaObjet */,
+				8752982A1DA371D700F28C50 /* Brass */,
 				871E160A1D9A17F800739047 /* Maschine */,
-				871908961D9257AC0048A43F /* Funktion */,
 				871E15C11D9A011A00739047 /* Optimizer */,
 				871E15721D952F2A00739047 /* Distribution */,
 				8719083F1D92421E0048A43F /* MNIST */,
@@ -204,10 +203,10 @@
 				871E15A01D9530D600739047 /* DistributionTests.xctest */,
 				871E15E71D9A065B00739047 /* Optimizer.framework */,
 				871E15E91D9A065B00739047 /* OptimizerTests.xctest */,
-				871908B91D9282040048A43F /* Funktion.framework */,
-				871908BB1D9282040048A43F /* FunktionTests.xctest */,
 				871E160E1D9A17F900739047 /* Maschine.framework */,
 				871E16101D9A17F900739047 /* MaschineTests.xctest */,
+				8752984B1DA3723900F28C50 /* Brass.framework */,
+				8752984D1DA3723900F28C50 /* BrassTests.xctest */,
 				8719080A1D921DE80048A43F /* LaObjet.framework */,
 				8719080C1D921DE80048A43F /* LaObjetTests.xctest */,
 				871908631D924CD00048A43F /* CIFAR10.framework */,
@@ -281,17 +280,6 @@
 				871908641D924CF60048A43F /* CIFAR10.swift */,
 			);
 			name = CIFAR10;
-			sourceTree = "<group>";
-		};
-		871908961D9257AC0048A43F /* Funktion */ = {
-			isa = PBXGroup;
-			children = (
-				871908BC1D9282180048A43F /* Maschine.swift */,
-				871908BF1D928F8A0048A43F /* Buffer.swift */,
-				871908C01D928F960048A43F /* Command.swift */,
-				871908C51D9298370048A43F /* BufferTests.swift */,
-			);
-			name = Funktion;
 			sourceTree = "<group>";
 		};
 		871E15721D952F2A00739047 /* Distribution */ = {
@@ -381,6 +369,16 @@
 				871E16451D9A75E400739047 /* OptimizerTests.swift */,
 			);
 			name = Tests;
+			sourceTree = "<group>";
+		};
+		8752982A1DA371D700F28C50 /* Brass */ = {
+			isa = PBXGroup;
+			children = (
+				875298471DA3723800F28C50 /* Brass.swift */,
+				8752984E1DA3724200F28C50 /* mtlBrass.metal */,
+				875298531DA37D2500F28C50 /* BrassTests.swift */,
+			);
+			name = Brass;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -481,20 +479,6 @@
 			remoteRef = 8719088F1D9253DE0048A43F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		871908B91D9282040048A43F /* Funktion.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Funktion.framework;
-			remoteRef = 871908B81D9282040048A43F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		871908BB1D9282040048A43F /* FunktionTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = FunktionTests.xctest;
-			remoteRef = 871908BA1D9282040048A43F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		871E159E1D9530D600739047 /* Distribution.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -535,6 +519,20 @@
 			fileType = wrapper.cfbundle;
 			path = MaschineTests.xctest;
 			remoteRef = 871E160F1D9A17F900739047 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8752984B1DA3723900F28C50 /* Brass.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Brass.framework;
+			remoteRef = 8752984A1DA3723900F28C50 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8752984D1DA3723900F28C50 /* BrassTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = BrassTests.xctest;
+			remoteRef = 8752984C1DA3723900F28C50 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
