@@ -8,21 +8,32 @@
 import CoreData
 import LaObjet
 import Maschine
+import Optimizer
 
 public class Context: NSManagedObjectContext {
 	
-	//I hate fileprivate rather
+	//I hate fileprivate
 	internal let maschine: Maschine
+	internal let storage: URL?
+	internal var optimizer: ((Maschine, Int)throws->Optimizer)
 	
 	public init(storage: URL?) throws {
 		self.maschine = try Maschine(device: MTLCreateSystemDefaultDevice())
+		self.storage = storage
+		self.optimizer = StochasticGradientDescent.factory(η: 0.5)
 		super.init(concurrencyType: .privateQueueConcurrencyType)
 		try setup(storage: storage)
 	}
 	public required init?(coder: NSCoder) {
 		self.maschine = try!Maschine(device: MTLCreateSystemDefaultDevice())
+		self.storage = coder.decodeObject(forKey: "storage")as?URL
+		self.optimizer = StochasticGradientDescent.factory(η: 0.5)
 		super.init(coder: coder)
-		try!setup(storage: nil)
+		try!setup(storage: storage)
+	}
+	public override func encode(with: NSCoder) {
+		with.encode(storage, forKey: "storage")
+		super.encode(with: with)
 	}
 	private func setup(storage: URL?) throws {
 		guard let model: NSManagedObjectModel = NSManagedObjectModel.mergedModel(from: [Bundle(for: type(of: self))]) else { throw SystemError.BrokenBundle }
@@ -54,32 +65,37 @@ extension Context {
 	}
 }
 extension Context {
+	internal func newOptimizer(count: Int) throws -> Optimizer {
+		return try optimizer(maschine, count)
+	}
+}
+extension Context {
 	internal func new<T: ManagedObject>() -> T? {
 		var result: T? = nil
-		if let entityName: String = String(describing: T.self).components(separatedBy: ".").last {
-			performAndWait {
-				let object: NSManagedObject = NSEntityDescription.insertNewObject(forEntityName: entityName, into: self)
-				if let sametype: T = object as? T {
-					result = sametype
-				} else {
-					self.delete(object)
-				}
+		performAndWait {
+			let object: NSManagedObject = NSEntityDescription.insertNewObject(forEntityName: T.entityName, into: self)
+			if let sametype: T = object as? T {
+				result = sametype
+			} else {
+				self.delete(object)
 			}
 		}
 		return result
 	}
-	internal func fetch<T: ManagedObject>(attribute: Dictionary<String, Any>, handler: ((Error)->Void)? = nil) -> Array<T> {
+	internal func fetch<T: ManagedObject>(attribute: Dictionary<String, Any>) throws -> Array<T> {
 		var result: Array<T> = Array<T>()
-		if let entityName: String = String(describing: T.self).components(separatedBy: ".").last {
-			performAndWait {
-				let request: NSFetchRequest<T> = NSFetchRequest<T>(entityName: entityName)
-				request.predicate = attribute.isEmpty ? nil : NSPredicate(format: attribute.keys.map{"\($0) = %@"}.joined(separator: " and "), argumentArray: Array<Any>(attribute.values))
-				do {
-					result  = try self.fetch(request)
-				} catch {
-					handler?(error)
-				}
+		var err: Error?
+		performAndWait {
+			let request: NSFetchRequest<T> = NSFetchRequest<T>(entityName: T.entityName)
+			request.predicate = attribute.isEmpty ? nil : NSPredicate(format: attribute.keys.map{"\($0) = %@"}.joined(separator: " and "), argumentArray: Array<Any>(attribute.values))
+			do {
+				result  = try self.fetch(request)
+			} catch {
+				err = error
 			}
+		}
+		if let err: Error = err {
+			throw err
 		}
 		return result
 	}
@@ -88,46 +104,52 @@ extension Context {
 			self.delete(object)
 		}
 	}
-	internal func store(sync: Bool = false, handling: ((Error)->Void)? = nil) {
+	internal func store(sync: Bool = false) throws {
+		var err: Error?
 		( sync ? perform : performAndWait ) {
 			do {
 				try self.save()
 			} catch {
-				handling?(error)
+				err = error
 			}
+		}
+		if let err: Error = err {
+			throw err
 		}
 	}
 }
 public class ManagedObject: NSManagedObject {
 	internal var context: Context {
-		guard let context: Context = managedObjectContext as? Context else { fatalError(Context.SystemError.InvalidContext.rawValue) }
+		guard let context: Context = managedObjectContext as? Context else {
+			assertionFailure(Context.SystemError.BrokenBundle.rawValue)
+			fatalError()
+		}
 		return context
+	}
+	internal static var entityName: String {
+		guard let entityName: String = String(describing: type(of: self)).components(separatedBy: ".").last else {
+			assertionFailure(Context.SystemError.BrokenBundle.rawValue)
+			fatalError()
+		}
+		return  entityName
 	}
 	internal func setup(context: Context) throws {
 		
 	}
 	public override func awakeFromFetch() {
 		super.awakeFromFetch()
-		if let context: Context = managedObjectContext as? Context {
-			do {
-				try setup(context: context)
-			} catch {
-			
-			}
-		} else {
-			assertionFailure(Context.SystemError.InvalidContext.rawValue)
+		do {
+			try setup(context: context)
+		} catch {
+			assertionFailure(Context.SystemError.BrokenBundle.rawValue)
 		}
 	}
-	public override func awake(fromSnapshotEvents flags: NSSnapshotEventType) {
-		super.awake(fromSnapshotEvents: flags)
-		if let context: Context = managedObjectContext as? Context {
-			do {
-				try setup(context: context)
-			} catch {
-				
-			}
-		} else {
-			assertionFailure(Context.SystemError.InvalidContext.rawValue)
+	public override func awake(fromSnapshotEvents: NSSnapshotEventType) {
+		super.awake(fromSnapshotEvents: fromSnapshotEvents)
+		do {
+			try setup(context: context)
+		} catch {
+			assertionFailure(Context.SystemError.BrokenBundle.rawValue)
 		}
 	}
 }

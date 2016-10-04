@@ -18,7 +18,8 @@ class OptimizerTests: XCTestCase {
 	var loss: ComputePipelineState!
 	var dloss: ComputePipelineState!
 	var x: Buffer<Float>!
-	var Δx: Buffer<Float>!
+	var g: Buffer<Float>!
+	var Δ: Buffer<Float>!
 	var ans: Buffer<Float>!
 	
 	override func setUp() {
@@ -26,7 +27,8 @@ class OptimizerTests: XCTestCase {
 		do {
 			maschine = try Maschine()
 			x = maschine.newBuffer(count: count)
-			Δx = maschine.newBuffer(count: count)
+			g = maschine.newBuffer(count: count)
+			Δ = maschine.newBuffer(count: count)
 			ans = maschine.newBuffer(count: count)
 			(0..<count).forEach {
 				x[$0] = Float(drand48())
@@ -39,21 +41,22 @@ class OptimizerTests: XCTestCase {
 		}
 	}
 	
-	func loss(command: Command) {
+	func loss(command: CommandBuffer) {
 		command.compute {
 			$0.set(pipeline: loss)
-			$0.set(buffer: Δx, offset: 0, at: 0)
-			$0.set(buffer: x, offset: 0, at: 1)
-			$0.set(buffer: ans, offset: 0, at: 2)
+			$0.set(buffer: g, offset: 0, at: 0)
+			$0.set(buffer: Δ, offset: 0, at: 1)
+			$0.set(buffer: x, offset: 0, at: 2)
+			$0.set(buffer: ans, offset: 0, at: 3)
 			$0.dispatch(groups: (count-1)/4+1, threads: 1)
 		}
 	}
 	
 	func eval(optimizer: Optimizer) {
-		let c: Command = maschine.newCommand()
+		let c: CommandBuffer = maschine.newCommandBuffer()
 		for _ in 0..<1024 {
 			loss(command: c)
-			optimizer.update(command: c, θ: x, Δθ: Δx)
+			optimizer.update(commandBuffer: c, value: x, nabla: g, delta: Δ)
 		}
 		c.commit()
 		c.waitUntilCompleted()
@@ -70,7 +73,25 @@ class OptimizerTests: XCTestCase {
 	
 	func testMomentum() {
 		do {
-			eval(optimizer: try Momentum(maschine: maschine, count: count, γ: 0.9, η: 1/96.0))
+			eval(optimizer: try Momentum(maschine: maschine, count: count, γ: 0.5, η: 1/96.0))
+			print(x.array)
+		} catch {
+			XCTFail()
+		}
+	}
+	
+	func testRMSProp() {
+		do {
+			eval(optimizer: try RMSProp(maschine: maschine, count: count, α: 1e-2, γ: 0.9, ε: 1e-16))
+			print(x.array)
+		} catch {
+			XCTFail()
+		}
+	}
+	
+	func testAdaDelta() {
+		do {
+			eval(optimizer: try AdaDelta(maschine: maschine, count: count, α: 1.0, γ: 0.95, ε: 1e-5))
 			print(x.array)
 		} catch {
 			XCTFail()

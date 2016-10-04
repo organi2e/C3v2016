@@ -9,11 +9,11 @@
 #include <metal_stdlib>
 using namespace metal;
 
-kernel void loss(device float4 * const dx [[ buffer(0) ]],
-				 device const float4 * const x [[ buffer(1) ]],
-				 device const float4 * const ans [[ buffer(2) ]],
+kernel void loss(device float4 * const nabla [[ buffer(0) ]],
+				 device float4 * const delta [[ buffer(1) ]],
+				 device const float4 * const value [[ buffer(2) ]],
+				 device const float4 * const ans [[ buffer(3) ]],
 				 uint const n [[ thread_position_in_grid ]]) {
-	float4 deltay = ( x [ n ] - ans [ n ] ) * ( x [ n ] - ans [ n ] );
-	float4 dydx = 2 * ( x [ n ] - ans [ n ] );
-	dx[n] = deltay * dydx;
+	delta [ n ] = ( value [ n ] - ans [ n ] ) * ( value [ n ] - ans [ n ] );
+	nabla [ n ] = 2 * ( value [ n ] - ans [ n ] );
 }

@@ -10,6 +10,6 @@ import LaObjet
 import Maschine
 
 public protocol Optimizer {
-	func update(commandBuffer: CommandBuffer, θ: Buffer<Float>, Δθ: Buffer<Float>)
+	func update(commandBuffer: CommandBuffer, value: Buffer<Float>, nabla: Buffer<Float>, delta: Buffer<Float>)
 	func reset()
 }

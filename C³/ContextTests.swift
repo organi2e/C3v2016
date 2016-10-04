@@ -12,7 +12,7 @@ import C3
 class ContextTests: XCTestCase {
 	func testContext() {
 		do {
-			let context: Context = try Context(storage: URL(fileURLWithPath: "/Users/Kota/test.sqlite"))
+			let context: Context = try Context(storage: nil)//URL(fileURLWithPath: "/Users/Kota/test.sqlite"))
 			let cell: Cell = try context.newCell(width: 10)
 			print(cell)
 		} catch {

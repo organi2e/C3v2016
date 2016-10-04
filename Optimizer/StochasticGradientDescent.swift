@@ -14,18 +14,26 @@ public class StochasticGradientDescent: Optimizer {
 	let η: Float
 	let pipeline: ComputePipelineState
 	
+	public static func factory(η: Float) -> (Maschine, Int) throws -> Optimizer {
+		return {
+			try StochasticGradientDescent(maschine: $0, count: $1, η: η)
+		}
+	}
+	
 	public init(maschine: Maschine, count: Int, η: Float) throws {
 		try?maschine.employ(bundle: Bundle(for: type(of: self)))
 		self.pipeline = try maschine.newComputePipelineState(name: "StochasticGradientDescent")
 		self.groups = (count-1)/4+1
 		self.η = η
 	}
-	public func update(commandBuffer: CommandBuffer, θ: Buffer<Float>, Δθ: Buffer<Float>) {
+	
+	public func update(commandBuffer: CommandBuffer, value: Buffer<Float>, nabla: Buffer<Float>, delta: Buffer<Float>) {
 		commandBuffer.compute {
 			$0.set(pipeline: pipeline)
-			$0.set(buffer: θ, offset: 0, at: 0)
-			$0.set(buffer: Δθ, offset: 0, at: 1)
-			$0.set(value: η, at: 2)
+			$0.set(buffer: value, offset: 0, at: 0)
+			$0.set(buffer: nabla, offset: 0, at: 1)
+			$0.set(buffer: delta, offset: 0, at: 2)
+			$0.set(value: η, at: 3)
 			$0.dispatch(groups: groups, threads: 1)
 		}
 	}

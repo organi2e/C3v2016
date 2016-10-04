@@ -57,7 +57,11 @@
 		871E164C1D9A84BE00739047 /* mtlMomentum.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E164B1D9A84BE00739047 /* mtlMomentum.metal */; };
 		875298031DA2643600F28C50 /* mtlArcane.metal in Sources */ = {isa = PBXBuildFile; fileRef = 875298021DA2643600F28C50 /* mtlArcane.metal */; };
 		875298061DA266A300F28C50 /* Decay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 875298051DA266A300F28C50 /* Decay.swift */; };
-		8752980D1DA269C500F28C50 /* C³.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8752980A1DA2688700F28C50 /* C³.xcdatamodeld */; };
+		875298161DA3473100F28C50 /* C³.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 875298151DA3473100F28C50 /* C³.xcdatamodeld */; };
+		8752981E1DA354F800F28C50 /* RMSProp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8752981D1DA354F800F28C50 /* RMSProp.swift */; };
+		875298201DA354FC00F28C50 /* mtlRMSProp.metal in Sources */ = {isa = PBXBuildFile; fileRef = 8752981F1DA354FC00F28C50 /* mtlRMSProp.metal */; };
+		875298271DA35CA800F28C50 /* AdaDelta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 875298261DA35CA800F28C50 /* AdaDelta.swift */; };
+		875298291DA35CAB00F28C50 /* mtlAdaDelta.metal in Sources */ = {isa = PBXBuildFile; fileRef = 875298281DA35CAB00F28C50 /* mtlAdaDelta.metal */; };
 		8762339A1D9E64E000E7D001 /* LaEntier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876233991D9E64E000E7D001 /* LaEntier.swift */; };
 		8762339B1D9E650900E7D001 /* LaEntier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876233991D9E64E000E7D001 /* LaEntier.swift */; };
 		876233AE1D9E6A3000E7D001 /* LaÉlément.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876233AD1D9E6A3000E7D001 /* LaÉlément.swift */; };
@@ -242,8 +246,11 @@
 		871E164B1D9A84BE00739047 /* mtlMomentum.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlMomentum.metal; path = ../../Optimizer/mtlMomentum.metal; sourceTree = "<group>"; };
 		875298021DA2643600F28C50 /* mtlArcane.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlArcane.metal; path = "../../C³/mtlArcane.metal"; sourceTree = "<group>"; };
 		875298051DA266A300F28C50 /* Decay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Decay.swift; path = "../../C³/Decay.swift"; sourceTree = "<group>"; };
-		875298091DA2688700F28C50 /* C³.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "C³.xcdatamodel"; sourceTree = "<group>"; };
-		8752980C1DA2699B00F28C50 /* 1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = 1.xcdatamodel; sourceTree = "<group>"; };
+		875298141DA3473100F28C50 /* C³.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "C³.xcdatamodel"; sourceTree = "<group>"; };
+		8752981D1DA354F800F28C50 /* RMSProp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RMSProp.swift; path = ../../Optimizer/RMSProp.swift; sourceTree = "<group>"; };
+		8752981F1DA354FC00F28C50 /* mtlRMSProp.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlRMSProp.metal; path = ../../Optimizer/mtlRMSProp.metal; sourceTree = "<group>"; };
+		875298261DA35CA800F28C50 /* AdaDelta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdaDelta.swift; path = ../../Optimizer/AdaDelta.swift; sourceTree = "<group>"; };
+		875298281DA35CAB00F28C50 /* mtlAdaDelta.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlAdaDelta.metal; path = ../../Optimizer/mtlAdaDelta.metal; sourceTree = "<group>"; };
 		876233991D9E64E000E7D001 /* LaEntier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LaEntier.swift; path = ../../LaObjet/LaEntier.swift; sourceTree = "<group>"; };
 		876233AD1D9E6A3000E7D001 /* LaÉlément.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "LaÉlément.swift"; path = "../../LaObjet/LaÉlément.swift"; sourceTree = "<group>"; };
 		8766AEA31D9CCCA100FC7FE6 /* BlitCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BlitCommand.swift; path = ../../Maschine/BlitCommand.swift; sourceTree = "<group>"; };
@@ -447,6 +454,7 @@
 		8719086F1D9252F30048A43F /* C3 */ = {
 			isa = PBXGroup;
 			children = (
+				875298151DA3473100F28C50 /* C³.xcdatamodeld */,
 				87CDF7411DA220D80056FC89 /* RingBuffer.swift */,
 				871908941D9254000048A43F /* Context.swift */,
 				871908921D9253FD0048A43F /* Arcane.swift */,
@@ -456,7 +464,6 @@
 				871E15AF1D953AB300739047 /* Edge.swift */,
 				875298021DA2643600F28C50 /* mtlArcane.metal */,
 				871908701D9252F30048A43F /* C3.h */,
-				8752980A1DA2688700F28C50 /* C³.xcdatamodeld */,
 				871908711D9252F30048A43F /* Info.plist */,
 			);
 			path = C3;
@@ -519,10 +526,14 @@
 		871E15C91D9A01FD00739047 /* Optimizer */ = {
 			isa = PBXGroup;
 			children = (
+				875298281DA35CAB00F28C50 /* mtlAdaDelta.metal */,
+				8752981F1DA354FC00F28C50 /* mtlRMSProp.metal */,
 				871E16431D9A672500739047 /* mtlStochasticGradientDescent.metal */,
 				871E164B1D9A84BE00739047 /* mtlMomentum.metal */,
-				871E16411D9A671F00739047 /* StochasticGradientDescent.swift */,
+				875298261DA35CA800F28C50 /* AdaDelta.swift */,
+				8752981D1DA354F800F28C50 /* RMSProp.swift */,
 				871E15EA1D9A0DD400739047 /* Momentum.swift */,
+				871E16411D9A671F00739047 /* StochasticGradientDescent.swift */,
 				871E15DF1D9A020D00739047 /* Optimizer.swift */,
 				871E15CA1D9A01FD00739047 /* Optimizer.h */,
 				871E15CB1D9A01FD00739047 /* Info.plist */,
@@ -1143,7 +1154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8752980D1DA269C500F28C50 /* C³.xcdatamodeld in Sources */,
+				875298161DA3473100F28C50 /* C³.xcdatamodeld in Sources */,
 				871908951D9254000048A43F /* Context.swift in Sources */,
 				871908931D9253FD0048A43F /* Arcane.swift in Sources */,
 				87CDF7491DA248150056FC89 /* Bias.swift in Sources */,
@@ -1208,9 +1219,13 @@
 			files = (
 				871E15E01D9A020D00739047 /* Optimizer.swift in Sources */,
 				871E16421D9A671F00739047 /* StochasticGradientDescent.swift in Sources */,
-				871E15EB1D9A0DD400739047 /* Momentum.swift in Sources */,
 				871E16441D9A672500739047 /* mtlStochasticGradientDescent.metal in Sources */,
+				871E15EB1D9A0DD400739047 /* Momentum.swift in Sources */,
 				871E164C1D9A84BE00739047 /* mtlMomentum.metal in Sources */,
+				8752981E1DA354F800F28C50 /* RMSProp.swift in Sources */,
+				875298201DA354FC00F28C50 /* mtlRMSProp.metal in Sources */,
+				875298271DA35CA800F28C50 /* AdaDelta.swift in Sources */,
+				875298291DA35CAB00F28C50 /* mtlAdaDelta.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3076,13 +3091,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		8752980A1DA2688700F28C50 /* C³.xcdatamodeld */ = {
+		875298151DA3473100F28C50 /* C³.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				8752980C1DA2699B00F28C50 /* 1.xcdatamodel */,
-				875298091DA2688700F28C50 /* C³.xcdatamodel */,
+				875298141DA3473100F28C50 /* C³.xcdatamodel */,
 			);
-			currentVersion = 8752980C1DA2699B00F28C50 /* 1.xcdatamodel */;
+			currentVersion = 875298141DA3473100F28C50 /* C³.xcdatamodel */;
 			name = "C³.xcdatamodeld";
 			path = "../../C³/C³.xcdatamodeld";
 			sourceTree = "<group>";

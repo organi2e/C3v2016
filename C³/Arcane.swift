@@ -13,6 +13,10 @@ import Optimizer
 
 internal class Arcane: ManagedObject {
 	
+	private static let argmukey: String = "argmu"
+	private static let argsigmakey: String = "argsigma"
+	private static let keys: Set<String> = Set<String>(arrayLiteral: argmukey, argsigmakey)
+	
 	private var cache: (
 		χ: Buffer<Float>,
 		μ: Buffer<Float>,
@@ -21,7 +25,7 @@ internal class Arcane: ManagedObject {
 		argσ: Buffer<Float>,
 		graμ: Buffer<Float>,
 		graσ: Buffer<Float>,
-		update: ComputePipelineState
+		refresh: ComputePipelineState
 	)!
 	private var optimizer: Optimizer!
 	
@@ -35,16 +39,23 @@ internal class Arcane: ManagedObject {
 			argσ: context.newBuffer(count: count),
 			graμ: context.newBuffer(count: count),
 			graσ: context.newBuffer(count: count),
-			update: try context.newComputePipelineState(name: "arcaneUpdate")
+			refresh: try context.newComputePipelineState(name: "arcaneRefresh")
 		)
-		setPrimitiveValue(Data(bytesNoCopy: cache.argμ.pointer, count: count, deallocator: .none), forKey: "argmu")
-		setPrimitiveValue(Data(bytesNoCopy: cache.argσ.pointer, count: count, deallocator: .none), forKey: "argsigma")
+		setPrimitiveValue(Data(bytesNoCopy: cache.argμ.pointer, count: count, deallocator: .none), forKey: Arcane.argmukey)
+		setPrimitiveValue(Data(bytesNoCopy: cache.argσ.pointer, count: count, deallocator: .none), forKey: Arcane.argsigmakey)
+	}
+	internal func refresh(commandBuffer: CommandBuffer) {
+		func scheduled(commandBuffer: CommandBuffer) {
+			Arcane.keys.forEach { willAccessValue(forKey: $0) }
+		}
+		func completed(commandBuffer: CommandBuffer) {
+			Arcane.keys.forEach { didAccessValue(forKey: $0) }
+		}
+		commandBuffer.addScheduledHandler(scheduled)
+		commandBuffer.addCompletedHandler(completed)
 	}
 	internal func update(commandBuffer: CommandBuffer, Δμ: Buffer<Float>, Δσ: Buffer<Float>) {
-		commandBuffer.compute {
-			$0.set(pipeline: cache.update)
-			$0.dispatch(groups: rows*cols, threads: 1)
-		}
+		
 	}
     internal var χ: LaObjet<Float> {
         return LaObjet<Float>(valuer: cache.χ.address, rows: rows, cols: cols, deallocator: nil)
