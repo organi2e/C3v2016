@@ -20,10 +20,11 @@ class BrassTests: XCTestCase {
 		do {
 			let maschine: Maschine = try Maschine()
 			let brass: Brass<Float> = try Brass(maschine: maschine)
-			let P: Int = 1
-			let M: Int = 16
-			let K: Int = 16
-			let N: Int = 16
+			let gpu: Bool = false
+			let P: Int = 16
+			let M: Int = 1024
+			let K: Int = 1024
+			let N: Int = 1024
 			let y: Buffer<Float> = maschine.newBuffer(count: M*N)
 			let a: Buffer<Float> = maschine.newBuffer(count: M*K)
 			let b: Buffer<Float> = maschine.newBuffer(count: K*N)
@@ -34,7 +35,7 @@ class BrassTests: XCTestCase {
 			(0..<K*N).forEach {
 				b[$0] = Float(drand48())
 			}
-			
+			/*
 			let commandBuffer: CommandBuffer = maschine.newCommandBuffer()
 			brass.gemm(commandBuffer: commandBuffer, y, a, b, m: M, k: K, n: N)
 			commandBuffer.commit()
@@ -44,14 +45,13 @@ class BrassTests: XCTestCase {
 			let A: LaObjet<Float> = LaObjet(valuer: a.address, rows: M, cols: K, deallocator: nil)
 			let B: LaObjet<Float> = LaObjet(valuer: b.address, rows: K, cols: N, deallocator: nil)
 			print(matrix_product(A, B).array)
+			*/
 			
-			
-			/*
-			if false {
+			if gpu {
 				measure {
 					let commandBuffer: CommandBuffer = maschine.newCommandBuffer()
 					for _ in 0..<P {
-						brass.gemm(commandBuffer: commandBuffer, y, a, x, m: M, k: K, n: N)
+						brass.gemm(commandBuffer: commandBuffer, y, a, b, m: M, k: K, n: N)
 					}
 					commandBuffer.commit()
 					commandBuffer.waitUntilCompleted()
@@ -60,12 +60,11 @@ class BrassTests: XCTestCase {
 				measure {
 					for _ in 0..<P {
 						let A: LaObjet<Float> = LaObjet(valuer: a.address, rows: M, cols: K, deallocator: nil)
-						let X: LaObjet<Float> = LaObjet(valuer: x.address, rows: K, cols: N, deallocator: nil)
-						matrix_product(A, X).copy(to: y.address)
+						let B: LaObjet<Float> = LaObjet(valuer: b.address, rows: K, cols: N, deallocator: nil)
+						matrix_product(A, B).copy(to: y.address)
 					}
 				}
 			}
-			*/
 			
 		} catch {
 			XCTFail(String(describing: error))

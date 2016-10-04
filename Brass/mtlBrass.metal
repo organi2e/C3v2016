@@ -28,27 +28,25 @@ kernel void sgemm_ss(device float * const y [[ buffer(0) ]],
 	uint const cols_C = g.x * L + t.x;
 	
 	float c = 0;
-	
+	/*
 	threadgroup float * const aref = A + L * t.x;
 	threadgroup float * const bref = B + L * t.y;
-	
+	*/
 	for ( uint i = 0, I = K ; i < I ; i += L ) {
 		
 		uint const rows_A = i + t.y;
 		uint const cols_A = cols_C;
 		
-		aref[t.y] = rows_A < M && cols_A < K ? a[cols_A*M+rows_A] : 0;
+		A[t.x*L+t.y] = rows_A < M && cols_A < K ? a[cols_A*M+rows_A] : 0;
 		
 		uint const rows_B = rows_C;
 		uint const cols_B = i + t.x;
 		
-		bref[t.x] = rows_B < K && cols_B < N ? b[cols_B*K+rows_B] : 0;
+		B[t.y*L+t.x] = rows_B < K && cols_B < N ? b[cols_B*K+rows_B] : 0;
 		
 		threadgroup_barrier( mem_flags :: mem_threadgroup );
-		
 		for ( uint k = 0, K = L ; k < K ; ++ k )
-			c += aref[k] * bref[k];
-		
+			c += A[t.x*L+k] * B[t.y*L+k];
 		threadgroup_barrier( mem_flags :: mem_threadgroup );
 	}
 	if ( rows_C < M && cols_C < N ) {
