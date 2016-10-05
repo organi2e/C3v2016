@@ -14,8 +14,8 @@ class Edge: Arcane {
 		input.collect_clear(ignore: ignore)
 		refresh(commandBuffer: commandBuffer, distribution: output.distribution)
 	}
-	internal func collect(ignore: Set<Cell>) -> (χ: LaObjet<Float>, μ: LaObjet<Float>, σ: LaObjet<Float>) {
-		let activator: LaObjet = input.collect(ignore: ignore)
+	internal func collect(commandBuffer: CommandBuffer, ignore: Set<Cell>) -> (χ: LaObjet<Float>, μ: LaObjet<Float>, σ: LaObjet<Float>) {
+		let activator: LaObjet = input.collect(commandBuffer: commandBuffer, ignore: ignore)
 		let distribution = output.distribution
 		return(
 			χ: matrix_product(χ, activator),

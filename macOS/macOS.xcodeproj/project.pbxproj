@@ -50,6 +50,7 @@
 		871E164A1D9A7B5600739047 /* mtlOptimizerTests.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E16491D9A7B5600739047 /* mtlOptimizerTests.metal */; };
 		871E164C1D9A84BE00739047 /* mtlMomentum.metal in Sources */ = {isa = PBXBuildFile; fileRef = 871E164B1D9A84BE00739047 /* mtlMomentum.metal */; };
 		87460CBB1DA3CEB900E779CA /* GaussianDistributionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87460CBA1DA3CEB900E779CA /* GaussianDistributionTests.swift */; };
+		87460CBE1DA49C0F00E779CA /* mtlCell.metal in Sources */ = {isa = PBXBuildFile; fileRef = 87460CBD1DA49C0F00E779CA /* mtlCell.metal */; };
 		875298031DA2643600F28C50 /* mtlArcane.metal in Sources */ = {isa = PBXBuildFile; fileRef = 875298021DA2643600F28C50 /* mtlArcane.metal */; };
 		875298061DA266A300F28C50 /* Decay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 875298051DA266A300F28C50 /* Decay.swift */; };
 		875298161DA3473100F28C50 /* C³.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 875298151DA3473100F28C50 /* C³.xcdatamodeld */; };
@@ -236,6 +237,7 @@
 		871E16491D9A7B5600739047 /* mtlOptimizerTests.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlOptimizerTests.metal; path = ../../Optimizer/mtlOptimizerTests.metal; sourceTree = "<group>"; };
 		871E164B1D9A84BE00739047 /* mtlMomentum.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlMomentum.metal; path = ../../Optimizer/mtlMomentum.metal; sourceTree = "<group>"; };
 		87460CBA1DA3CEB900E779CA /* GaussianDistributionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GaussianDistributionTests.swift; path = ../../Distribution/GaussianDistributionTests.swift; sourceTree = "<group>"; };
+		87460CBD1DA49C0F00E779CA /* mtlCell.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlCell.metal; path = "../../C³/mtlCell.metal"; sourceTree = "<group>"; };
 		875298021DA2643600F28C50 /* mtlArcane.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlArcane.metal; path = "../../C³/mtlArcane.metal"; sourceTree = "<group>"; };
 		875298051DA266A300F28C50 /* Decay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Decay.swift; path = "../../C³/Decay.swift"; sourceTree = "<group>"; };
 		875298141DA3473100F28C50 /* C³.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "C³.xcdatamodel"; sourceTree = "<group>"; };
@@ -463,6 +465,7 @@
 				875298051DA266A300F28C50 /* Decay.swift */,
 				871E15AF1D953AB300739047 /* Edge.swift */,
 				875298021DA2643600F28C50 /* mtlArcane.metal */,
+				87460CBD1DA49C0F00E779CA /* mtlCell.metal */,
 				871908701D9252F30048A43F /* C3.h */,
 				871908711D9252F30048A43F /* Info.plist */,
 			);
@@ -1161,6 +1164,7 @@
 				871E15B01D953AB300739047 /* Edge.swift in Sources */,
 				87CDF7421DA220D80056FC89 /* RingBuffer.swift in Sources */,
 				875298031DA2643600F28C50 /* mtlArcane.metal in Sources */,
+				87460CBE1DA49C0F00E779CA /* mtlCell.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

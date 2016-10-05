@@ -23,4 +23,17 @@ class ContextTests: XCTestCase {
 			XCTFail()
 		}
 	}
+	func testChain() {
+		do {
+			let context: Context = try Context(storage: nil)//URL(fileURLWithPath: "/Users/Kota/test.sqlite"))
+			let I: Cell = try context.newCell(type: .Degenerate, width: 10)
+			let O: Cell = try context.newCell(type: .Degenerate, width: 10, input: [I])
+			
+			O.collect_clear()
+			context.save(sync: false)
+			
+		} catch {
+			
+		}
+	}
 }

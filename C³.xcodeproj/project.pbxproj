@@ -158,6 +158,7 @@
 		871E16451D9A75E400739047 /* OptimizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OptimizerTests.swift; path = Optimizer/OptimizerTests.swift; sourceTree = "<group>"; };
 		871E16481D9A7A7E00739047 /* mtlOptimizerTests.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlOptimizerTests.metal; path = Optimizer/mtlOptimizerTests.metal; sourceTree = "<group>"; };
 		87460CA91DA3CEAC00E779CA /* GaussianDistributionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GaussianDistributionTests.swift; path = Distribution/GaussianDistributionTests.swift; sourceTree = "<group>"; };
+		87460CBC1DA49C0000E779CA /* mtlCell.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlCell.metal; path = "C³/mtlCell.metal"; sourceTree = "<group>"; };
 		875297F11DA2637500F28C50 /* mtlArcane.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlArcane.metal; path = "C³/mtlArcane.metal"; sourceTree = "<group>"; };
 		875298041DA2669100F28C50 /* Decay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Decay.swift; path = "C³/Decay.swift"; sourceTree = "<group>"; };
 		875298131DA3472600F28C50 /* C³.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "C³.xcdatamodel"; sourceTree = "<group>"; };
@@ -262,6 +263,7 @@
 				871E15AE1D953A5C00739047 /* Edge.swift */,
 				87CDF7301DA21FCA0056FC89 /* RingBuffer.swift */,
 				875297F11DA2637500F28C50 /* mtlArcane.metal */,
+				87460CBC1DA49C0000E779CA /* mtlCell.metal */,
 				87CDF7441DA234D00056FC89 /* ContextTests.swift */,
 			);
 			name = "C³";

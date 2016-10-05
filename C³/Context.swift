@@ -103,22 +103,18 @@ extension Context {
 		}
 		return result
 	}
-	internal func purge(object: ManagedObject, sync: Bool = false) {
+	public func delete(sync: Bool, object: ManagedObject) {
 		( sync ? perform : performAndWait ) {
 			self.delete(object)
 		}
 	}
-	internal func store(sync: Bool = false) throws {
-		var err: Error?
+	public func save(sync: Bool, handler: ((Error)->Void)? = nil) {
 		( sync ? perform : performAndWait ) {
 			do {
 				try self.save()
 			} catch {
-				err = error
+				handler?(error)
 			}
-		}
-		if let err: Error = err {
-			throw err
 		}
 	}
 }
@@ -126,14 +122,14 @@ public class ManagedObject: NSManagedObject {
 	internal var context: Context {
 		guard let context: Context = managedObjectContext as? Context else {
 			assertionFailure(Context.SystemError.BrokenBundle.rawValue)
-			fatalError()
+			fatalError(Context.SystemError.BrokenBundle.rawValue)
 		}
 		return context
 	}
 	internal static var entityName: String {
 		guard let entityName: String = String(describing: self).components(separatedBy: ".").last else {
 			assertionFailure(Context.SystemError.BrokenBundle.rawValue)
-			fatalError()
+			fatalError(Context.SystemError.BrokenBundle.rawValue)
 		}
 		return  entityName
 	}
