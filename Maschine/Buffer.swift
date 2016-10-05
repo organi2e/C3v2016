@@ -45,7 +45,7 @@ public class Buffer<T> {
 			assert(0<=index&&index<count)
 			UnsafeMutablePointer<T>(OpaquePointer(body.contents()))[index] = newValue
 		}
-	}
+	}	
 }
 
 extension Maschine {

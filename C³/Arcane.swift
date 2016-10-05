@@ -46,7 +46,7 @@ internal class Arcane: ManagedObject {
 		setPrimitiveValue(Data(bytesNoCopy: cache.argμ.pointer, count: count, deallocator: .none), forKey: Arcane.argmukey)
 		setPrimitiveValue(Data(bytesNoCopy: cache.argσ.pointer, count: count, deallocator: .none), forKey: Arcane.argsigmakey)
 	}
-	internal func refresh(commandBuffer: CommandBuffer) {
+	internal func refresh(commandBuffer: CommandBuffer, distribution: SymmetricStableDistribution) {
 		func scheduled(commandBuffer: CommandBuffer) {
 			Arcane.keys.forEach { willAccessValue(forKey: $0) }
 		}
@@ -65,6 +65,7 @@ internal class Arcane: ManagedObject {
 			$0.set(buffer: cache.argσ, offset: 0, at: 5)
 			$0.dispatch(groups: (rows*cols-1)/4+1, threads: 1)
 		}
+		distribution.eval(commandBuffer: commandBuffer, χ: cache.χ, μ: cache.μ, σ: cache.σ)
 	}
 	internal func update(commandBuffer: CommandBuffer, Δμ: Buffer<Float>, Δσ: Buffer<Float>) {
 		func scheduled(commandBuffer: CommandBuffer) {

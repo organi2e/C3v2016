@@ -30,10 +30,13 @@ public class DegenerateDistribution: SymmetricStableDistribution {
 		assert(LaObjet<Float>(valuer: 1, rows: μ.count, cols: 1).copy(to: gradμ.address))
 		assert(LaObjet<Float>(valuer: 0, rows: μ.count, cols: 1).copy(to: gradσ.address))
 	}
-	public func λsynth(λ: Buffer<Float>, σ: Buffer<Float>) {
+	public func synth(λ: Buffer<Float>, σ: Buffer<Float>) {
 		assert(LaObjet<Float>(valuer: 0, rows: σ.count, cols: 1).copy(to: λ.address))
 	}
-	public func σscale<Type: FloatingPoint>(σ: LaObjet<Type>) -> LaObjet<Type> {
+	public func scale<Type: FloatingPoint>(μ: LaObjet<Type>) -> LaObjet<Type> {
+		return μ
+	}
+	public func scale<Type: FloatingPoint>(σ: LaObjet<Type>) -> LaObjet<Type> {
 		return LaObjet<Type>(valuer: 0, rows: σ.rows, cols: σ.cols)
 	}
 	public func gradσδ<Type: FloatingPoint>(λ: LaObjet<Type>, a: LaObjet<Type>, x: LaObjet<Type>) -> LaObjet<Type> {

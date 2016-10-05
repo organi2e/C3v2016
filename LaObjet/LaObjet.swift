@@ -108,6 +108,12 @@ public struct LaObjet<Type: LaType> {
 	public subscript(range: Range<Int>) -> LaObjet {
 		return LaObjet(objet: la_vector_slice(objet, range.lowerBound, 1, la_count_t(range.count)))
 	}
+	public var statistics: (μ: Type.Élément, σ: Type.Élément) {
+		var μ: Type.Élément = 0
+		var σ: Type.Élément = 0
+		Type.vecteurStatistics(array, 1, UnsafeMutablePointer<Type.Élément>.allocate(capacity: 0), 0, &μ, &σ, la_matrix_rows(objet)*la_matrix_cols(objet))
+		return(μ: μ, σ: σ)
+	}
 	public subscript(rows: Range<Int>, cols: Range<Int>) -> LaObjet {
 		return LaObjet(objet: la_matrix_slice(objet, rows.lowerBound, cols.lowerBound, la_index_t(la_matrix_cols(objet)), 1, la_count_t(rows.count), la_count_t(cols.count)))
 	}

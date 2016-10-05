@@ -157,6 +157,7 @@
 		871E16401D9A670F00739047 /* StochasticGradientDescent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StochasticGradientDescent.swift; path = Optimizer/StochasticGradientDescent.swift; sourceTree = "<group>"; };
 		871E16451D9A75E400739047 /* OptimizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OptimizerTests.swift; path = Optimizer/OptimizerTests.swift; sourceTree = "<group>"; };
 		871E16481D9A7A7E00739047 /* mtlOptimizerTests.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlOptimizerTests.metal; path = Optimizer/mtlOptimizerTests.metal; sourceTree = "<group>"; };
+		87460CA91DA3CEAC00E779CA /* GaussianDistributionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GaussianDistributionTests.swift; path = Distribution/GaussianDistributionTests.swift; sourceTree = "<group>"; };
 		875297F11DA2637500F28C50 /* mtlArcane.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlArcane.metal; path = "C³/mtlArcane.metal"; sourceTree = "<group>"; };
 		875298041DA2669100F28C50 /* Decay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Decay.swift; path = "C³/Decay.swift"; sourceTree = "<group>"; };
 		875298131DA3472600F28C50 /* C³.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "C³.xcdatamodel"; sourceTree = "<group>"; };
@@ -292,6 +293,7 @@
 				871E15A11D95311A00739047 /* GaussianDistribution.swift */,
 				871E15BB1D98AE7400739047 /* mtlCauchy.metal */,
 				871E15BE1D98B07600739047 /* mtlGauss.metal */,
+				87460CA91DA3CEAC00E779CA /* GaussianDistributionTests.swift */,
 			);
 			name = Distribution;
 			sourceTree = "<group>";

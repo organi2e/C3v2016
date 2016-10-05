@@ -10,13 +10,21 @@ import Maschine
 import CoreData
 
 class Edge: Arcane {
+	internal func collect_clear(commandBuffer: CommandBuffer, ignore: Set<Cell>) {
+		input.collect_clear(ignore: ignore)
+		refresh(commandBuffer: commandBuffer, distribution: output.distribution)
+	}
 	internal func collect(ignore: Set<Cell>) -> (χ: LaObjet<Float>, μ: LaObjet<Float>, σ: LaObjet<Float>) {
 		let activator: LaObjet = input.collect(ignore: ignore)
+		let distribution = output.distribution
 		return(
 			χ: matrix_product(χ, activator),
-			μ: matrix_product(μ, activator),
-			σ: matrix_product(σ, activator)
+			μ: matrix_product(distribution.scale(μ: μ), distribution.scale(μ: activator)),
+			σ: matrix_product(distribution.scale(σ: σ), distribution.scale(σ: activator))
 		)
+	}
+	internal func correct_clear(ignore: Set<Cell>) {
+		
 	}
 	internal func correct(ignore: Set<Cell>, activator: LaObjet<Float>) -> LaObjet<Float> {
 		//let (Δ: LaObjet<Float>, gradμ: LaObjet<Float>, gradσ: LaObjet<Float>) = output.correct(ignore: ignore)

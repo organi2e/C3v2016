@@ -9,6 +9,7 @@ import CoreData
 import LaObjet
 import Maschine
 import Optimizer
+import Distribution
 
 public class Context: NSManagedObjectContext {
 	
@@ -54,11 +55,14 @@ extension Context {
 	}
 }
 extension Context {
-	internal func newBuffer<T>(count: Int) -> Buffer<T> {
-		return maschine.newBuffer(count: count)
+	internal func newBuffer<T>(count: Int, options: MTLResourceOptions = .storageModeShared) -> Buffer<T> {
+		return maschine.newBuffer(count: count, options: options)
 	}
-	internal func newBuffer<T>(data: Data) -> Buffer<T> {
-		return maschine.newBuffer(data: data)
+	internal func newBuffer<T>(data: Data, options: MTLResourceOptions = .storageModeShared) -> Buffer<T> {
+		return maschine.newBuffer(data: data, options: options)
+	}
+	internal func newCommandBuffer() -> CommandBuffer {
+		return maschine.newCommandBuffer()
 	}
 	internal func newComputePipelineState(name: String) throws -> ComputePipelineState {
 		return try maschine.newComputePipelineState(name: name)
