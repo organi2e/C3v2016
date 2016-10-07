@@ -24,13 +24,16 @@ internal class Arcane: ManagedObject {
 		σ: Buffer<Float>,
 		argμ: Buffer<Float>,
 		argσ: Buffer<Float>,
-		graμ: Buffer<Float>,
-		graσ: Buffer<Float>,
+		gradμ: Buffer<Float>,
+		gradσ: Buffer<Float>,
+		deltaμ: Buffer<Float>,
+		deltaσ: Buffer<Float>,
 		refresh: ComputePipelineState
 	)!
 	private var optimizer: Optimizer!
 	
 	override func setup(context: Context) throws {
+		try super.setup(context: context)
 		let count: Int = Int(rows*cols)
 		optimizer = try context.newOptimizer(count: count)
 		cache = (
@@ -39,8 +42,10 @@ internal class Arcane: ManagedObject {
 			σ: context.newBuffer(count: count),
 			argμ: context.newBuffer(count: count),
 			argσ: context.newBuffer(count: count),
-			graμ: context.newBuffer(count: count),
-			graσ: context.newBuffer(count: count),
+			gradμ: context.newBuffer(count: count),
+			gradσ: context.newBuffer(count: count),
+			deltaμ: context.newBuffer(count: count),
+			deltaσ: context.newBuffer(count: count),
 			refresh: try context.newComputePipelineState(name: "arcaneRefresh")
 		)
 		setPrimitiveValue(Data(bytesNoCopy: cache.argμ.pointer, count: count, deallocator: .none), forKey: Arcane.argmukey)
@@ -59,25 +64,32 @@ internal class Arcane: ManagedObject {
 			$0.set(pipeline: cache.refresh)
 			$0.set(buffer: cache.μ, offset: 0, at: 0)
 			$0.set(buffer: cache.σ, offset: 0, at: 1)
-			$0.set(buffer: cache.graμ, offset: 0, at: 2)
-			$0.set(buffer: cache.graσ, offset: 0, at: 3)
+			$0.set(buffer: cache.gradμ, offset: 0, at: 2)
+			$0.set(buffer: cache.gradσ, offset: 0, at: 3)
 			$0.set(buffer: cache.argμ, offset: 0, at: 4)
 			$0.set(buffer: cache.argσ, offset: 0, at: 5)
 			$0.dispatch(groups: (rows*cols-1)/4+1, threads: 1)
 		}
 		distribution.eval(commandBuffer: commandBuffer, χ: cache.χ, μ: cache.μ, σ: cache.σ)
 	}
-	internal func update(commandBuffer: CommandBuffer, Δμ: Buffer<Float>, Δσ: Buffer<Float>) {
+	internal func update(commandBuffer: CommandBuffer, Δμ: LaObjet<Float>, Δσ: LaObjet<Float>) {
+		
 		func scheduled(commandBuffer: CommandBuffer) {
 			Arcane.keys.forEach { willChangeValue(forKey: $0) }
 		}
 		func completed(commandBuffer: CommandBuffer) {
 			Arcane.keys.forEach { didChangeValue(forKey: $0) }
 		}
+		
 		commandBuffer.addScheduledHandler(scheduled)
 		commandBuffer.addCompletedHandler(completed)
-		optimizer.update(commandBuffer: commandBuffer, value: cache.μ, nabla: cache.graμ, delta: Δμ)
-		optimizer.update(commandBuffer: commandBuffer, value: cache.σ, nabla: cache.graσ, delta: Δσ)
+		
+		assert(Δμ.copy(to: cache.deltaμ.address))
+		optimizer.update(commandBuffer: commandBuffer, value: cache.argμ, nabla: cache.gradμ, delta: cache.deltaμ)
+		
+		assert(Δσ.copy(to: cache.deltaσ.address))
+		optimizer.update(commandBuffer: commandBuffer, value: cache.argσ, nabla: cache.gradσ, delta: cache.deltaσ)
+		
 	}
     internal var χ: LaObjet<Float> {
         return LaObjet<Float>(valuer: cache.χ.address, rows: rows, cols: cols, deallocator: nil)
@@ -88,6 +100,23 @@ internal class Arcane: ManagedObject {
     internal var σ: LaObjet<Float> {
         return LaObjet<Float>(valuer: cache.σ.address, rows: rows, cols: cols, deallocator: nil)
 	}
+	internal func dump(label: String? = nil) {
+		if let label: String = label {
+			print(label)
+		}
+		print("χ")
+		for row in 0..<rows {
+			print(Array(cache.χ.buffer[Int(row*cols)..<Int((row+1)*cols)]))
+		}
+		print("argμ")
+		for row in 0..<rows {
+			print(Array(cache.argμ.buffer[Int(row*cols)..<Int((row+1)*cols)]))
+		}
+		print("argσ")
+		for row in 0..<rows {
+			print(Array(cache.argσ.buffer[Int(row*cols)..<Int((row+1)*cols)]))
+		}
+	}
 }
 extension Arcane {
 	@NSManaged var rows: UInt
@@ -96,11 +125,12 @@ extension Arcane {
 	@NSManaged var argsigma: Data
 }
 extension Arcane {
-	internal func resize(rows: UInt, cols: UInt) {
+	internal func resize(rows: UInt, cols: UInt) throws {
 		let count: Int = MemoryLayout<Float>.size*Int(rows*cols)
 		self.rows = rows
 		self.cols = cols
 		self.argmu = Data(count: count)
 		self.argsigma = Data(count: count)
+		try setup(context: context)
 	}
 }

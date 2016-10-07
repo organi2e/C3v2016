@@ -111,7 +111,7 @@ public struct LaObjet<Type: LaType> {
 	public var statistics: (μ: Type.Élément, σ: Type.Élément) {
 		var μ: Type.Élément = 0
 		var σ: Type.Élément = 0
-		Type.vecteurStatistics(array, 1, UnsafeMutablePointer<Type.Élément>.allocate(capacity: 0), 0, &μ, &σ, la_matrix_rows(objet)*la_matrix_cols(objet))
+		Type.vecteurStatistics(array, 1, nil, 0, &μ, &σ, la_matrix_rows(objet)*la_matrix_cols(objet))
 		return(μ: μ, σ: σ)
 	}
 	public subscript(rows: Range<Int>, cols: Range<Int>) -> LaObjet {

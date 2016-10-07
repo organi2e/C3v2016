@@ -141,7 +141,7 @@ public class ManagedObject: NSManagedObject {
 		do {
 			try setup(context: context)
 		} catch {
-			assertionFailure(Context.SystemError.BrokenBundle.rawValue)
+			assertionFailure(String(describing: error))
 		}
 	}
 	public override func awake(fromSnapshotEvents: NSSnapshotEventType) {
@@ -149,7 +149,7 @@ public class ManagedObject: NSManagedObject {
 		do {
 			try setup(context: context)
 		} catch {
-			assertionFailure(Context.SystemError.BrokenBundle.rawValue)
+			assertionFailure(String(describing: error))
 		}
 	}
 }

@@ -23,11 +23,11 @@ public class Cell: ManagedObject {
 	var state: RingBuffer<Buffer<Float>> = RingBuffer<Buffer<Float>>(array: [])
 	var train: RingBuffer<Buffer<Float>> = RingBuffer<Buffer<Float>>(array: [])
 	var error: RingBuffer<Buffer<Float>> = RingBuffer<Buffer<Float>>(array: [])
+	var delta: RingBuffer<Buffer<Float>> = RingBuffer<Buffer<Float>>(array: [])
 	var level: RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)> = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: [])
-	var nabla: RingBuffer<(φ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)> = RingBuffer<(φ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)>(array: [])
+	var nabla: RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)> = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: [])
 	var distribution: SymmetricStableDistribution = DegenerateDistribution()
-}
-extension Cell {
+	
 	override func setup(context: Context) throws {
 		let depth: Int = 2
 		let count: Int = Int(width)
@@ -40,6 +40,9 @@ extension Cell {
 		error = RingBuffer<Buffer<Float>>(array: (0..<depth).map {(_)in
 			return context.newBuffer(count: count)
 		})
+		delta = RingBuffer<Buffer<Float>>(array: (0..<depth).map {(_)in
+			return context.newBuffer(count: count)
+		})
 		level = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: (0..<depth).map {(_)in
 			return (
 				χ: context.newBuffer(count: count),
@@ -47,120 +50,205 @@ extension Cell {
 				λ: context.newBuffer(count: count)
 			)
 		})
-		nabla = RingBuffer<(φ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)>(array: (0..<depth).map {(_)in
+		nabla = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: (0..<depth).map {(_)in
 			return (
-				φ: context.newBuffer(count: count),
+				χ: context.newBuffer(count: count),
 				μ: context.newBuffer(count: count),
-				σ: context.newBuffer(count: count)
+				λ: context.newBuffer(count: count)
 			)
 		})
 		distribution = try context.newDistribution(type: type)
 	}
 }
 extension Cell {
-	private func enter(commandBuffer: CommandBuffer) {
-		group.enter()
-	}
-	private func leave(commandBuffer: CommandBuffer) {
-		group.leave()
-	}
-	private func merge() {
-		group.wait()
-	}
-	public func collect_clear(ignore: Set<Cell> = []) {
+	public func collect_clear(ignore: Set<Cell> = Set<Cell>()) {
 		if ignore.contains(self) {
 			
 		} else if ready.contains(.State) {
 			ready.remove(.State)
 			level.progress()
+			state.progress()
+			
 			do {
 				let commandBuffer: CommandBuffer = context.newCommandBuffer()
-				enter(commandBuffer: commandBuffer)
+				
+				commandBuffer.blit {
+					$0.fill(buffer: level.curr.χ, value: 0)
+					$0.fill(buffer: level.curr.μ, value: 0)
+					$0.fill(buffer: level.curr.λ, value: 0)
+					$0.fill(buffer: state.curr, value: 0)
+				}
 				input.forEach {
 					$0.collect_clear(commandBuffer: commandBuffer, ignore: ignore.union([self]))
 				}
 				bias.collect_clear(commandBuffer: commandBuffer)
-				commandBuffer.addCompletedHandler(leave)
+				
+				commandBuffer.fork(group: group)
+				//commandBuffer.enqueue()
 				commandBuffer.commit()
+				//commandBuffer.waitUntilCompleted()
 			}
 		}
 	}
-	public func collect() {
-		let commandBuffer: CommandBuffer = context.newCommandBuffer()
-		commandBuffer.commit()
-	}
-	internal func collect(commandBuffer: CommandBuffer, ignore: Set<Cell>) -> LaObjet<Float> {
+	public func collect(ignore: Set<Cell> = Set<Cell>()) -> LaObjet<Float> {
 		if ignore.contains(self) {
 			return _χ
-		} else if ready.contains(.State) {
+		} else if !ready.contains(.State) {
+			ready.insert(.State)
 			do {
-				let commandBuffer: CommandBuffer = context.newCommandBuffer()
 				let xs: [(χ: LaObjet<Float>, μ: LaObjet<Float>, σ: LaObjet<Float>)] = input.map {
-					$0.collect(commandBuffer: commandBuffer, ignore: ignore.union([self]))
+					$0.collect(ignore: ignore.union([self]))
 				}
 				let ys: [(χ: LaObjet<Float>, μ: LaObjet<Float>, σ: LaObjet<Float>)] = []
 				let ref: [(χ: LaObjet<Float>, μ: LaObjet<Float>, σ: LaObjet<Float>)] = xs + ys
 				let mix: (χ: LaObjet<Float>, μ: LaObjet<Float>, σ: LaObjet<Float>) = ref.reduce(bias.collect()) {
 					( $0.0.χ + $0.1.χ, $0.0.μ + $0.1.μ, $0.0.σ + $0.1.σ )
 				}
-				commandBuffer.commit()
-				commandBuffer.waitUntilCompleted()
+				group.wait()
 				assert(mix.χ.copy(to: level.curr.χ.address))
 				assert(mix.μ.copy(to: level.curr.μ.address))
 				assert(mix.σ.copy(to: level.curr.λ.address))
 			}
 			do {
-				commandBuffer.enqueue()
-				
+				let src: UnsafePointer<float4> = UnsafePointer<float4>(OpaquePointer(level.curr.χ.pointer))
+				let dst: UnsafeMutablePointer<float4> = UnsafeMutablePointer<float4>(OpaquePointer(state.curr.pointer))
+				for k in 0..<Int((width-1)/4+1) {
+					dst[k] = step(src[k], edge: float4(0))
+				}
 			}
 			do {
 				let commandBuffer: CommandBuffer = context.newCommandBuffer()
-				enter(commandBuffer: commandBuffer)
-				commandBuffer.addCompletedHandler(leave)
+				
+				distribution.eval(commandBuffer: commandBuffer, gradμ: nabla.curr.μ, gradλ: nabla.curr.λ, μ: level.curr.μ, λ: level.curr.λ)
+				
+				commandBuffer.fork(group: group)
+				//commandBuffer.enqueue()
 				commandBuffer.commit()
+				//commandBuffer.waitUntilCompleted()
 			}
-			ready.insert(.State)
 		}
 		return χ
 	}
 	public func correct_clear(ignore: Set<Cell> = Set<Cell>()) {
-		output.forEach {
-			$0.correct_clear(ignore: ignore.union(Set<Cell>(arrayLiteral: self)))
+		if ignore.contains(self) {
+			
+		} else if ready.contains(.Delta) {
+			ready.remove(.Delta)
+			train.progress()
+			nabla.progress()
+			error.progress()
+			delta.progress()
+			do {
+				output.forEach {
+					$0.correct_clear(ignore: ignore.union([self]))
+				}
+				bias.correct_clear()
+			}
 		}
 	}
-	public func correct(ignore: Set<Cell> = Set<Cell>()) -> (Δ: LaObjet<Float>, gradμ: LaObjet<Float>, gradσ: LaObjet<Float>) {
+	public func correct(ignore: Set<Cell> = Set<Cell>()) -> (Δ: LaObjet<Float>, gradμ: LaObjet<Float>, gradλ: LaObjet<Float>) {
+		if ignore.contains(self) || !ready.contains(.State) {
+			return (
+				Δ: (2 / Float(input .map { $0.cols } .reduce(1) { $0.0 + $0.1 })) * _Δ,
+				gradμ: _gradμ,
+				gradλ: _gradλ
+			)
+		} else if !ready.contains(.Delta) {
+			ready.insert(.Delta)
+			do {
+				
+				let commandBuffer: CommandBuffer = context.newCommandBuffer()
+				
+				let ε: LaObjet<Float> = ready.contains(.Train) ? χ - ψ : output.map {
+					$0.correct(commandBuffer: commandBuffer, ignore: ignore.union([self]))
+				}.reduce(LaObjet<Float>(valuer: 0)) {
+					$0.0 + $0.1
+				}
+				
+				group.wait()
+				assert(ε.copy(to: error.curr.address))
+
+				let src: UnsafePointer<float4> = UnsafePointer<float4>(OpaquePointer(error.curr.pointer))
+				let dst: UnsafeMutablePointer<float4> = UnsafeMutablePointer<float4>(OpaquePointer(delta.curr.pointer))
+				
+				for k in 0..<Int((width-1)/4+1) {
+					dst[k] = sign(src[k])
+				}
+				
+				bias.correct(commandBuffer: commandBuffer, Δ: Δ, gradμ: gradμ, gradλ: gradλ)
+				
+				commandBuffer.fork(group: group)
+				//commandBuffer.enqueue()
+				commandBuffer.commit()
+				//commandBuffer.waitUntilCompleted()
+			}
+		}
 		return (
-			Δ: Δ,
+			Δ: (2 / Float(input .map { $0.cols } .reduce(1) { $0.0 + $0.1 })) * Δ,
 			gradμ: gradμ,
-			gradσ: gradσ
+			gradλ: gradλ
 		)
 	}
 }
 extension Cell {
-	public var active: [Bool] {
+	public var active: Array<Bool> {
+		set {
+			let count: Int = min(newValue.count, Int(width))
+			let commandBuffer: CommandBuffer = context.newCommandBuffer()
+			func completed(commandBuffer: CommandBuffer) {
+				(0..<count).forEach {
+					state.curr[$0] = newValue[$0] ? 1 : 0
+				}
+				state.curr.didChange()
+			}
+			commandBuffer.blit {
+				$0.sync(buffer: state.curr)
+			}
+			commandBuffer.addCompletedHandler(completed)
+			commandBuffer.commit()
+			ready.insert(.State)
+		}
 		get {
-			return []
+			let count: Int = Int(width)
+			let commandBuffer: CommandBuffer = context.newCommandBuffer()
+			var result: Array<Bool> = Array<Bool>(repeating: false, count: count)
+			func completed(commandBuffer: CommandBuffer) {
+				(0..<count).forEach {
+					result[$0] = 0 < state.curr[$0]
+				}
+			}
+			commandBuffer.blit {
+				$0.sync(buffer: state.curr)
+			}
+			commandBuffer.addCompletedHandler(completed)
+			commandBuffer.commit()
+			commandBuffer.waitUntilCompleted()
+			return result
 		}
 	}
 	public var answer: Array<Bool> {
 		set {
-			if 0 < width {
-				let commandBuffer: CommandBuffer = context.newCommandBuffer()
-				func completed(commandBuffer: CommandBuffer) {
-				
+			let count: Int = min(newValue.count, Int(width))
+			let commandBuffer: CommandBuffer = context.newCommandBuffer()
+			func completed(commandBuffer: CommandBuffer) {
+				(0..<count).forEach {
+					train.curr[$0] = newValue[$0] ? 1 : 0
 				}
-				commandBuffer.blit {
-					$0.sync(buffer: train.curr)
-				}
-				commandBuffer.addCompletedHandler(completed)
-				commandBuffer.commit()
 			}
+			commandBuffer.blit {
+				$0.sync(buffer: train.curr)
+			}
+			commandBuffer.addCompletedHandler(completed)
+			commandBuffer.commit()
+			commandBuffer.waitUntilCompleted()
+			ready.insert(.Train)
 		}
 		get {
-			var result: Array<Bool> = Array<Bool>(repeating: false, count: Int(width))
+			let count: Int = Int(width)
+			var result: Array<Bool> = Array<Bool>(repeating: false, count: count)
 			func completed(commandBuffer: CommandBuffer) {
-				for k in 0..<Int(width) {
-					result[k] = 0 < train.curr[k]
+				(0..<count).forEach {
+					result[$0] = 0 < train.curr[$0]
 				}
 			}
 			let commandBuffer: CommandBuffer = context.newCommandBuffer()
@@ -215,30 +303,31 @@ extension Cell {
 	}
 }
 extension Cell {
-	internal var gradφ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: nabla.curr.φ.address, rows: width, cols: 1, deallocator: nil)
+	internal var gradχ: LaObjet<Float> {
+		return LaObjet<Float>(valuer: nabla.curr.χ.address, rows: width, cols: 1, deallocator: nil)
 	}
 	internal var gradμ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: nabla.curr.φ.address, rows: width, cols: 1, deallocator: nil)
+		return LaObjet<Float>(valuer: nabla.curr.μ.address, rows: width, cols: 1, deallocator: nil)
 	}
-	internal var gradσ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: nabla.curr.φ.address, rows: width, cols: 1, deallocator: nil)
+	internal var gradλ: LaObjet<Float> {
+		return LaObjet<Float>(valuer: nabla.curr.λ.address, rows: width, cols: 1, deallocator: nil)
 	}
-	internal var _gradφ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: nabla.prev.φ.address, rows: width, cols: 1, deallocator: nil)
+	internal var _gradχ: LaObjet<Float> {
+		return LaObjet<Float>(valuer: nabla.prev.χ.address, rows: width, cols: 1, deallocator: nil)
 	}
 	internal var _gradμ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: nabla.prev.φ.address, rows: width, cols: 1, deallocator: nil)
+		return LaObjet<Float>(valuer: nabla.prev.μ.address, rows: width, cols: 1, deallocator: nil)
 	}
-	internal var _gradσ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: nabla.prev.φ.address, rows: width, cols: 1, deallocator: nil)
+	internal var _gradλ: LaObjet<Float> {
+		return LaObjet<Float>(valuer: nabla.prev.λ.address, rows: width, cols: 1, deallocator: nil)
 	}
 }
 extension Cell {
-	@objc public enum DistributionType: Int {
+	@objc public enum DistributionType: UInt16 {
 		case Degenerate
 		case Cauchy
 		case Gaussian
+		
 	}
 }
 extension Cell {
@@ -286,9 +375,9 @@ extension Context {
 		case .Degenerate:
 			return DegenerateDistribution()
 		case .Cauchy:
-			return DegenerateDistribution()
+			return try GaussianDistribution(maschine: maschine)
 		case .Gaussian:
-			return DegenerateDistribution()
+			return try GaussianDistribution(maschine: maschine)
 		}
 	}
 }

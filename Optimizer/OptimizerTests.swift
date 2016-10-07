@@ -91,7 +91,7 @@ class OptimizerTests: XCTestCase {
 	
 	func testAdaDelta() {
 		do {
-			eval(optimizer: try AdaDelta(maschine: maschine, count: count, α: 1.0, γ: 0.95, ε: 1e-5))
+			eval(optimizer: try AdaDelta(maschine: maschine, count: count, α: 1.0, γ: 0.95, ε: 1e-3))
 			print(x.array)
 		} catch {
 			XCTFail()

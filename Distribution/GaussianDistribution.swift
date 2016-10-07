@@ -9,13 +9,17 @@
 import LaObjet
 import Maschine
 
+private let M_SQRT1_2PI = Float(0.5*M_SQRT1_2*M_2_SQRTPI)
+
 public class GaussianDistribution: SymmetricStableDistribution {
 	let u: Buffer<uint>
 	let rng: ComputePipelineState
+	let grn: ComputePipelineState
 	public init(maschine: Maschine, block: Int = 256) throws {
 		try?maschine.employ(bundle: Bundle(for: type(of: self)))
-		self.u = maschine.newBuffer(count: block, options: .cpuCacheModeWriteCombined)
-		self.rng = try maschine.newComputePipelineState(name: "gaussRng")
+		u = maschine.newBuffer(count: block, options: .cpuCacheModeWriteCombined)
+		rng = try maschine.newComputePipelineState(name: "gaussRng")
+		grn = try maschine.newComputePipelineState(name: "gaussGrn")
 	}
 	public func eval(commandBuffer: CommandBuffer, pdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
 		
@@ -39,9 +43,26 @@ public class GaussianDistribution: SymmetricStableDistribution {
 			$0.dispatch(groups: u.count/4, threads: 1)
 		}
 	}
-	public func eval(commandBuffer: CommandBuffer, gradμ: Buffer<Float>, gradσ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>) {
-		assert(LaObjet<Float>(valuer: 1, rows: μ.count, cols: 1).copy(to: gradμ.address))
-		assert(LaObjet<Float>(valuer: 0, rows: μ.count, cols: 1).copy(to: gradσ.address))
+	public func eval(commandBuffer: CommandBuffer, dχdμ: Buffer<Float>, dχdλ: Buffer<Float>, λ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>) {
+		assert(LaObjet<Float>(valuer: 1, rows: μ.count, cols: 1).copy(to: dχdμ.address))
+		assert(LaObjet<Float>(valuer: 0, rows: σ.count, cols: 1).copy(to: dχdλ.address))
+		assert(LaObjet<Float>(valuer: 0, rows: σ.count, cols: 1).copy(to: λ.address))
+	}
+	public func eval(commandBuffer: CommandBuffer, gradμ: Buffer<Float>, gradλ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>) {
+		let count: Int = min(gradμ.count, gradλ.count, μ.count, λ.count)
+		assert(gradμ.count==count)
+		assert(gradλ.count==count)
+		assert(μ.count==count)
+		assert(λ.count==count)
+		commandBuffer.compute {
+			$0.set(pipeline: grn)
+			$0.set(buffer: gradμ, offset: 0, at: 0)
+			$0.set(buffer: gradλ, offset: 0, at: 1)
+			$0.set(buffer: μ, offset: 0, at: 2)
+			$0.set(buffer: λ, offset: 0, at: 3)
+			$0.set(value: M_SQRT1_2PI, at: 4)
+			$0.dispatch(groups: (count-1)/4+1, threads: 1)
+		}
 	}
 	public func synth(λ: Buffer<Float>, σ: Buffer<Float>) {
 		var count: Int32 = Int32(min(λ.count, σ.count))

@@ -12,7 +12,8 @@ import LaObjet
 public protocol SymmetricStableDistribution: RandomNumberGenerator {
 	func eval(commandBuffer: CommandBuffer, pdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
 	func eval(commandBuffer: CommandBuffer, cdf: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
-	func eval(commandBuffer: CommandBuffer, gradμ: Buffer<Float>, gradσ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)
+	func eval(commandBuffer: CommandBuffer, dχdμ: Buffer<Float>, dχdλ: Buffer<Float>, λ: Buffer<Float>, μ: Buffer<Float>, σ: Buffer<Float>)
+	func eval(commandBuffer: CommandBuffer, gradμ: Buffer<Float>, gradλ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)
 	func synth(λ: Buffer<Float>, σ: Buffer<Float>)
 	func scale<Type: FloatingPoint>(μ: LaObjet<Type>) -> LaObjet<Type>
 	func scale<Type: FloatingPoint>(σ: LaObjet<Type>) -> LaObjet<Type>

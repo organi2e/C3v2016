@@ -21,6 +21,18 @@ extension CommandBuffer {
 		encode(blitCommand)
 		blitCommand.endEncoding()
 	}
+	public func fork(group: DispatchGroup, wait: Bool = false, enter: Bool = true) {
+		func done(commandBuffer: CommandBuffer) {
+			group.leave()
+		}
+		if wait {
+			group.wait()
+		}
+		if enter {
+			group.enter()
+		}
+		addCompletedHandler(done)
+	}
 }
 extension Maschine {
 	public func newCommandBuffer() -> CommandBuffer {

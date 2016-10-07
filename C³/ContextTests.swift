@@ -7,30 +7,64 @@
 //
 
 import XCTest
-import C3
+import LaObjet
+import Maschine
+@testable import C3
 
 class ContextTests: XCTestCase {
-	func testContext() {
-		do {
-			let context: Context = try Context(storage: nil)//URL(fileURLWithPath: "/Users/Kota/test.sqlite"))
-			let _: Cell = try context.newCell(type: .Degenerate, width: 10)
-			let _: Cell = try context.newCell(type: .Degenerate, width: 12)
-			let _: Cell = try context.newCell(type: .Cauchy, width: 14)
-			try context.save()
-			let restore: [Cell] = try context.searchCell(type: .Cauchy)
-			print(restore)
-		} catch {
-			XCTFail()
-		}
-	}
+	
+	let context: Context = try!Context(storage: nil)//URL(fileURLWithPath: "/Users/Kota/test.sqlite"))
+	
+	static let T: Bool = true
+	static let f: Bool = false
+	
+	let IS: [[Bool]] = [[f,f,f,T], [f,f,T,f], [f,T,f,f], [T,f,f,f]]
+	let OS: [[Bool]] = [[f,f,f,T], [f,f,T,f], [f,T,f,f], [T,f,f,f]]
+	
 	func testChain() {
 		do {
-			let context: Context = try Context(storage: nil)//URL(fileURLWithPath: "/Users/Kota/test.sqlite"))
-			let I: Cell = try context.newCell(type: .Degenerate, width: 10)
-			let O: Cell = try context.newCell(type: .Degenerate, width: 10, input: [I])
+			let I: Cell = try context.newCell(type: .Degenerate, width: 4, label: "I")
+			let O: Cell = try context.newCell(type: .Degenerate, width: 4, label: "O", input: [I])
 			
-			O.collect_clear()
-			context.save(sync: false)
+			for k in 0..<256 {
+				
+				print("before \(k)")
+				O.input.first?.dump()
+				
+				for k in 0..<4 {
+				
+					O.collect_clear()
+					I.correct_clear()
+			
+					I.active = IS[k%4]
+					O.answer = OS[k%4]
+			
+					O.collect()
+					I.correct()
+					
+					print(O.level.curr.χ.array)
+					print(O.state.curr.array)
+				}
+				
+				print("after \(k)")
+				O.input.first?.dump()
+				
+				
+			}
+			
+			for k in 0..<4 {
+				
+				O.collect_clear()
+				I.correct_clear()
+				
+				I.active = IS[k%4]
+				O.collect()
+				
+				print(k)
+				print(O.level.curr.χ.array)
+				print(O.state.curr.array)
+				
+			}
 			
 		} catch {
 			

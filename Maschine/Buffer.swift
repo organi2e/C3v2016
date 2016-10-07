@@ -45,7 +45,12 @@ public class Buffer<T> {
 			assert(0<=index&&index<count)
 			UnsafeMutablePointer<T>(OpaquePointer(body.contents()))[index] = newValue
 		}
-	}	
+	}
+	public func didChange(location: Int? = nil, length: Int? = nil) {
+		let loc: Int = location ?? 0
+		let len: Int = length ?? body.length - loc
+		body.didModifyRange(NSRange(location: loc, length: len))
+	}
 }
 
 extension Maschine {

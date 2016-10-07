@@ -18,6 +18,12 @@ public class AdaDelta: Optimizer {
 	let s: Buffer<Float>
 	let pipeline: ComputePipelineState
 	
+	public static func factory(α: Float, γ: Float, ε: Float) -> (Maschine, Int) throws -> Optimizer {
+		return {
+			try AdaDelta(maschine: $0, count: $1, α: α, γ: γ, ε: ε)
+		}
+	}
+	
 	public init(maschine: Maschine, count: Int, α: Float, γ: Float, ε: Float) throws {
 		try?maschine.employ(bundle: Bundle(for: type(of: self)))
 		self.pipeline = try maschine.newComputePipelineState(name: "AdaDelta")
