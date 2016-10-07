@@ -57,10 +57,8 @@ extension Bias {
 		let Δσ: LaObjet<Float> = matrix_product((Δ*gradλ).T, dλdc)
 		update(commandBuffer: commandBuffer, Δμ: Δμ, Δσ: Δσ)
 		*/
-		/*
 		let λ: LaObjet<Float> = cell.λ
 		update(commandBuffer: commandBuffer, Δμ: Δ * gradμ, Δσ: -Δ * λ * λ * gradλ)
-		*/
 	}
 	private var dμdμ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: nablaμ, rows: rows, cols: rows, deallocator: nil)

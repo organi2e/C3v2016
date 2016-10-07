@@ -10,7 +10,7 @@ import Foundation
 
 internal struct RingBuffer<T> {
 	private var cursor: Int
-	private let buffer: Array<T>
+	private var buffer: Array<T>
 	mutating func progress() {
 		cursor = ( cursor + 1 ) % length
 	}

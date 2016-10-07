@@ -52,27 +52,16 @@ extension Edge {
 	}
 	internal func correct(commandBuffer: CommandBuffer, ignore: Set<Cell>) -> LaObjet<Float> {
 		let distribution: SymmetricStableDistribution = output.distribution
+		
+		let λ: LaObjet<Float> = output.λ
+		
 		let (Δ, gradμ, gradλ): (Δ: LaObjet<Float>, gradμ: LaObjet<Float>, gradλ: LaObjet<Float>) = output.correct(ignore: ignore)
-		/*
-		let μactivator: LaObjet<Float> = input.χ
-		let σactivator: LaObjet<Float> = distribution.gradσδ(λ: output.λ, a: σ, x: input.χ)
-		(0..<rows).forEach {
-			do {
-				let slice: LaObjet<Float> = μactivator
-				assert(slice.copy(to: UnsafePointer<Float>(dμdμ).advanced(by: Int($0*(rows+1)*cols))))
-			}
-			do {
-				let slice: LaObjet<Float> = σactivator[Int($0)..<Int($0+1), 0..<Int(cols)]
-				assert(slice.copy(to: UnsafePointer<Float>(dλdσ).advanced(by: Int($0*(rows+1)*cols))))
-			}
-		}
-		let Δμ: LaObjet<Float> = matrix_product((Δ*gradμ).T, LaObjet<Float>(valuer: dμdμ, rows: rows, cols: rows*cols, deallocator: nil))
-		let Δσ: LaObjet<Float> = matrix_product((Δ*gradλ).T, LaObjet<Float>(valuer: dλdσ, rows: rows, cols: rows*cols, deallocator: nil))
-		*/
 		
 		let Δμ: LaObjet<Float> = outer_product(Δ*gradμ, last)
-		let Δσ: LaObjet<Float> = outer_product(-Δ*gradλ*input.λ*input.λ, last)
+		let Δσ: LaObjet<Float> = σ * outer_product(-Δ*gradλ*λ*λ*λ, last * last)
+		
 		update(commandBuffer: commandBuffer, Δμ: Δμ, Δσ: Δσ)
+		
 		return matrix_product(χ.T, Δ)
 	}
 }

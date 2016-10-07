@@ -35,7 +35,7 @@ public class DegenerateDistribution: SymmetricStableDistribution {
 	}
 	public func eval(commandBuffer: CommandBuffer, gradμ: Buffer<Float>, gradλ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>) {
 		assert(LaObjet<Float>(valuer: 1, rows: μ.count, cols: 1).copy(to: gradμ.address))
-		assert(LaObjet<Float>(valuer: 0, rows: μ.count, cols: 1).copy(to: gradλ.address))
+		assert(LaObjet<Float>(valuer: 0, rows: λ.count, cols: 1).copy(to: gradλ.address))
 	}
 	public func synth(λ: Buffer<Float>, σ: Buffer<Float>) {
 		assert(LaObjet<Float>(valuer: 0, rows: σ.count, cols: 1).copy(to: λ.address))

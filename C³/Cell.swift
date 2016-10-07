@@ -20,39 +20,39 @@ public class Cell: ManagedObject {
 	}
 	let group: DispatchGroup = DispatchGroup()
 	var ready: Set<Ready> = []
-	var state: RingBuffer<Buffer<Float>> = RingBuffer<Buffer<Float>>(array: [])
-	var train: RingBuffer<Buffer<Float>> = RingBuffer<Buffer<Float>>(array: [])
-	var error: RingBuffer<Buffer<Float>> = RingBuffer<Buffer<Float>>(array: [])
-	var delta: RingBuffer<Buffer<Float>> = RingBuffer<Buffer<Float>>(array: [])
-	var level: RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)> = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: [])
-	var nabla: RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)> = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: [])
+	var state: RingBuffer<Array<Float>> = RingBuffer<Array<Float>>(array: [])
+	var train: RingBuffer<Array<Float>> = RingBuffer<Array<Float>>(array: [])
+	var error: RingBuffer<Array<Float>> = RingBuffer<Array<Float>>(array: [])
+	var delta: RingBuffer<Array<Float>> = RingBuffer<Array<Float>>(array: [])
+	var level: RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)> = RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: [])
+	var nabla: RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)> = RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: [])
 	var distribution: SymmetricStableDistribution = DegenerateDistribution()
 	
 	override func setup(context: Context) throws {
 		let depth: Int = 2
 		let count: Int = Int(width)
-		state = RingBuffer<Buffer<Float>>(array: (0..<depth).map {(_)in
-			return context.newBuffer(count: count)
+		state = RingBuffer<Array<Float>>(array: (0..<depth).map {(_)in
+			return Array<Float>(repeating: 0, count: count)
 		})
-		train = RingBuffer<Buffer<Float>>(array: (0..<depth).map {(_)in
-			return context.newBuffer(count: count)
+		train = RingBuffer<Array<Float>>(array: (0..<depth).map {(_)in
+			return Array<Float>(repeating: 0, count: count)
 		})
-		error = RingBuffer<Buffer<Float>>(array: (0..<depth).map {(_)in
-			return context.newBuffer(count: count)
+		error = RingBuffer<Array<Float>>(array: (0..<depth).map {(_)in
+			return Array<Float>(repeating: 0, count: count)
 		})
-		delta = RingBuffer<Buffer<Float>>(array: (0..<depth).map {(_)in
-			return context.newBuffer(count: count)
+		delta = RingBuffer<Array<Float>>(array: (0..<depth).map {(_)in
+			return Array<Float>(repeating: 0, count: count)
 		})
-		level = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: (0..<depth).map {(_)in
+		level = RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: (0..<depth).map {(_)in
 			return (
-				χ: context.newBuffer(count: count),
+				χ: Array<Float>(repeating: 0, count: count),
 				μ: context.newBuffer(count: count),
 				λ: context.newBuffer(count: count)
 			)
 		})
-		nabla = RingBuffer<(χ: Buffer<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: (0..<depth).map {(_)in
+		nabla = RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: (0..<depth).map {(_)in
 			return (
-				χ: context.newBuffer(count: count),
+				χ: Array<Float>(repeating: 0, count: count),
 				μ: context.newBuffer(count: count),
 				λ: context.newBuffer(count: count)
 			)
@@ -71,12 +71,9 @@ extension Cell {
 			
 			do {
 				let commandBuffer: CommandBuffer = context.newCommandBuffer()
-				
 				commandBuffer.blit {
-					$0.fill(buffer: level.curr.χ, value: 0)
 					$0.fill(buffer: level.curr.μ, value: 0)
 					$0.fill(buffer: level.curr.λ, value: 0)
-					$0.fill(buffer: state.curr, value: 0)
 				}
 				input.forEach {
 					$0.collect_clear(commandBuffer: commandBuffer, ignore: ignore.union([self]))
@@ -105,16 +102,17 @@ extension Cell {
 					( $0.0.χ + $0.1.χ, $0.0.μ + $0.1.μ, $0.0.σ + $0.1.σ )
 				}
 				group.wait()
-				assert(mix.χ.copy(to: level.curr.χ.address))
+				assert(mix.χ.copy(to: level.curr.χ))
 				assert(mix.μ.copy(to: level.curr.μ.address))
 				assert(mix.σ.copy(to: level.curr.λ.address))
 			}
 			do {
-				let src: UnsafePointer<float4> = UnsafePointer<float4>(OpaquePointer(level.curr.χ.pointer))
-				let dst: UnsafeMutablePointer<float4> = UnsafeMutablePointer<float4>(OpaquePointer(state.curr.pointer))
+				let src: UnsafePointer<float4> = UnsafePointer<float4>(OpaquePointer(level.curr.χ))
+				let dst: UnsafeMutablePointer<float4> = UnsafeMutablePointer<float4>(OpaquePointer(state.curr))
 				for k in 0..<Int((width-1)/4+1) {
 					dst[k] = step(src[k], edge: float4(0))
 				}
+				distribution.synth(λ: level.curr.λ, σ: level.curr.λ)
 			}
 			do {
 				let commandBuffer: CommandBuffer = context.newCommandBuffer()
@@ -147,9 +145,9 @@ extension Cell {
 		}
 	}
 	public func correct(ignore: Set<Cell> = Set<Cell>()) -> (Δ: LaObjet<Float>, gradμ: LaObjet<Float>, gradλ: LaObjet<Float>) {
-		if ignore.contains(self) || !ready.contains(.State) {
+		if ignore.contains(self) || !ready.contains(.State) {			
 			return (
-				Δ: (2 / Float(input .map { $0.cols } .reduce(1) { $0.0 + $0.1 })) * _Δ,
+				Δ: _Δ,
 				gradμ: _gradμ,
 				gradλ: _gradλ
 			)
@@ -165,11 +163,11 @@ extension Cell {
 					$0.0 + $0.1
 				}
 				
-				group.wait()
-				assert(ε.copy(to: error.curr.address))
+				//group.wait()
+				assert(ε.copy(to: error.curr))
 
-				let src: UnsafePointer<float4> = UnsafePointer<float4>(OpaquePointer(error.curr.pointer))
-				let dst: UnsafeMutablePointer<float4> = UnsafeMutablePointer<float4>(OpaquePointer(delta.curr.pointer))
+				let src: UnsafePointer<float4> = UnsafePointer<float4>(OpaquePointer(error.curr))
+				let dst: UnsafeMutablePointer<float4> = UnsafeMutablePointer<float4>(OpaquePointer(delta.curr))
 				
 				for k in 0..<Int((width-1)/4+1) {
 					dst[k] = sign(src[k])
@@ -177,14 +175,14 @@ extension Cell {
 				
 				bias.correct(commandBuffer: commandBuffer, Δ: Δ, gradμ: gradμ, gradλ: gradλ)
 				
-				commandBuffer.fork(group: group)
+				//commandBuffer.fork(group: group)
 				//commandBuffer.enqueue()
 				commandBuffer.commit()
 				//commandBuffer.waitUntilCompleted()
 			}
 		}
 		return (
-			Δ: (2 / Float(input .map { $0.cols } .reduce(1) { $0.0 + $0.1 })) * Δ,
+			Δ: Δ,
 			gradμ: gradμ,
 			gradλ: gradλ
 		)
@@ -194,97 +192,43 @@ extension Cell {
 	public var active: Array<Bool> {
 		set {
 			let count: Int = min(newValue.count, Int(width))
-			let commandBuffer: CommandBuffer = context.newCommandBuffer()
-			func completed(commandBuffer: CommandBuffer) {
-				(0..<count).forEach {
-					state.curr[$0] = newValue[$0] ? 1 : 0
-				}
-				state.curr.didChange()
+			let ref: UnsafeMutablePointer<Float> = UnsafeMutablePointer<Float>(mutating: state.curr)
+			(0..<count).forEach {
+				ref[$0] = newValue[$0] ? 1 : 0
 			}
-			commandBuffer.blit {
-				$0.sync(buffer: state.curr)
-			}
-			commandBuffer.addCompletedHandler(completed)
-			commandBuffer.commit()
 			ready.insert(.State)
 		}
 		get {
-			let count: Int = Int(width)
-			let commandBuffer: CommandBuffer = context.newCommandBuffer()
-			var result: Array<Bool> = Array<Bool>(repeating: false, count: count)
-			func completed(commandBuffer: CommandBuffer) {
-				(0..<count).forEach {
-					result[$0] = 0 < state.curr[$0]
-				}
-			}
-			commandBuffer.blit {
-				$0.sync(buffer: state.curr)
-			}
-			commandBuffer.addCompletedHandler(completed)
-			commandBuffer.commit()
-			commandBuffer.waitUntilCompleted()
-			return result
+			return 0 < width ? state.curr.map { 0 < $0 } : []
 		}
 	}
 	public var answer: Array<Bool> {
 		set {
 			let count: Int = min(newValue.count, Int(width))
-			let commandBuffer: CommandBuffer = context.newCommandBuffer()
-			func completed(commandBuffer: CommandBuffer) {
-				(0..<count).forEach {
-					train.curr[$0] = newValue[$0] ? 1 : 0
-				}
+			let ref: UnsafeMutablePointer<Float> = UnsafeMutablePointer<Float>(mutating: train.curr)
+			(0..<count).forEach {
+				ref[$0] = newValue[$0] ? 1 : 0
 			}
-			commandBuffer.blit {
-				$0.sync(buffer: train.curr)
-			}
-			commandBuffer.addCompletedHandler(completed)
-			commandBuffer.commit()
-			commandBuffer.waitUntilCompleted()
 			ready.insert(.Train)
 		}
 		get {
-			let count: Int = Int(width)
-			var result: Array<Bool> = Array<Bool>(repeating: false, count: count)
-			func completed(commandBuffer: CommandBuffer) {
-				(0..<count).forEach {
-					result[$0] = 0 < train.curr[$0]
-				}
-			}
-			let commandBuffer: CommandBuffer = context.newCommandBuffer()
-			commandBuffer.blit {
-				$0.sync(buffer: train.curr)
-			}
-			commandBuffer.addCompletedHandler(completed)
-			commandBuffer.commit()
-			commandBuffer.waitUntilCompleted()
-			return result
+			return 0 < width ? train.curr.map { 0 < $0 } : []
 		}
 	}
 }
 extension Cell {
-	internal var χ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: state.curr.address, rows: width, cols: 1, deallocator: nil)
-	}
-	internal var ψ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: train.curr.address, rows: width, cols: 1, deallocator: nil)
-	}
-	internal var Δ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: error.curr.address, rows: width, cols: 1, deallocator: nil)
-	}
-	internal var _χ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: state.prev.address, rows: width, cols: 1, deallocator: nil)
-	}
-	internal var _ψ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: train.prev.address, rows: width, cols: 1, deallocator: nil)
-	}
-	internal var _Δ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: error.prev.address, rows: width, cols: 1, deallocator: nil)
-	}
+	internal var χ: LaObjet<Float> { return LaObjet<Float>(valuer: state.curr, rows: width, cols: 1, deallocator: nil) }
+	internal var ψ: LaObjet<Float> { return LaObjet<Float>(valuer: train.curr, rows: width, cols: 1, deallocator: nil) }
+	internal var ε: LaObjet<Float> { return LaObjet<Float>(valuer: error.curr, rows: width, cols: 1, deallocator: nil) }
+	internal var Δ: LaObjet<Float> { return LaObjet<Float>(valuer: delta.curr, rows: width, cols: 1, deallocator: nil) }
+	internal var _χ: LaObjet<Float> { return LaObjet<Float>(valuer: state.prev, rows: width, cols: 1, deallocator: nil) }
+	internal var _ψ: LaObjet<Float> { return LaObjet<Float>(valuer: train.prev, rows: width, cols: 1, deallocator: nil) }
+	internal var _ε: LaObjet<Float> { return LaObjet<Float>(valuer: error.prev, rows: width, cols: 1, deallocator: nil) }
+	internal var _Δ: LaObjet<Float> { return LaObjet<Float>(valuer: delta.prev, rows: width, cols: 1, deallocator: nil) }
 }
 extension Cell {
 	internal var φ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: level.curr.χ.address, rows: width, cols: 1, deallocator: nil)
+		return LaObjet<Float>(valuer: level.curr.χ, rows: width, cols: 1, deallocator: nil)
 	}
 	internal var μ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: level.curr.μ.address, rows: width, cols: 1, deallocator: nil)
@@ -293,7 +237,7 @@ extension Cell {
 		return LaObjet<Float>(valuer: level.curr.λ.address, rows: width, cols: 1, deallocator: nil)
 	}
 	internal var _φ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: level.prev.χ.address, rows: width, cols: 1, deallocator: nil)
+		return LaObjet<Float>(valuer: level.prev.χ, rows: width, cols: 1, deallocator: nil)
 	}
 	internal var _μ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: level.prev.μ.address, rows: width, cols: 1, deallocator: nil)
@@ -304,7 +248,7 @@ extension Cell {
 }
 extension Cell {
 	internal var gradχ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: nabla.curr.χ.address, rows: width, cols: 1, deallocator: nil)
+		return LaObjet<Float>(valuer: nabla.curr.χ, rows: width, cols: 1, deallocator: nil)
 	}
 	internal var gradμ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: nabla.curr.μ.address, rows: width, cols: 1, deallocator: nil)
@@ -313,7 +257,7 @@ extension Cell {
 		return LaObjet<Float>(valuer: nabla.curr.λ.address, rows: width, cols: 1, deallocator: nil)
 	}
 	internal var _gradχ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: nabla.prev.χ.address, rows: width, cols: 1, deallocator: nil)
+		return LaObjet<Float>(valuer: nabla.prev.χ, rows: width, cols: 1, deallocator: nil)
 	}
 	internal var _gradμ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: nabla.prev.μ.address, rows: width, cols: 1, deallocator: nil)
@@ -379,5 +323,8 @@ extension Context {
 		case .Gaussian:
 			return try GaussianDistribution(maschine: maschine)
 		}
+	}
+	public func chain(output: Cell, input: Cell) throws {
+		let _: Edge = try newEdge(output: output, input: input)
 	}
 }
