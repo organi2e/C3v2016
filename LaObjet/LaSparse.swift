@@ -26,7 +26,7 @@ extension LaSparseObjet {
 			return 0
 		}
 		set {
-			sparse_insert_entry_float(self, newValue, sparse_index(row), sparse_index(col))
+			
 		}
 	}
 	subscript(rows: Int, cols: Int) -> [Float] {

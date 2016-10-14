@@ -172,6 +172,8 @@
 		8762339C1D9E6A2500E7D001 /* LaÉlément.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "LaÉlément.swift"; path = "LaObjet/LaÉlément.swift"; sourceTree = "<group>"; };
 		8766AEA21D9CCC6B00FC7FE6 /* BlitCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BlitCommand.swift; path = Maschine/BlitCommand.swift; sourceTree = "<group>"; };
 		8766AEA51D9CD43500FC7FE6 /* DegenerateDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DegenerateDistribution.swift; path = Distribution/DegenerateDistribution.swift; sourceTree = "<group>"; };
+		87809BB71DB08F8300780C6C /* Cube.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Cube.swift; path = "C³/Cube.swift"; sourceTree = "<group>"; };
+		87809BCA1DB0933E00780C6C /* mtlCube.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlCube.metal; path = "C³/mtlCube.metal"; sourceTree = "<group>"; };
 		87CDF7301DA21FCA0056FC89 /* RingBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RingBuffer.swift; path = "C³/RingBuffer.swift"; sourceTree = "<group>"; };
 		87CDF7441DA234D00056FC89 /* ContextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContextTests.swift; path = "C³/ContextTests.swift"; sourceTree = "<group>"; };
 		87CDF7471DA246EA0056FC89 /* Bias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Bias.swift; path = "C³/Bias.swift"; sourceTree = "<group>"; };
@@ -259,11 +261,13 @@
 				871908911D9253ED0048A43F /* Arcane.swift */,
 				87CDF7471DA246EA0056FC89 /* Bias.swift */,
 				871E15AB1D9539CC00739047 /* Cell.swift */,
+				87809BB71DB08F8300780C6C /* Cube.swift */,
 				875298041DA2669100F28C50 /* Decay.swift */,
 				871E15AE1D953A5C00739047 /* Edge.swift */,
 				87CDF7301DA21FCA0056FC89 /* RingBuffer.swift */,
 				875297F11DA2637500F28C50 /* mtlArcane.metal */,
 				87460CBC1DA49C0000E779CA /* mtlCell.metal */,
+				87809BCA1DB0933E00780C6C /* mtlCube.metal */,
 				87CDF7441DA234D00056FC89 /* ContextTests.swift */,
 			);
 			name = "C³";

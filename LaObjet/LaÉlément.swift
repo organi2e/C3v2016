@@ -28,8 +28,10 @@ public protocol LaType: FloatingPoint {
 	static var vecteurExp: (UnsafeMutablePointer<Élément>, UnsafePointer<Élément>, UnsafePointer<Int32>) -> Void { get }
 	static var vecteurLog: (UnsafeMutablePointer<Élément>, UnsafePointer<Élément>, UnsafePointer<Int32>) -> Void { get }
 	static var vecteurRec: (UnsafeMutablePointer<Élément>, UnsafePointer<Élément>, UnsafePointer<Int32>) -> Void { get }
+	static var vecteurSqrt: (UnsafeMutablePointer<Élément>, UnsafePointer<Élément>, UnsafePointer<Int32>) -> Void { get }
 	static var vecteurRsqrt: (UnsafeMutablePointer<Élément>, UnsafePointer<Élément>, UnsafePointer<Int32>) -> Void { get }
 	
+	static var vecteurClear: (UnsafeMutablePointer<Élément>, Int, UInt) -> Void { get }
 	static var vecteurStatistics: (UnsafePointer<Élément>, Int, UnsafeMutablePointer<Élément>?, Int, UnsafeMutablePointer<Élément>, UnsafeMutablePointer<Élément>, UInt) -> Void { get }
 }
 public protocol LaSoloType {}
@@ -76,8 +78,14 @@ extension Float: LaType, LaSoloType {
 	public static var vecteurRec: (UnsafeMutablePointer<Float>, UnsafePointer<Float>, UnsafePointer<Int32>) -> Void {
 		return vvrecf
 	}
-	public static var vecteurRsqrt: (UnsafeMutablePointer<Float>, UnsafePointer<Float>, UnsafePointer<Int32>) -> Void {
+	public static var vecteurSqrt: (UnsafeMutablePointer<Float>, UnsafePointer<Float>, UnsafePointer<Int32>) -> Void {
 		return vvsqrtf
+	}
+	public static var vecteurRsqrt: (UnsafeMutablePointer<Float>, UnsafePointer<Float>, UnsafePointer<Int32>) -> Void {
+		return vvrsqrtf
+	}
+	public static var vecteurClear: (UnsafeMutablePointer<Float>, Int, UInt) -> Void {
+		return vDSP_vclr
 	}
 	public static var vecteurStatistics: (UnsafePointer<Float>, Int, UnsafeMutablePointer<Float>?, Int, UnsafeMutablePointer<Float>, UnsafeMutablePointer<Float>, UInt) -> Void {
 		return vDSP_normalize
@@ -127,8 +135,14 @@ extension Double: LaType, LaDoubléType {
 	public static var vecteurRec: (UnsafeMutablePointer<Double>, UnsafePointer<Double>, UnsafePointer<Int32>) -> Void {
 		return vvrec
 	}
-	public static var vecteurRsqrt: (UnsafeMutablePointer<Double>, UnsafePointer<Double>, UnsafePointer<Int32>) -> Void {
+	public static var vecteurSqrt: (UnsafeMutablePointer<Double>, UnsafePointer<Double>, UnsafePointer<Int32>) -> Void {
 		return vvsqrt
+	}
+	public static var vecteurRsqrt: (UnsafeMutablePointer<Double>, UnsafePointer<Double>, UnsafePointer<Int32>) -> Void {
+		return vvrsqrt
+	}
+	public static var vecteurClear: (UnsafeMutablePointer<Double>, Int, UInt) -> Void {
+		return vDSP_vclrD
 	}
 	public static var vecteurStatistics: (UnsafePointer<Double>, Int, UnsafeMutablePointer<Double>?, Int, UnsafeMutablePointer<Double>, UnsafeMutablePointer<Double>, UInt) -> Void {
 		return vDSP_normalizeD

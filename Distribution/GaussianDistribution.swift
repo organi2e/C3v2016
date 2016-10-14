@@ -9,7 +9,7 @@
 import LaObjet
 import Maschine
 
-private let M_SQRT1_2PI = Float(0.5*M_SQRT1_2*M_2_SQRTPI)
+private let M_SQRT1_2PI: Float = Float(0.5*M_SQRT1_2*M_2_SQRTPI)
 
 public class GaussianDistribution: SymmetricStableDistribution {
 	let u: Buffer<uint>

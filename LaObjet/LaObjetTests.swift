@@ -99,7 +99,7 @@ class LaObjetTests: XCTestCase {
 		let c = b.map { a / $0 }
 		let A = LaObjet<T>(valuer: a)
 		let B = LaObjet<T>(valuer: b, rows: b.count, cols: 1, deallocator: nil)
-		if 1e-5 < ((A/B) - LaObjet<T>(valuer: c, rows: b.count, cols: 1, deallocator: nil)).LINFNorme {
+		if 1e-5 < ((A/B) - LaObjet<T>(valuer: c, rows: b.count, cols: 1, deallocator: nil)).L2Norme {
 			XCTFail()
 			print((A/B).array)
 			print(c)
@@ -112,10 +112,24 @@ class LaObjetTests: XCTestCase {
 		let c = b.map { $0 / a }
 		let A = LaObjet<T>(valuer: a)
 		let B = LaObjet<T>(valuer: b, rows: b.count, cols: 1, deallocator: nil)
-		if 1e-5 < ((B/A) - LaObjet<T>(valuer: c, rows: b.count, cols: 1, deallocator: nil)).LINFNorme {
+		if 1e-5 < ((B/A) - LaObjet<T>(valuer: c, rows: b.count, cols: 1, deallocator: nil)).L2Norme {
 			XCTFail()
 			print((B/A).array)
 			print(c)
 		}
+	}
+	
+	func testColdiagonale() {
+		let a = uniform()
+		let A = LaObjet<T>(valuer: a, rows: a.count, cols: 1, deallocator: nil)
+		let B = A.coldiagonale
+		let C = matrix_product(B, A)
+		let c = C.array
+		T.vecteurSqrt(UnsafeMutablePointer<T>(mutating: c), c, [Int32(c.count)])
+		let D = LaObjet<T>(valuer: c, rows: c.count, cols: 1, deallocator: nil)
+		if 1e-5 < (A-D).L2Norme {
+			XCTFail()
+		}
+		
 	}
 }

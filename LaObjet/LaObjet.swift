@@ -14,6 +14,7 @@ import Accelerate
 
 private let ATTR: la_attribute_t = la_attribute_t(LA_ATTRIBUTE_ENABLE_LOGGING)
 private let HINT: la_hint_t = la_hint_t(LA_NO_HINT)
+private let NOHINT: la_hint_t = la_hint_t(LA_NO_HINT)
 private let SUCCESS: la_status_t = la_status_t(LA_SUCCESS)
 
 public struct LaObjet<Type: LaType> {
@@ -38,6 +39,13 @@ public struct LaObjet<Type: LaType> {
 	}
 	public init<Entier: Integer>(valuer: UnsafePointer<Type.Élément>, rows: Entier, cols: Entier, stride: Entier? = nil, deallocator: (@convention(c) (UnsafeMutableRawPointer?) -> Void)?) {
 		objet = Type.matriceNocopy(UnsafeMutablePointer<Type.Élément>(OpaquePointer(valuer)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, deallocator, ATTR)
+	}
+	public var coldiagonale: LaObjet {
+		let rows: UInt = la_matrix_rows(objet)
+		let cols: UInt = la_matrix_cols(objet)
+		let buffer: UnsafeMutablePointer<Type.Élément> = UnsafeMutablePointer<Type.Élément>(OpaquePointer(calloc(Int(rows*rows*cols), MemoryLayout<Type.Élément>.size)))
+		assert(Type.matriceBytes(buffer, (rows+1)*cols, objet)==SUCCESS)
+		return LaObjet(objet: Type.matriceNocopy(buffer, rows, rows*cols, rows*cols, NOHINT, { free($0) }, ATTR))
 	}
 	public var array: Array<Type.Élément> {
 		let rows: la_count_t = la_matrix_rows(objet)

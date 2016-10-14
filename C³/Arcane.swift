@@ -16,7 +16,6 @@ internal class Arcane: ManagedObject {
 	
 	private static let argmukey: String = "argmu"
 	private static let argsigmakey: String = "argsigma"
-	private static let keys: Set<String> = Set<String>(arrayLiteral: argmukey, argsigmakey)
 	
 	private var cache: (
 		χ: Buffer<Float>,
@@ -30,7 +29,7 @@ internal class Arcane: ManagedObject {
 		deltaσ: Buffer<Float>,
 		refresh: ComputePipelineState
 	)!
-	private var optimizer: Optimizer!
+	private var optimizer: Optimizer?
 	
 	override func setup(context: Context) throws {
 		try super.setup(context: context)
@@ -53,10 +52,12 @@ internal class Arcane: ManagedObject {
 	}
 	internal func refresh(commandBuffer: CommandBuffer, distribution: SymmetricStableDistribution) {
 		func scheduled(commandBuffer: CommandBuffer) {
-			Arcane.keys.forEach { willAccessValue(forKey: $0) }
+			willAccessValue(forKey: Arcane.argmukey)
+			willAccessValue(forKey: Arcane.argsigmakey)
 		}
 		func completed(commandBuffer: CommandBuffer) {
-			Arcane.keys.forEach { didAccessValue(forKey: $0) }
+			didAccessValue(forKey: Arcane.argmukey)
+			didAccessValue(forKey: Arcane.argsigmakey)
 		}
 		commandBuffer.addScheduledHandler(scheduled)
 		commandBuffer.addCompletedHandler(completed)
@@ -75,20 +76,22 @@ internal class Arcane: ManagedObject {
 	internal func update(commandBuffer: CommandBuffer, Δμ: LaObjet<Float>, Δσ: LaObjet<Float>) {
 		
 		func scheduled(commandBuffer: CommandBuffer) {
-			Arcane.keys.forEach { willChangeValue(forKey: $0) }
+			willChangeValue(forKey: Arcane.argmukey)
+			willChangeValue(forKey: Arcane.argsigmakey)
 		}
 		func completed(commandBuffer: CommandBuffer) {
-			Arcane.keys.forEach { didChangeValue(forKey: $0) }
+			didChangeValue(forKey: Arcane.argsigmakey)
+			didChangeValue(forKey: Arcane.argmukey)
 		}
 		
 		commandBuffer.addScheduledHandler(scheduled)
 		commandBuffer.addCompletedHandler(completed)
 		
 		assert(Δμ.copy(to: cache.deltaμ.address))
-		optimizer.update(commandBuffer: commandBuffer, value: cache.argμ, nabla: cache.gradμ, delta: cache.deltaμ)
+		optimizer?.update(commandBuffer: commandBuffer, value: cache.argμ, nabla: cache.gradμ, delta: cache.deltaμ)
 		
 		assert(Δσ.copy(to: cache.deltaσ.address))
-		optimizer.update(commandBuffer: commandBuffer, value: cache.argσ, nabla: cache.gradσ, delta: cache.deltaσ)
+		optimizer?.update(commandBuffer: commandBuffer, value: cache.argσ, nabla: cache.gradσ, delta: cache.deltaσ)
 		
 	}
     internal var χ: LaObjet<Float> {

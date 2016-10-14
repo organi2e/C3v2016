@@ -13,16 +13,16 @@ import Optimizer
 
 internal class Bias: Arcane {
 	//Put on main memory because they tend to be too large for gpu-memory
-	var nablaμ: Array<Float> = []
-	var nablaσ: Array<Float> = []
+	var nablaμ: Array<Float> = Array<Float>()
+	var nablaσ: Array<Float> = Array<Float>()
 	override func setup(context: Context) throws {
 		try super.setup(context: context)
 		let count: Int = Int(cell.width * cell.width)
 		let commandBuffer: CommandBuffer = context.newCommandBuffer()
 		refresh(commandBuffer: commandBuffer, distribution: cell.distribution)
 		commandBuffer.commit()
-		nablaμ = Array<Float>(repeating: 0, count: count)
-		nablaσ = Array<Float>(repeating: 0, count: count)
+	//	nablaμ = Array<Float>(repeating: 0, count: count*count)
+	//	nablaσ = Array<Float>(repeating: 0, count: count*count)
 	}
 }
 extension Bias {
@@ -49,16 +49,18 @@ extension Bias {
 		
 	}
 	internal func correct(commandBuffer: CommandBuffer, Δ: LaObjet<Float>, gradμ: LaObjet<Float>, gradλ: LaObjet<Float>) {
-		/*
-		let distribution: SymmetricStableDistribution = cell.distribution
-		let dμdc: LaObjet<Float> = LaObjet<Float>(identité: rows)
-		let dλdc: LaObjet<Float> = -distribution.gradσδ(λ: cell.λ, c: σ)
-		let Δμ: LaObjet<Float> = matrix_product((Δ*gradμ).T, dμdc)
-		let Δσ: LaObjet<Float> = matrix_product((Δ*gradλ).T, dλdc)
-		update(commandBuffer: commandBuffer, Δμ: Δμ, Δσ: Δσ)
-		*/
-		let λ: LaObjet<Float> = cell.λ
-		update(commandBuffer: commandBuffer, Δμ: Δ * gradμ, Δσ: -Δ * λ * λ * gradλ)
+		/*let distribution: SymmetricStableDistribution = cell.distribution
+		do {
+			//Feedback
+		}
+		do {
+			//Always gain
+			let dλdc: LaObjet<Float> = -distribution.gradσδ(λ: cell.λ, c: σ).coldiagonale
+			let Δσ: LaObjet<Float> = matrix_product((Δ*gradλ).T, dλdc)
+			update(commandBuffer: commandBuffer, Δμ: Δ*gradμ, Δσ: Δσ)
+		}*/
+		let λ = cell.λ
+		update(commandBuffer: commandBuffer, Δμ: Δ*gradμ, Δσ: -Δ*gradλ*λ*λ*σ)
 	}
 	private var dμdμ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: nablaμ, rows: rows, cols: rows, deallocator: nil)

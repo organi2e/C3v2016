@@ -48,7 +48,10 @@ kernel void gaussRng(device float4 * const value [[ buffer(0) ]],
 	for ( uint k = n ; k < K ; k += N ) {
 		
 		float4 const u = ( float4 ( seq ) + 1 ) / 4294967296.0;
-		value [ k ] = mu [ k ] + sigma [ k ] * float4( fast :: cospi( 2 * u.xy ), fast :: sinpi( 2 * u.xy ) ) * fast :: sqrt( -2 * fast :: log( u.zw ).xyxy );
+		float2 const xy = 2.0 * u.xy;
+		float2 const zw = u.zw;
+		
+		value [ k ] = mu [ k ] + sigma [ k ] * float4( fast :: cospi( xy ), fast :: sinpi( xy ) ) * fast :: sqrt( -2 * fast :: log( zw ).xyxy );
 		
 		seq ^= seq >> a;
 		seq ^= seq << b;
@@ -67,7 +70,7 @@ kernel void gaussGrn(device float4 * const gradmu [[ buffer(0) ]],
 	float4 const m = mu [ n ];
 	float4 const l = lambda [ n ];
 	float4 const x = m * l;
-	float4 const gradx = M_SQRT1_2PI * exp ( -0.5 * x * x );
-	gradmu [ n ] = gradx * l;
-	gradlambda [ n ] = gradx * m;
+	float4 const g = M_SQRT1_2PI * exp ( -0.5 * x * x );
+	gradmu [ n ] = g * l;
+	gradlambda [ n ] = g * m;
 }
