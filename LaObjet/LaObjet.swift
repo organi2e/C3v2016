@@ -40,7 +40,7 @@ public struct LaObjet<Type: LaType> {
 	public init<Entier: Integer>(valuer: UnsafePointer<Type.Élément>, rows: Entier, cols: Entier, stride: Entier? = nil, deallocator: (@convention(c) (UnsafeMutableRawPointer?) -> Void)?) {
 		objet = Type.matriceNocopy(UnsafeMutablePointer<Type.Élément>(OpaquePointer(valuer)), rows.unsignedValue, cols.unsignedValue, (stride ?? cols).unsignedValue, HINT, deallocator, ATTR)
 	}
-	public var coldiagonale: LaObjet {
+	public var colsdiag: LaObjet {
 		let rows: UInt = la_matrix_rows(objet)
 		let cols: UInt = la_matrix_cols(objet)
 		let buffer: UnsafeMutablePointer<Type.Élément> = UnsafeMutablePointer<Type.Élément>(OpaquePointer(calloc(Int(rows*rows*cols), MemoryLayout<Type.Élément>.size)))

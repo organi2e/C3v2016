@@ -101,6 +101,7 @@ extension Cell {
 				let mix: (χ: LaObjet<Float>, μ: LaObjet<Float>, σ: LaObjet<Float>) = ref.reduce(bias.collect()) {
 					( $0.0.χ + $0.1.χ, $0.0.μ + $0.1.μ, $0.0.σ + $0.1.σ )
 				}
+				//sync for pre-computation for preparation
 				group.wait()
 				assert(mix.χ.copy(to: level.curr.χ))
 				assert(mix.μ.copy(to: level.curr.μ.address))
@@ -116,11 +117,10 @@ extension Cell {
 			}
 			do {
 				let commandBuffer: CommandBuffer = context.newCommandBuffer()
-				
 				distribution.eval(commandBuffer: commandBuffer, gradμ: nabla.curr.μ, gradλ: nabla.curr.λ, μ: level.curr.μ, λ: level.curr.λ)
 				
+				//pre-computation for optimization
 				commandBuffer.fork(group: group)
-				//commandBuffer.enqueue()
 				commandBuffer.commit()
 				//commandBuffer.waitUntilCompleted()
 			}
@@ -162,19 +162,17 @@ extension Cell {
 				}.reduce(LaObjet<Float>(valuer: 0)) {
 					$0.0 + $0.1
 				}
-				
-				//group.wait()
+				//sync for pre-computation for optimization
+				group.wait()
 				assert(ε.copy(to: error.curr))
-
-				let src: UnsafePointer<float4> = UnsafePointer<float4>(OpaquePointer(error.curr))
-				let dst: UnsafeMutablePointer<float4> = UnsafeMutablePointer<float4>(OpaquePointer(delta.curr))
-				
-				for k in 0..<Int((width-1)/4+1) {
-					dst[k] = sign(src[k])
+				do {
+					let src: UnsafePointer<float4> = UnsafePointer<float4>(OpaquePointer(error.curr))
+					let dst: UnsafeMutablePointer<float4> = UnsafeMutablePointer<float4>(OpaquePointer(delta.curr))
+					for k in 0..<Int((width-1)/4+1) {
+						dst[k] = sign(src[k])
+					}
 				}
-				
 				bias.correct(commandBuffer: commandBuffer, Δ: Δ, gradμ: gradμ, gradλ: gradλ)
-				
 				//commandBuffer.fork(group: group)
 				//commandBuffer.enqueue()
 				commandBuffer.commit()

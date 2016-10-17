@@ -19,33 +19,33 @@ class ContextTests: XCTestCase {
 	static let T: Bool = true
 	static let f: Bool = false
 	
-	let IS: [[Bool]] = [[T,f,f,f], [f,T,f,f], [f,f,T,f], [f,T,f,f]]
-	//let IS: [[Bool]] = [[f,T,f,f], [f,f,T,T], [f,f,T,f], [f,f,f,T]]
+	//let IS: [[Bool]] = [[T,f,f,f], [f,T,f,f], [f,f,T,f], [f,T,f,f]]
+	let IS: [[Bool]] = [[f,T,f,f], [f,f,T,T], [f,f,T,f], [f,f,f,T]]
 	//let IS: [[Bool]] = [[T,f,f,f], [f,T,f,f], [f,f,T,f], [f,f,f,T]]
 	let OS: [[Bool]] = [[T,f,f,f], [f,T,f,f], [f,f,T,f], [f,f,f,T]]
 	
 	func testChain() {
 		do {
 			
-			context.optimizer = AdaDelta.factory(α: 1, γ: 0.95, ε: 1e-3)
+			context.optimizer = AdaDelta.factory(α: 1, γ: 0.95, ε: 1e-4)
 			
 			let I: Cell = try context.newCell(type: .Gaussian, width: 4, label: "I")
-			let H: Cell = try context.newCell(type: .Gaussian, width: 256, label: "H")
-			let G: Cell = try context.newCell(type: .Gaussian, width: 256, label: "G")
+			let H: Cell = try context.newCell(type: .Gaussian, width: 16, label: "H")
+			let G: Cell = try context.newCell(type: .Gaussian, width: 16, label: "G")
 			let O: Cell = try context.newCell(type: .Gaussian, width: 4, label: "O")
 			
-			try context.chain(output: O, input: G)
-			try context.chain(output: G, input: H)
-			try context.chain(output: H, input: G)
+			try context.chain(output: O, input: H)
+			//try context.chain(output: G, input: H)
+			//try context.chain(output: H, input: G)
 			try context.chain(output: H, input: I)
 			
 			
-			for i in 0..<65536 {
+			for i in 0..<4096 {
 				
 				//print("before \(k)")
 				//O.input.first?.dump()
 				
-				for _ in 0..<16 {
+				for _ in 0..<4 {
 					
 					O.collect_clear()
 					I.correct_clear()

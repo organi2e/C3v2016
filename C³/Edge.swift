@@ -52,24 +52,20 @@ extension Edge {
 	}
 	internal func correct(commandBuffer: CommandBuffer, ignore: Set<Cell>) -> LaObjet<Float> {
 		let distribution: SymmetricStableDistribution = output.distribution
-		
 		let λ: LaObjet<Float> = output.λ
-		
 		let (Δ, gradμ, gradλ): (Δ: LaObjet<Float>, gradμ: LaObjet<Float>, gradλ: LaObjet<Float>) = output.correct(ignore: ignore)
-		
-		let Δμ: LaObjet<Float> = outer_product(Δ*gradμ, last)
-		let Δσ: LaObjet<Float> = σ * outer_product(-Δ*gradλ*λ*λ*λ, last * last)
-		
-		update(commandBuffer: commandBuffer, Δμ: Δμ, Δσ: Δσ)
-		
+		do {
+			let Δμ: LaObjet<Float> = outer_product(Δ*gradμ, last)
+			let dλdσ: LaObjet<Float> = -distribution.gradσδ(λ: λ, a: σ, x: last).colsdiag
+			let Δσ: LaObjet<Float> = matrix_product((Δ*gradλ).T, dλdσ)
+			update(commandBuffer: commandBuffer, Δμ: Δμ, Δσ: Δσ)
+		}
 		return matrix_product(χ.T, Δ)
 	}
 }
 extension Context {
 	internal func newEdge(output: Cell, input: Cell) throws -> Edge {
-		guard let edge: Edge = new() else {
-			throw EntityError.InsertionError(of: Edge.self)
-		}
+		guard let edge: Edge = new() else { throw EntityError.InsertionError(of: Edge.self) }
 		edge.output = output
 		edge.input = input
 		try edge.resize(rows: output.width, cols: input.width)

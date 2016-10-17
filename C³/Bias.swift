@@ -49,18 +49,21 @@ extension Bias {
 		
 	}
 	internal func correct(commandBuffer: CommandBuffer, Δ: LaObjet<Float>, gradμ: LaObjet<Float>, gradλ: LaObjet<Float>) {
-		/*let distribution: SymmetricStableDistribution = cell.distribution
+		let distribution: SymmetricStableDistribution = cell.distribution
+		let λ: LaObjet<Float> = cell.λ
+		/*
 		do {
 			//Feedback
 		}
+		*/
 		do {
 			//Always gain
-			let dλdc: LaObjet<Float> = -distribution.gradσδ(λ: cell.λ, c: σ).coldiagonale
+			let dλdc: LaObjet<Float> = -distribution.gradσδ(λ: λ, c: σ).colsdiag
 			let Δσ: LaObjet<Float> = matrix_product((Δ*gradλ).T, dλdc)
-			update(commandBuffer: commandBuffer, Δμ: Δ*gradμ, Δσ: Δσ)
-		}*/
-		let λ = cell.λ
-		update(commandBuffer: commandBuffer, Δμ: Δ*gradμ, Δσ: -Δ*gradλ*λ*λ*σ)
+			let Δμ: LaObjet<Float> = Δ * gradμ
+			update(commandBuffer: commandBuffer, Δμ: Δμ, Δσ: Δσ)
+		}
+		//update(commandBuffer: commandBuffer, Δμ: Δ*gradμ, Δσ: -Δ*gradλ*λ*λ*σ)
 	}
 	private var dμdμ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: nablaμ, rows: rows, cols: rows, deallocator: nil)

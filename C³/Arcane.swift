@@ -74,7 +74,6 @@ internal class Arcane: ManagedObject {
 		distribution.eval(commandBuffer: commandBuffer, χ: cache.χ, μ: cache.μ, σ: cache.σ)
 	}
 	internal func update(commandBuffer: CommandBuffer, Δμ: LaObjet<Float>, Δσ: LaObjet<Float>) {
-		
 		func scheduled(commandBuffer: CommandBuffer) {
 			willChangeValue(forKey: Arcane.argmukey)
 			willChangeValue(forKey: Arcane.argsigmakey)
@@ -83,7 +82,6 @@ internal class Arcane: ManagedObject {
 			didChangeValue(forKey: Arcane.argsigmakey)
 			didChangeValue(forKey: Arcane.argmukey)
 		}
-		
 		commandBuffer.addScheduledHandler(scheduled)
 		commandBuffer.addCompletedHandler(completed)
 		
