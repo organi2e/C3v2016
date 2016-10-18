@@ -24,8 +24,8 @@ public class Cell: ManagedObject {
 	var train: RingBuffer<Array<Float>> = RingBuffer<Array<Float>>(array: [])
 	var error: RingBuffer<Array<Float>> = RingBuffer<Array<Float>>(array: [])
 	var delta: RingBuffer<Array<Float>> = RingBuffer<Array<Float>>(array: [])
-	var level: RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)> = RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: [])
-	var nabla: RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)> = RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: [])
+	var level: RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, σ: Buffer<Float>, λ: Buffer<Float>)> = RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, σ: Buffer<Float>, λ: Buffer<Float>)>(array: [])
+	var nabla: RingBuffer<(μ: Buffer<Float>, λ: Buffer<Float>)> = RingBuffer<(μ: Buffer<Float>, λ: Buffer<Float>)>(array: [])
 	var distribution: SymmetricStableDistribution = DegenerateDistribution()
 	
 	override func setup(context: Context) throws {
@@ -43,22 +43,25 @@ public class Cell: ManagedObject {
 		delta = RingBuffer<Array<Float>>(array: (0..<depth).map {(_)in
 			return Array<Float>(repeating: 0, count: count)
 		})
-		level = RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: (0..<depth).map {(_)in
+		level = RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, σ: Buffer<Float>, λ: Buffer<Float>)>(array: (0..<depth).map {(_)in
 			return (
 				χ: Array<Float>(repeating: 0, count: count),
 				μ: context.newBuffer(count: count),
+				σ: context.newBuffer(count: count),
 				λ: context.newBuffer(count: count)
 			)
 		})
-		nabla = RingBuffer<(χ: Array<Float>, μ: Buffer<Float>, λ: Buffer<Float>)>(array: (0..<depth).map {(_)in
+		nabla = RingBuffer<(μ: Buffer<Float>, λ: Buffer<Float>)>(array: (0..<depth).map {(_)in
 			return (
-				χ: Array<Float>(repeating: 0, count: count),
 				μ: context.newBuffer(count: count),
 				λ: context.newBuffer(count: count)
 			)
 		})
 		distribution = try context.newDistribution(type: type)
 	}
+}
+extension Cell {
+	
 }
 extension Cell {
 	public func collect_clear(ignore: Set<Cell> = Set<Cell>()) {
@@ -105,7 +108,7 @@ extension Cell {
 				group.wait()
 				assert(mix.χ.copy(to: level.curr.χ))
 				assert(mix.μ.copy(to: level.curr.μ.address))
-				assert(mix.σ.copy(to: level.curr.λ.address))
+				assert(mix.σ.copy(to: level.curr.σ.address))
 			}
 			do {
 				let src: UnsafePointer<float4> = UnsafePointer<float4>(OpaquePointer(level.curr.χ))
@@ -113,7 +116,7 @@ extension Cell {
 				for k in 0..<Int((width-1)/4+1) {
 					dst[k] = step(src[k], edge: float4(0))
 				}
-				distribution.synth(λ: level.curr.λ, σ: level.curr.λ)
+				distribution.synth(λ: level.curr.λ, σ: level.curr.σ)
 			}
 			do {
 				let commandBuffer: CommandBuffer = context.newCommandBuffer()
@@ -231,6 +234,9 @@ extension Cell {
 	internal var μ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: level.curr.μ.address, rows: width, cols: 1, deallocator: nil)
 	}
+	internal var σ: LaObjet<Float> {
+		return LaObjet<Float>(valuer: level.curr.σ.address, rows: width, cols: 1, deallocator: nil)
+	}
 	internal var λ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: level.curr.λ.address, rows: width, cols: 1, deallocator: nil)
 	}
@@ -240,22 +246,19 @@ extension Cell {
 	internal var _μ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: level.prev.μ.address, rows: width, cols: 1, deallocator: nil)
 	}
+	internal var _σ: LaObjet<Float> {
+		return LaObjet<Float>(valuer: level.prev.σ.address, rows: width, cols: 1, deallocator: nil)
+	}
 	internal var _λ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: level.prev.λ.address, rows: width, cols: 1, deallocator: nil)
 	}
 }
 extension Cell {
-	internal var gradχ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: nabla.curr.χ, rows: width, cols: 1, deallocator: nil)
-	}
 	internal var gradμ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: nabla.curr.μ.address, rows: width, cols: 1, deallocator: nil)
 	}
 	internal var gradλ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: nabla.curr.λ.address, rows: width, cols: 1, deallocator: nil)
-	}
-	internal var _gradχ: LaObjet<Float> {
-		return LaObjet<Float>(valuer: nabla.prev.χ, rows: width, cols: 1, deallocator: nil)
 	}
 	internal var _gradμ: LaObjet<Float> {
 		return LaObjet<Float>(valuer: nabla.prev.μ.address, rows: width, cols: 1, deallocator: nil)
@@ -280,6 +283,7 @@ extension Cell {
 	@NSManaged var input: Set<Edge>
 	@NSManaged var output: Set<Edge>
 	@NSManaged var bias: Bias
+	@NSManaged var decay: Decay?
 }
 extension Context {
 	public func newCell(type: Cell.DistributionType, width: UInt, label: String = "", recur: Bool = false, input: Array<Cell> = Array<Cell>()) throws -> Cell {

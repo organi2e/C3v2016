@@ -68,8 +68,8 @@ public struct LaObjet<Type: LaType> {
 		assert(Type.matriceBytes(&value, 1, la_matrix_from_splat( rows == 0 && cols == 0 ? objet : la_splat_from_matrix_element(objet, at.0.signedValue, at.1.signedValue), 1, 1))==SUCCESS)//Avoid redundant computation
 		return value
 	}
-	public func copy(to: UnsafePointer<Type.Élément>) -> Bool {
-		return Type.matriceBytes(UnsafeMutablePointer<Type.Élément>(OpaquePointer(to)), cols, objet) == SUCCESS
+	public func copy(to: UnsafePointer<Type.Élément>, cols: UInt? = nil) -> Bool {
+		return Type.matriceBytes(UnsafeMutablePointer<Type.Élément>(OpaquePointer(to)), cols ?? la_matrix_cols(objet), objet) == SUCCESS
 	}
 	public var L1Norme: Type.Élément {
 		return Type.matriceNormé(objet, la_norm_t(LA_L1_NORM))

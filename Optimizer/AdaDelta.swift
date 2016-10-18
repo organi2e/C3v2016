@@ -39,17 +39,16 @@ public class AdaDelta: Optimizer {
 		}
 	}
 	
-	public func update(commandBuffer: CommandBuffer, value: Buffer<Float>, nabla: Buffer<Float>, delta: Buffer<Float>) {
+	public func update(commandBuffer: CommandBuffer, value: Buffer<Float>, delta: Buffer<Float>) {
 		commandBuffer.compute {
 			$0.set(pipeline: pipeline)
 			$0.set(buffer: value, offset: 0, at: 0)
-			$0.set(buffer: nabla, offset: 0, at: 1)
-			$0.set(buffer: delta, offset: 0, at: 2)
-			$0.set(buffer: r, offset: 0, at: 3)
-			$0.set(buffer: s, offset: 0, at: 4)
-			$0.set(value: α, at: 5)
-			$0.set(value: γ, at: 6)
-			$0.set(value: ε, at: 7)
+			$0.set(buffer: delta, offset: 0, at: 1)
+			$0.set(buffer: r, offset: 0, at: 2)
+			$0.set(buffer: s, offset: 0, at: 3)
+			$0.set(value: α, at: 4)
+			$0.set(value: γ, at: 5)
+			$0.set(value: ε, at: 6)
 			$0.dispatch(groups: groups, threads: 1)
 		}
 	}

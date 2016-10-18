@@ -34,18 +34,17 @@ class ContextTests: XCTestCase {
 			let G: Cell = try context.newCell(type: .Gaussian, width: 16, label: "G")
 			let O: Cell = try context.newCell(type: .Gaussian, width: 4, label: "O")
 			
-			try context.chain(output: O, input: H)
-			//try context.chain(output: G, input: H)
+			try context.chain(output: O, input: G)
+			try context.chain(output: G, input: H)
 			//try context.chain(output: H, input: G)
 			try context.chain(output: H, input: I)
 			
-			
-			for i in 0..<4096 {
+			for i in 0..<8192 {
 				
 				//print("before \(k)")
 				//O.input.first?.dump()
 				
-				for _ in 0..<4 {
+				for _ in 0..<8 {
 					
 					O.collect_clear()
 					I.correct_clear()
@@ -61,20 +60,24 @@ class ContextTests: XCTestCase {
 				//print("after \(k)")
 				//O.input.first?.dump()
 			
+				if i % 64 == 0 {
+					print(i/64)
+				}
+				
 			}
 			
-			for k in 0..<4 {
+			for k in 0..<8 {
 				
-				for _ in 0..<4 {
+				print(k)
+				
+				for _ in 0..<8 {
 					O.collect_clear()
 					I.correct_clear()
 					
 					I.active = IS[k%4]
 					O.collect()
 				
-					print(k)
-					print(O.active.enumerated().map { k == $0.offset ? "[\($0.element)]" : "\($0.element)" })
-					print(O.level.curr.χ)
+					print(O.active.enumerated().map { k % 4 == $0.offset ? "[\($0.element)]" : "\($0.element)" }, O.level.curr.χ)
 				}
 				
 			}

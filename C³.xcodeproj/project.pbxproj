@@ -122,6 +122,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8704B8321DB4B9C200240592 /* mtlDecay.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = mtlDecay.metal; path = "C³/mtlDecay.metal"; sourceTree = "<group>"; };
 		871907C61D921D570048A43F /* macOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = macOS.xcodeproj; path = macOS/macOS.xcodeproj; sourceTree = "<group>"; };
 		871907D01D921D750048A43F /* iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iOS.xcodeproj; path = iOS/iOS.xcodeproj; sourceTree = "<group>"; };
 		871907DA1D921D840048A43F /* tvOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = tvOS.xcodeproj; path = tvOS/tvOS.xcodeproj; sourceTree = "<group>"; };
@@ -268,6 +269,7 @@
 				875297F11DA2637500F28C50 /* mtlArcane.metal */,
 				87460CBC1DA49C0000E779CA /* mtlCell.metal */,
 				87809BCA1DB0933E00780C6C /* mtlCube.metal */,
+				8704B8321DB4B9C200240592 /* mtlDecay.metal */,
 				87CDF7441DA234D00056FC89 /* ContextTests.swift */,
 			);
 			name = "C³";

@@ -18,7 +18,6 @@ class OptimizerTests: XCTestCase {
 	var loss: ComputePipelineState!
 	var dloss: ComputePipelineState!
 	var x: Buffer<Float>!
-	var g: Buffer<Float>!
 	var Δ: Buffer<Float>!
 	var ans: Buffer<Float>!
 	
@@ -27,7 +26,6 @@ class OptimizerTests: XCTestCase {
 		do {
 			maschine = try Maschine()
 			x = maschine.newBuffer(count: count)
-			g = maschine.newBuffer(count: count)
 			Δ = maschine.newBuffer(count: count)
 			ans = maschine.newBuffer(count: count)
 			(0..<count).forEach {
@@ -44,10 +42,9 @@ class OptimizerTests: XCTestCase {
 	func loss(command: CommandBuffer) {
 		command.compute {
 			$0.set(pipeline: loss)
-			$0.set(buffer: g, offset: 0, at: 0)
-			$0.set(buffer: Δ, offset: 0, at: 1)
-			$0.set(buffer: x, offset: 0, at: 2)
-			$0.set(buffer: ans, offset: 0, at: 3)
+			$0.set(buffer: Δ, offset: 0, at: 0)
+			$0.set(buffer: x, offset: 0, at: 1)
+			$0.set(buffer: ans, offset: 0, at: 2)
 			$0.dispatch(groups: (count-1)/4+1, threads: 1)
 		}
 	}
@@ -56,7 +53,7 @@ class OptimizerTests: XCTestCase {
 		let c: CommandBuffer = maschine.newCommandBuffer()
 		for _ in 0..<1024 {
 			loss(command: c)
-			optimizer.update(commandBuffer: c, value: x, nabla: g, delta: Δ)
+			optimizer.update(commandBuffer: c, value: x, delta: Δ)
 		}
 		c.commit()
 		c.waitUntilCompleted()

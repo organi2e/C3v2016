@@ -9,8 +9,6 @@
 import LaObjet
 import Maschine
 
-private let M_SQRT1_2PI: Float = Float(0.5*M_SQRT1_2*M_2_SQRTPI)
-
 public class GaussianDistribution: SymmetricStableDistribution {
 	let u: Buffer<uint>
 	let rng: ComputePipelineState
@@ -60,7 +58,6 @@ public class GaussianDistribution: SymmetricStableDistribution {
 			$0.set(buffer: gradλ, offset: 0, at: 1)
 			$0.set(buffer: μ, offset: 0, at: 2)
 			$0.set(buffer: λ, offset: 0, at: 3)
-			$0.set(value: M_SQRT1_2PI, at: 4)
 			$0.dispatch(groups: (count-1)/4+1, threads: 1)
 		}
 	}
@@ -75,6 +72,9 @@ public class GaussianDistribution: SymmetricStableDistribution {
 	}
 	public func scale<T: FloatingPoint>(σ: LaObjet<T>) -> LaObjet<T> {
 		return σ * σ
+	}
+	public func δdλdr<Type: FloatingPoint>(r: LaObjet<Type>, λ: LaObjet<Type>) -> LaObjet<Type> {
+		return LaObjet<Type>(diagonale: r * λ, shift: 0)
 	}
 	public func gradσδ<Type: FloatingPoint>(λ: LaObjet<Type>, a: LaObjet<Type>, x: LaObjet<Type>) -> LaObjet<Type> {
 		return a * outer_product(λ * λ * λ, x * x)

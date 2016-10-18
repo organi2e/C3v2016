@@ -27,12 +27,11 @@ public class StochasticGradientDescent: Optimizer {
 		self.η = η
 	}
 	
-	public func update(commandBuffer: CommandBuffer, value: Buffer<Float>, nabla: Buffer<Float>, delta: Buffer<Float>) {
+	public func update(commandBuffer: CommandBuffer, value: Buffer<Float>, delta: Buffer<Float>) {
 		commandBuffer.compute {
 			$0.set(pipeline: pipeline)
 			$0.set(buffer: value, offset: 0, at: 0)
-			$0.set(buffer: nabla, offset: 0, at: 1)
-			$0.set(buffer: delta, offset: 0, at: 2)
+			$0.set(buffer: delta, offset: 0, at: 1)
 			$0.set(value: η, at: 3)
 			$0.dispatch(groups: groups, threads: 1)
 		}

@@ -57,12 +57,11 @@ kernel void cauchyRng(device float4 * const value [[ buffer(0) ]],
 		
 	}
 }
-
+constant float M_1_PI = M_1_PI_F;
 kernel void cauchyGrn(device float4 * const gradmu [[ buffer(0) ]],
 					  device float4 * const gradlambda [[ buffer(1) ]],
 					  device const float4 * const mu [[ buffer(2) ]],
 					  device const float4 * const lambda [[ buffer(3) ]],
-					  constant float & M_1_PI [[ buffer(4) ]],
 					  uint const n [[ thread_position_in_grid ]],
 					  uint const N [[ threads_per_grid ]]) {
 	float4 const m = mu [ n ];

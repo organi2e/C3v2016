@@ -59,12 +59,11 @@ kernel void gaussRng(device float4 * const value [[ buffer(0) ]],
 		
 	}
 }
-
+constant float M_SQRT1_2PI = 0.5 * M_SQRT1_2_F * M_2_SQRTPI_F;
 kernel void gaussGrn(device float4 * const gradmu [[ buffer(0) ]],
 					 device float4 * const gradlambda [[ buffer(1) ]],
 					 device const float4 * const mu [[ buffer(2) ]],
 					 device const float4 * const lambda [[ buffer(3) ]],
-					 constant float & M_SQRT1_2PI [[ buffer(4) ]],
 					 uint const n [[ thread_position_in_grid ]],
 					 uint const N [[ threads_per_grid ]]) {
 	float4 const m = mu [ n ];

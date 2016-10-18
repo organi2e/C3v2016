@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11232" systemVersion="16A323" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Arcane" representedClassName="C3.Arcane" isAbstract="YES" syncable="YES">
-        <attribute name="argmu" attributeType="Binary" syncable="YES"/>
-        <attribute name="argsigma" attributeType="Binary" syncable="YES"/>
         <attribute name="cols" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="lambdamu" attributeType="Binary" syncable="YES"/>
+        <attribute name="lambdasigma" attributeType="Binary" syncable="YES"/>
         <attribute name="rows" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="Bias" representedClassName="C3.Bias" parentEntity="Arcane" syncable="YES">
-        <relationship name="cell" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Cell" inverseName="bias" inverseEntity="Cell" syncable="YES"/>
+        <relationship name="cell" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Cell" inverseName="bias" inverseEntity="Cell" syncable="YES"/>
     </entity>
     <entity name="Cell" representedClassName="C3.Cell" syncable="YES">
         <attribute name="attribute" attributeType="Transformable" syncable="YES"/>
@@ -15,22 +15,24 @@
         <attribute name="type" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="width" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="bias" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Bias" inverseName="cell" inverseEntity="Bias" syncable="YES"/>
+        <relationship name="decay" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Decay" inverseName="cell" inverseEntity="Decay" syncable="YES"/>
         <relationship name="input" toMany="YES" deletionRule="Cascade" destinationEntity="Edge" inverseName="output" inverseEntity="Edge" syncable="YES"/>
         <relationship name="output" toMany="YES" deletionRule="Cascade" destinationEntity="Edge" inverseName="input" inverseEntity="Edge" syncable="YES"/>
     </entity>
     <entity name="Decay" representedClassName="C3.Decay" syncable="YES">
-        <attribute name="loglambda" attributeType="Binary" syncable="YES"/>
-        <attribute name="rows" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="lambda" attributeType="Binary" syncable="YES"/>
+        <attribute name="width" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="cell" maxCount="1" deletionRule="Nullify" destinationEntity="Cell" inverseName="decay" inverseEntity="Cell" syncable="YES"/>
     </entity>
     <entity name="Edge" representedClassName="C3.Edge" parentEntity="Arcane" syncable="YES">
-        <relationship name="input" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Cell" inverseName="output" inverseEntity="Cell" syncable="YES"/>
-        <relationship name="output" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Cell" inverseName="input" inverseEntity="Cell" syncable="YES"/>
+        <relationship name="input" maxCount="1" deletionRule="Nullify" destinationEntity="Cell" inverseName="output" inverseEntity="Cell" syncable="YES"/>
+        <relationship name="output" maxCount="1" deletionRule="Nullify" destinationEntity="Cell" inverseName="input" inverseEntity="Cell" syncable="YES"/>
     </entity>
     <elements>
         <element name="Arcane" positionX="-63" positionY="-18" width="128" height="105"/>
         <element name="Bias" positionX="-54" positionY="-9" width="128" height="60"/>
-        <element name="Cell" positionX="-36" positionY="9" width="128" height="150"/>
-        <element name="Decay" positionX="0" positionY="45" width="128" height="75"/>
+        <element name="Cell" positionX="-36" positionY="9" width="128" height="165"/>
+        <element name="Decay" positionX="0" positionY="45" width="128" height="90"/>
         <element name="Edge" positionX="-18" positionY="27" width="128" height="75"/>
     </elements>
 </model>

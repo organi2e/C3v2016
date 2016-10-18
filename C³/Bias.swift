@@ -58,7 +58,7 @@ extension Bias {
 		*/
 		do {
 			//Always gain
-			let dλdc: LaObjet<Float> = -distribution.gradσδ(λ: λ, c: σ).colsdiag
+			let dλdc: LaObjet<Float> = -distribution.gradσδ(λ: λ, c: σ)
 			let Δσ: LaObjet<Float> = matrix_product((Δ*gradλ).T, dλdc)
 			let Δμ: LaObjet<Float> = Δ * gradμ
 			update(commandBuffer: commandBuffer, Δμ: Δμ, Δσ: Δσ)
